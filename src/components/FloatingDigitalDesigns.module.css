@@ -1,0 +1,177 @@
+.container {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.shape {
+  position: absolute;
+  opacity: 0.12;
+  filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.3));
+}
+
+.shape svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* 1. Neural / Server Node Network */
+.network {
+  width: 300px;
+  height: 300px;
+  top: 10%;
+  left: 5%;
+  color: var(--color-primary);
+  animation: floatRandom 25s infinite ease-in-out alternate, spinSlow 60s infinite linear;
+}
+
+/* 2. Floating Code Block */
+.codeBlock {
+  width: 380px;
+  top: 60%;
+  right: 5%;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.6;
+  opacity: 0.08;
+  color: var(--text-primary);
+  animation: floatVertical 20s infinite ease-in-out alternate-reverse;
+  transform: perspective(600px) rotateY(-15deg) rotateX(10deg);
+}
+
+.codeContent {
+  background: rgba(10, 10, 26, 0.4);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.keyword { color: #c678dd; }
+.function { color: #61afef; }
+.method { color: #e5c07b; }
+.property { color: #e06c75; }
+.number { color: #d19a66; }
+
+/* 3. Detailed Wireframe Database */
+.database {
+  width: 200px;
+  height: 300px;
+  bottom: 5%;
+  left: 15%;
+  color: var(--color-secondary);
+  opacity: 0.15;
+  animation: floatHorizontal 22s infinite ease-in-out alternate;
+}
+
+/* 4. Cybernetic Circuit Board Segment */
+.circuit {
+  width: 350px;
+  height: 350px;
+  top: 15%;
+  right: 10%;
+  color: var(--color-accent);
+  opacity: 0.1;
+  animation: floatRandom 30s infinite ease-in-out, pulseOpacity 10s infinite;
+  transform: perspective(800px) rotateX(20deg) rotateZ(-10deg);
+}
+
+/* 5. Terminal CLI Prompt */
+.terminal {
+  width: 400px;
+  bottom: 10%;
+  left: 35%;
+  opacity: 0.08;
+  font-family: var(--font-mono);
+  animation: floatVertical 25s infinite ease-in-out alternate;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  overflow: hidden;
+  transform: perspective(600px) rotateY(15deg);
+}
+
+.terminalHeader {
+  height: 25px;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  gap: 6px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+  opacity: 0.5;
+}
+
+.terminalBody {
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  font-size: 13px;
+  color: #a0a0c0;
+}
+
+.terminalOutput {
+  color: var(--color-success);
+}
+
+/* Utility Animations */
+.blinkFast {
+  animation: blink 1s infinite steps(2, start);
+}
+
+.blinkSlow {
+  animation: blink 2.5s infinite steps(2, start);
+}
+
+/* Keyframes */
+@keyframes floatRandom {
+  0% { transform: translate(0, 0); }
+  33% { transform: translate(40px, -60px); }
+  66% { transform: translate(-50px, 30px); }
+  100% { transform: translate(20px, 50px); }
+}
+
+@keyframes floatVertical {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-100px); }
+}
+
+@keyframes floatHorizontal {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(80px); }
+}
+
+@keyframes spinSlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulseOpacity {
+  0%, 100% { opacity: 0.05; filter: drop-shadow(0 0 5px rgba(0,240,255,0.1)); }
+  50% { opacity: 0.18; filter: drop-shadow(0 0 20px rgba(0,240,255,0.4)); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Media Query for smaller screens */
+@media (max-width: 768px) {
+  .shape {
+    transform: scale(0.6) !important;
+  }
+  
+  .network { left: -10%; top: 5%; }
+  .codeBlock { right: -20%; top: 40%; }
+  .database { left: -5%; bottom: 15%; }
+  .circuit { right: -15%; top: 10%; }
+  .terminal { left: -10%; bottom: 5%; width: 300px; }
+}

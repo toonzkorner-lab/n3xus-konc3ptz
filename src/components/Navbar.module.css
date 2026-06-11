@@ -1,0 +1,314 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--navbar-height);
+  z-index: var(--z-fixed);
+  transition: all var(--transition-base);
+  background: transparent;
+  display: flex;
+  align-items: center;
+}
+
+.scrolled {
+  background: rgba(10, 10, 26, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-md);
+}
+
+.navContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.logoLink {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  object-fit: contain;
+  width: auto;
+  height: 44px;
+  filter: drop-shadow(0 0 10px var(--color-primary-glow));
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
+.link {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  position: relative;
+  transition: color var(--transition-fast);
+}
+
+.link:hover, .active {
+  color: var(--color-primary);
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--gradient-primary);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--transition-base);
+}
+
+.link:hover::after, .active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.navItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) 0;
+  min-width: 200px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+}
+
+.navItem:hover .dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.dropdownLink {
+  padding: var(--space-sm) var(--space-lg);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.dropdownLink:hover {
+  background: var(--color-primary-subtle);
+  color: var(--color-primary);
+  padding-left: calc(var(--space-lg) + 5px);
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-left: var(--space-lg);
+}
+
+.rightControls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  z-index: 302;
+  position: relative;
+}
+
+.cartButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-sm);
+  color: var(--text-secondary);
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.cartButton:hover {
+  color: var(--color-primary);
+  transform: scale(1.1);
+}
+
+.cartBadge {
+  position: absolute;
+  top: -2px;
+  right: -4px;
+  background: var(--gradient-primary);
+  color: var(--text-inverse, #fff);
+  font-size: 10px;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  box-shadow: 0 0 8px var(--color-primary-glow);
+  animation: cartPulse 0.3s ease;
+}
+
+@keyframes cartPulse {
+  0% { transform: scale(0.5); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.loginLink {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+}
+
+.loginLink:hover {
+  color: var(--color-primary);
+  text-shadow: 0 0 8px var(--color-primary-glow);
+}
+
+.ctaBtn {
+  font-size: var(--text-xs);
+  padding: 0.5rem 1.25rem;
+}
+
+.mobileToggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-sm);
+  position: relative;
+  z-index: 305;
+}
+
+.hamburger {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text-primary);
+  position: relative;
+  transition: background 0.2s ease-out;
+}
+
+.hamburger::before,
+.hamburger::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: var(--text-primary);
+  left: 0;
+  transition: all 0.2s ease-out;
+}
+
+.hamburger::before {
+  top: -8px;
+}
+
+.hamburger::after {
+  bottom: -8px;
+}
+
+.hamburgerOpen {
+  background: transparent;
+}
+
+.hamburgerOpen::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.hamburgerOpen::after {
+  bottom: 0;
+  transform: rotate(-45deg);
+}
+
+.mobileOpen {
+  /* Exported by CSS Modules globally */
+}
+
+@media (max-width: 768px) {
+  .navLinks {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-secondary);
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-2xl);
+    transform: translateX(100%);
+    transition: transform var(--transition-spring);
+    z-index: var(--z-fixed);
+    pointer-events: none;
+    display: none;
+  }
+
+  .mobileOpen {
+    transform: translateX(0);
+    pointer-events: auto;
+    display: flex;
+  }
+
+  .navActions {
+    flex-direction: column;
+    margin-left: 0;
+    margin-top: var(--space-xl);
+  }
+
+  .navItem {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .dropdown {
+    position: static;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    padding: var(--space-sm) 0 0 0;
+    display: none; /* Hide on mobile by default unless hovered/clicked, or just show them always inline */
+    text-align: center;
+  }
+
+  /* Simple hover or focus within to show on mobile */
+  .navItem:hover .dropdown,
+  .navItem:focus-within .dropdown {
+    display: flex;
+  }
+
+  .mobileToggle {
+    display: block;
+  }
+}

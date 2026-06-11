@@ -1,0 +1,236 @@
+.footer {
+  position: relative;
+  background: var(--bg-primary);
+  padding: var(--space-4xl) 0 var(--space-xl);
+  overflow: hidden;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--gradient-primary);
+  box-shadow: 0 0 10px var(--color-primary-glow);
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: var(--space-2xl);
+  margin-bottom: var(--space-3xl);
+}
+
+.logoLink {
+  display: inline-block;
+  margin-bottom: var(--space-lg);
+}
+
+.description {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-lg);
+  max-width: 300px;
+}
+
+.socials {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.socialLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  transition: all var(--transition-base);
+}
+
+.socialLink:hover {
+  color: var(--text-inverse);
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 15px var(--color-primary-glow);
+  transform: translateY(-3px);
+}
+
+.columnTitle {
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
+  position: relative;
+  display: inline-block;
+}
+
+.columnTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background: var(--color-primary);
+}
+
+.linkList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.link {
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+}
+
+.link::before {
+  content: '>';
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-primary);
+  margin-right: 8px;
+  opacity: 0;
+  transform: translateX(-5px);
+  transition: all var(--transition-fast);
+}
+
+.link:hover {
+  color: var(--color-primary);
+  padding-left: 5px;
+}
+
+.link:hover::before {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.newsletterText {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-md);
+}
+
+.newsletterForm {
+  position: relative;
+}
+
+.inputWrapper {
+  display: flex;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+}
+
+.inputWrapper:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-subtle);
+}
+
+.input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 0.75rem 1rem;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.submitBtn {
+  background: var(--color-primary-subtle);
+  border: none;
+  color: var(--color-primary);
+  padding: 0 1rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: var(--color-primary);
+  color: var(--text-inverse);
+}
+
+.submitBtn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.successMsg {
+  color: var(--color-success);
+  font-size: var(--text-xs);
+  margin-top: var(--space-xs);
+  position: absolute;
+}
+
+.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-xl);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.copyright {
+  color: var(--text-tertiary);
+  font-size: var(--text-sm);
+}
+
+.legalLinks {
+  display: flex;
+  gap: var(--space-lg);
+}
+
+.legalLink {
+  color: var(--text-tertiary);
+  font-size: var(--text-sm);
+  transition: color var(--transition-fast);
+}
+
+.legalLink:hover {
+  color: var(--color-primary);
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3xl) var(--space-xl);
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+  }
+  
+  .bottom {
+    flex-direction: column;
+    gap: var(--space-md);
+    text-align: center;
+  }
+}

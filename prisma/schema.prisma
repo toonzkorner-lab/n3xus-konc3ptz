@@ -1,0 +1,263 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  passwordHash  String?
+  role          String    @default("CLIENT") // "ADMIN" or "CLIENT"
+  company       String?
+  phone         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  projects      Project[]
+  invoices      Invoice[]
+  messages      Message[]
+  files         File[]
+  blogPosts     BlogPost[]
+}
+
+model Project {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  status      String    @default("PLANNING") // PLANNING, IN_PROGRESS, REVIEW, COMPLETED, ON_HOLD, CANCELLED
+  budget      Int       @default(0) // In cents
+  progress    Int       @default(0) // 0-100
+  deadline    DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  clientId    String
+  client      User      @relation(fields: [clientId], references: [id])
+  
+  tasks       Task[]
+  invoices    Invoice[]
+  messages    Message[]
+  files       File[]
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  status      String    @default("TODO") // TODO, IN_PROGRESS, DONE
+  priority    String    @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  dueDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  projectId   String
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Invoice {
+  id          String    @id @default(cuid())
+  number      String    @unique
+  amount      Int       // In cents
+  tax         Int       @default(0) // In cents
+  status      String    @default("DRAFT") // DRAFT, SENT, PAID, OVERDUE
+  dueDate     DateTime?
+  paidAt      DateTime?
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  projectId   String?
+  project     Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  
+  clientId    String
+  client      User      @relation(fields: [clientId], references: [id])
+
+  items       InvoiceItem[]
+}
+
+model InvoiceItem {
+  id          String    @id @default(cuid())
+  description String
+  quantity    Int       @default(1)
+  unitPrice   Int       // In cents
+  
+  invoiceId   String
+  invoice     Invoice   @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+model Message {
+  id          String    @id @default(cuid())
+  content     String
+  createdAt   DateTime  @default(now())
+
+  projectId   String
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  senderId    String
+  sender      User      @relation(fields: [senderId], references: [id])
+}
+
+model File {
+  id          String    @id @default(cuid())
+  name        String
+  url         String
+  size        Int
+  type        String?
+  createdAt   DateTime  @default(now())
+
+  projectId   String
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  uploadedById String
+  uploadedBy   User     @relation(fields: [uploadedById], references: [id])
+}
+
+model Service {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  shortDesc   String?
+  price       Int       @default(0) // In cents
+  features    String    @default("[]") // JSON string array
+  category    String?
+  icon        String?
+  active      Boolean   @default(true)
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model PortfolioItem {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  description String?
+  shortDesc   String?
+  images      String    @default("[]") // JSON string array
+  tags        String    @default("[]") // JSON string array
+  category    String?
+  featured    Boolean   @default(false)
+  liveUrl     String?
+  githubUrl   String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Testimonial {
+  id            String    @id @default(cuid())
+  clientName    String
+  clientRole    String?
+  clientCompany String?
+  content       String
+  rating        Int       @default(5) // 1-5
+  avatar        String?
+  featured      Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+}
+
+model ContactSubmission {
+  id          String    @id @default(cuid())
+  name        String
+  email       String
+  subject     String?
+  message     String
+  status      String    @default("NEW") // NEW, READ, REPLIED, ARCHIVED
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model BlogPost {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  content     String
+  excerpt     String?
+  coverImage  String?
+  published   Boolean   @default(false)
+  tags        String    @default("[]") // JSON string array
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id])
+}
+
+model Product {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  description     String?
+  shortDesc       String?
+  price           Int       @default(0) // In cents
+  images          String    @default("[]") // JSON string array
+  features        String    @default("[]") // JSON string array
+  category        String?
+  active          Boolean   @default(true)
+  recurring       String?   // "month" or "year"
+  digitalFileUrl  String?   // URL to the downloadable file after purchase
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  orderItems      OrderItem[]
+}
+
+model Order {
+  id              String    @id @default(cuid())
+  stripeSessionId String?   @unique
+  customerEmail   String?
+  customerName    String?
+  amountTotal     Int       @default(0) // In cents (before discount)
+  discountAmount  Int       @default(0) // In cents
+  amountFinal     Int       @default(0) // In cents (after discount)
+  status          String    @default("PENDING") // PENDING, PAID, FAILED, DELIVERED
+  couponCode      String?   // Applied coupon code
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id              String    @id @default(cuid())
+  orderId         String
+  order           Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  // An item can be a Product or a Service. We store the IDs loosely or strictly.
+  // We'll use loose references to allow flexible cart mixes without strictly enforcing relations
+  // that might break if a service is deleted.
+  itemId          String
+  itemType        String    // "PRODUCT" or "SERVICE"
+  title           String
+  price           Int       // In cents (price at the time of purchase)
+  quantity        Int       @default(1)
+
+  // Strict relation for products to allow tracking downloads easily if it's a product
+  productId       String?
+  product         Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+}
+
+model Coupon {
+  id              String    @id @default(cuid())
+  code            String    @unique
+  description     String?
+  type            String    @default("PERCENTAGE") // PERCENTAGE or FIXED
+  value           Int       // Percentage (e.g. 10 = 10%) or fixed amount in cents
+  minOrderAmount  Int       @default(0) // Minimum order total in cents to apply
+  maxUses         Int?      // Max total uses (null = unlimited)
+  uses            Int       @default(0)
+  active          Boolean   @default(true)
+  expiresAt       DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
