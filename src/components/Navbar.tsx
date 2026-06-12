@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import styles from './Navbar.module.css';
 import { cn } from '@/lib/utils';
 import { useCart } from './CartProvider';
+import { useSession } from 'next-auth/react';
 import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
@@ -15,6 +16,7 @@ export default function Navbar() {
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const { items, itemCount } = useCart();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
     setMounted(true);
@@ -105,9 +107,22 @@ export default function Navbar() {
             </div>
           ))}
           <div className={styles.navActions}>
-            <Link href="/auth/login" className={styles.loginLink} onClick={() => setMobileMenuOpen(false)}>Login</Link>
-            <Link href="/book" className={cn('btn', 'btn-secondary', styles.ctaBtn)} onClick={() => setMobileMenuOpen(false)}>Book Consultation</Link>
-            <Link href="/contact" className={cn('btn', 'btn-primary', styles.ctaBtn)} onClick={() => setMobileMenuOpen(false)}>Get Started</Link>
+            {status === 'loading' ? (
+              <span className={styles.loginLink}>...</span>
+            ) : session ? (
+              <>
+                {session.user?.role === 'ADMIN' && (
+                  <Link href="/admin" className={cn(styles.loginLink, 'text-accent hover:text-accent-glow')} onClick={() => setMobileMenuOpen(false)}>Admin Panel</Link>
+                )}
+                <Link href="/dashboard" className={styles.loginLink} onClick={() => setMobileMenuOpen(false)}>Client Portal</Link>
+              </>
+            ) : (
+              <>
+                <Link href="/auth/login" className={styles.loginLink} onClick={() => setMobileMenuOpen(false)}>Login</Link>
+                <Link href="/auth/register" className={cn('btn', 'btn-secondary', styles.ctaBtn, 'hidden md:inline-flex')} onClick={() => setMobileMenuOpen(false)}>Register</Link>
+              </>
+            )}
+            <Link href="/book" className={cn('btn', 'btn-primary', styles.ctaBtn)} onClick={() => setMobileMenuOpen(false)}>Book Consultation</Link>
           </div>
         </nav>
 
