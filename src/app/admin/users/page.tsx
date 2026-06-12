@@ -50,9 +50,9 @@ export default async function AdminUsersPage() {
                   <div className="flex items-center gap-md">
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold"
                       style={{ 
-                        background: user.role === 'ADMIN' ? 'var(--color-secondary-subtle)' : 'var(--color-primary-subtle)',
-                        color: user.role === 'ADMIN' ? 'var(--color-secondary)' : 'var(--color-primary)',
-                        border: `1px solid ${user.role === 'ADMIN' ? 'rgba(139, 92, 246, 0.3)' : 'rgba(0, 240, 255, 0.3)'}`,
+                        background: (user.role === 'ADMIN' || user.role === 'OWNER') ? 'var(--color-secondary-subtle)' : 'var(--color-primary-subtle)',
+                        color: (user.role === 'ADMIN' || user.role === 'OWNER') ? 'var(--color-secondary)' : 'var(--color-primary)',
+                        border: `1px solid ${(user.role === 'ADMIN' || user.role === 'OWNER') ? 'rgba(139, 92, 246, 0.3)' : 'rgba(0, 240, 255, 0.3)'}`,
                       }}
                     >
                       {(user.name || 'U').charAt(0).toUpperCase()}
@@ -64,7 +64,7 @@ export default async function AdminUsersPage() {
                   </div>
                 </td>
                 <td>
-                  <span className={`badge ${user.role === 'ADMIN' ? 'badge-secondary' : 'badge-primary'}`}>
+                  <span className={`badge ${(user.role === 'ADMIN' || user.role === 'OWNER') ? 'badge-secondary' : 'badge-primary'}`}>
                     {user.role}
                   </span>
                 </td>

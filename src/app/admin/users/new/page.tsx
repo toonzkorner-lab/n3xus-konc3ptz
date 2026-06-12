@@ -95,6 +95,7 @@ export default function NewUserPage() {
             <select id="role" name="role" className="form-input bg-primary-subtle border-primary text-primary font-bold">
               <option value="CLIENT">CLIENT</option>
               <option value="ADMIN">ADMIN</option>
+              <option value="OWNER">OWNER</option>
             </select>
           </div>
 

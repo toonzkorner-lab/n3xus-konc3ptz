@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const isAdmin = session.user.role === "ADMIN";
+  const isAdmin = (session.user.role === 'ADMIN' || session.user.role === 'OWNER');
   const invoices = await prisma.invoice.findMany({
     where: isAdmin ? {} : { clientId: session.user.id },
     include: {
@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id || session.user.role !== "ADMIN") {
+  if (!session?.user?.id || (session.user.role !== 'ADMIN' && session.user.role !== 'OWNER')) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

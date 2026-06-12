@@ -10,7 +10,7 @@ export async function PATCH(
 ) {
   const { id } = await params;
   const session = await getServerSession(authOptions);
-  if (!session?.user?.role || session.user.role !== 'ADMIN') {
+  if (!session?.user?.role || (session.user.role !== 'ADMIN' && session.user.role !== 'OWNER')) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
   }
 
@@ -45,7 +45,7 @@ export async function DELETE(
 ) {
   const { id } = await params;
   const session = await getServerSession(authOptions);
-  if (!session?.user?.role || session.user.role !== 'ADMIN') {
+  if (!session?.user?.role || (session.user.role !== 'ADMIN' && session.user.role !== 'OWNER')) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
   }
 

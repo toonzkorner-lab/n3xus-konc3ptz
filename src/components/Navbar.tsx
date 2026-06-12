@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import styles from './Navbar.module.css';
 import { cn } from '@/lib/utils';
 import { useCart } from './CartProvider';
+import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -105,12 +106,14 @@ export default function Navbar() {
           ))}
           <div className={styles.navActions}>
             <Link href="/auth/login" className={styles.loginLink} onClick={() => setMobileMenuOpen(false)}>Login</Link>
+            <Link href="/book" className={cn('btn', 'btn-secondary', styles.ctaBtn)} onClick={() => setMobileMenuOpen(false)}>Book Consultation</Link>
             <Link href="/contact" className={cn('btn', 'btn-primary', styles.ctaBtn)} onClick={() => setMobileMenuOpen(false)}>Get Started</Link>
           </div>
         </nav>
 
-        {/* Right-side controls (Cart + Mobile Toggle) */}
+        {/* Right-side controls (Cart + Mobile Toggle + Theme) */}
         <div className={styles.rightControls}>
+          <ThemeToggle />
           <Link
             href="/cart"
             className={styles.cartButton}

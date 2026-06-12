@@ -5,6 +5,24 @@ import Image from 'next/image';
 export const metadata = {
   title: 'About Us | N3xUs Konc3pt\'z',
   description: 'Learn about the vision and team behind N3xUs Konc3pt\'z digital design studio.',
+  alternates: {
+    canonical: 'https://n3xuskonceptz.com/about',
+  },
+  openGraph: {
+    title: 'About Us | N3xUs Konc3pt\'z',
+    description: 'Learn about the vision and team behind N3xUs Konc3pt\'z digital design studio.',
+    url: 'https://n3xuskonceptz.com/about',
+    siteName: 'N3xUs Konc3pt\'z',
+    images: [{ url: 'https://n3xuskonceptz.com/logo.jpg', width: 800, height: 800, alt: 'N3xUs Logo' }],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'About Us | N3xUs Konc3pt\'z',
+    description: 'Learn about the vision and team behind N3xUs Konc3pt\'z digital design studio.',
+    images: ['https://n3xuskonceptz.com/logo.jpg'],
+  },
 };
 
 export default function AboutPage() {

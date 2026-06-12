@@ -6,7 +6,7 @@ import { authOptions } from '@/lib/auth';
 // GET /api/coupons — list all coupons (admin only)
 export async function GET() {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.role || session.user.role !== 'ADMIN') {
+  if (!session?.user?.role || (session.user.role !== 'ADMIN' && session.user.role !== 'OWNER')) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
   }
 
@@ -24,7 +24,7 @@ export async function GET() {
 // POST /api/coupons — create a new coupon (admin only)
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.role || session.user.role !== 'ADMIN') {
+  if (!session?.user?.role || (session.user.role !== 'ADMIN' && session.user.role !== 'OWNER')) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
   }
 

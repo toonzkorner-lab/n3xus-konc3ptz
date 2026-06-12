@@ -3,8 +3,14 @@
    Cosmic Cyberpunk Theme
    ============================================================ */
 
-/* ---- Google Fonts Import ---- */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+/* ---- Google Fonts Removed (Loaded via next/font/google) ---- */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 
 /* ============================================================
    DESIGN TOKENS
@@ -69,9 +75,9 @@
   --gradient-button-hover: linear-gradient(135deg, #33f5ff 0%, #00e0f0 50%, #a78bfa 100%);
   
   /* ---- Typography ---- */
-  --font-heading: 'Orbitron', sans-serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-heading: var(--font-orbitron), sans-serif;
+  --font-body: var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
   
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -1253,3 +1259,58 @@ code, pre {
 
 .spinner-sm { width: 16px; height: 16px; }
 .spinner-lg { width: 40px; height: 40px; border-width: 3px; }
+
+/* ============================================================
+   LIGHT THEME VARIABLES
+   ============================================================ */
+:root.light {
+  /* ---- Color Palette (Inverted/Adjusted for light) ---- */
+  --color-primary: #008eb3;
+  --color-primary-dim: #007399;
+  --color-primary-glow: rgba(0, 142, 179, 0.2);
+  --color-primary-subtle: rgba(0, 142, 179, 0.08);
+  
+  --color-secondary: #6d3fd4;
+  --color-secondary-dim: #5527ba;
+  --color-secondary-glow: rgba(109, 63, 212, 0.2);
+  --color-secondary-subtle: rgba(109, 63, 212, 0.08);
+  
+  --color-accent: #d946ef;
+  --color-accent-glow: rgba(217, 70, 239, 0.2);
+  
+  /* ---- Background Colors ---- */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --bg-tertiary: #e2e8f0;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --bg-glass: rgba(255, 255, 255, 0.8);
+  --bg-glass-strong: rgba(255, 255, 255, 0.95);
+  --bg-input: #ffffff;
+  --bg-overlay: rgba(255, 255, 255, 0.8);
+  
+  /* ---- Text Colors ---- */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --text-inverse: #ffffff;
+  --text-link: #0ea5e9;
+  
+  /* ---- Border Colors ---- */
+  --border-primary: rgba(0, 142, 179, 0.3);
+  --border-secondary: rgba(109, 63, 212, 0.3);
+  --border-subtle: rgba(15, 23, 42, 0.1);
+  --border-hover: rgba(0, 142, 179, 0.5);
+  
+  /* ---- Gradients ---- */
+  --gradient-primary: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+  --gradient-primary-reverse: linear-gradient(135deg, #8b5cf6, #0ea5e9);
+  --gradient-hero: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+  --gradient-card: linear-gradient(145deg, rgba(14, 165, 233, 0.05), rgba(139, 92, 246, 0.05));
+  --gradient-cosmic: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+  --gradient-nebula: radial-gradient(ellipse at 20% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, rgba(14, 165, 233, 0.05) 0%, transparent 50%);
+  --gradient-text: linear-gradient(90deg, #0284c7, #7c3aed, #db2777);
+  --gradient-glow: radial-gradient(circle, rgba(14, 165, 233, 0.1) 0%, transparent 70%);
+  --gradient-button: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #7c3aed 100%);
+  --gradient-button-hover: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 50%, #8b5cf6 100%);
+}

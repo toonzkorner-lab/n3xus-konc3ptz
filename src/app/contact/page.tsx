@@ -5,6 +5,24 @@ import ContactForm from '@/components/ContactForm';
 export const metadata = {
   title: 'Contact | N3xUs Konc3pt\'z',
   description: 'Get in touch with us to start your next digital project.',
+  alternates: {
+    canonical: 'https://n3xuskonceptz.com/contact',
+  },
+  openGraph: {
+    title: 'Contact | N3xUs Konc3pt\'z',
+    description: 'Get in touch with us to start your next digital project.',
+    url: 'https://n3xuskonceptz.com/contact',
+    siteName: 'N3xUs Konc3pt\'z',
+    images: [{ url: 'https://n3xuskonceptz.com/logo.jpg', width: 800, height: 800, alt: 'N3xUs Logo' }],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Contact | N3xUs Konc3pt\'z',
+    description: 'Get in touch with us to start your next digital project.',
+    images: ['https://n3xuskonceptz.com/logo.jpg'],
+  },
 };
 
 export default function ContactPage() {
@@ -39,25 +57,16 @@ export default function ContactPage() {
                     <div>
                       <h4 className="text-lg font-heading text-primary mb-xs">Email Transmission</h4>
                       <p className="text-secondary text-sm mb-sm">For general inquiries and project proposals.</p>
-                      <a href="mailto:hello@n3xuskonc3ptz.com" className="text-md font-mono text-accent hover:underline">hello@n3xuskonc3ptz.com</a>
+                      <a href="mailto:jsocarras499@outlook.com" className="text-md font-mono text-accent hover:underline">jsocarras499@outlook.com</a>
                     </div>
                   </div>
                   
                   <div className="bg-card p-lg rounded-lg border border-subtle flex items-start gap-md">
-                    <div className="text-3xl text-secondary mt-1">💬</div>
+                    <div className="text-3xl text-secondary mt-1">📘</div>
                     <div>
-                      <h4 className="text-lg font-heading text-secondary mb-xs">Discord Server</h4>
-                      <p className="text-secondary text-sm mb-sm">Join our community for faster response times and direct chat.</p>
-                      <a href="#" className="text-md font-mono text-accent hover:underline">discord.gg/n3xus</a>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-card p-lg rounded-lg border border-subtle flex items-start gap-md">
-                    <div className="text-3xl text-accent mt-1">📱</div>
-                    <div>
-                      <h4 className="text-lg font-heading text-accent mb-xs">Telegram Portal</h4>
-                      <p className="text-secondary text-sm mb-sm">Connect with our automated routing bot.</p>
-                      <a href="#" className="text-md font-mono text-primary hover:underline">@N3xUs_Support_Bot</a>
+                      <h4 className="text-lg font-heading text-secondary mb-xs">Facebook Page</h4>
+                      <p className="text-secondary text-sm mb-sm">Connect with us on Facebook for updates and messaging.</p>
+                      <a href="https://www.facebook.com/profile.php?id=61590253607463" target="_blank" rel="noopener noreferrer" className="text-md font-mono text-primary hover:underline">N3xUs Konc3pt'z FB</a>
                     </div>
                   </div>
                 </div>
@@ -69,31 +78,7 @@ export default function ContactPage() {
             </div>
           </div>
         </section>
-        
-        {/* FAQ Preview */}
-        <section className="section bg-secondary">
-          <div className="container">
-            <div className="section-header text-center">
-              <h2 className="section-title">Transmission Guidelines</h2>
-              <p className="section-subtitle">Commonly requested coordinates</p>
-            </div>
-            
-            <div className="max-w-3xl mx-auto flex flex-col gap-md">
-              <div className="bg-card border border-subtle rounded-lg p-lg">
-                <h4 className="text-lg text-primary mb-sm">What is your typical project timeline?</h4>
-                <p className="text-secondary text-sm">Most custom Discord/Telegram bots take 2-4 weeks. Full web applications and design projects typically range from 4-8 weeks depending on complexity.</p>
-              </div>
-              <div className="bg-card border border-subtle rounded-lg p-lg">
-                <h4 className="text-lg text-primary mb-sm">Do you offer ongoing maintenance?</h4>
-                <p className="text-secondary text-sm">Yes. All our projects come with an optional cosmic maintenance plan ensuring your systems stay online, updated, and secure against digital threats.</p>
-              </div>
-              <div className="bg-card border border-subtle rounded-lg p-lg">
-                <h4 className="text-lg text-primary mb-sm">What payment methods do you accept?</h4>
-                <p className="text-secondary text-sm">We accept major credit cards via Stripe, wire transfers, and select cryptocurrencies (BTC, ETH, USDC) for web3 projects.</p>
-              </div>
-            </div>
-          </div>
-        </section>
+
       </main>
       <Footer />
     </>

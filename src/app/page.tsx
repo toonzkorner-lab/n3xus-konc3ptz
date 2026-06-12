@@ -10,6 +10,30 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import Navbar from '@/components/Navbar';
+
+export const metadata = {
+  title: 'N3xUs Konc3pt\'z | Digital Design Studio',
+  description: 'The premier digital design studio for the next generation of the web.',
+  alternates: {
+    canonical: 'https://n3xuskonceptz.com/',
+  },
+  openGraph: {
+    title: 'N3xUs Konc3pt\'z | Digital Design Studio',
+    description: 'The premier digital design studio for the next generation of the web.',
+    url: 'https://n3xuskonceptz.com/',
+    siteName: 'N3xUs Konc3pt\'z',
+    images: [{ url: 'https://n3xuskonceptz.com/logo.jpg', width: 800, height: 800, alt: 'N3xUs Logo' }],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'N3xUs Konc3pt\'z | Digital Design Studio',
+    description: 'The premier digital design studio for the next generation of the web.',
+    images: ['https://n3xuskonceptz.com/logo.jpg'],
+  },
+};
+
 export default async function Home() {
   // Fetch services from DB
   const services = await prisma.service.findMany({

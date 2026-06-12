@@ -25,9 +25,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   });
 
   // Static routes
-  const routes = ['', '/store', '/services', '/portfolio', '/blog', '/about', '/contact'].map((route) => ({
+  const routes = ['', '/store', '/services', '/portfolio', '/blog', '/about', '/contact', '/book'].map((route) => ({
     url: `${baseUrl}${route}`,
-    lastModified: new Date(),
+    lastModified: new Date('2025-01-01'),
     changeFrequency: 'weekly' as const,
     priority: route === '' ? 1 : 0.8,
   }));

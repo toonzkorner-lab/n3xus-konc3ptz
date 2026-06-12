@@ -103,6 +103,21 @@ async function main() {
     }
   })
 
+  // Seed a demo coupon
+  await prisma.coupon.upsert({
+    where: { code: 'NEXUS10' },
+    update: {},
+    create: {
+      code: 'NEXUS10',
+      description: 'Welcome discount — 10% off your first order',
+      type: 'PERCENTAGE',
+      value: 10,
+      minOrderAmount: 0,
+      maxUses: 100,
+      active: true,
+    },
+  })
+
   console.log('Seed executed successfully!')
 }
 

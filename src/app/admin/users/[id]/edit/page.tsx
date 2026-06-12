@@ -106,15 +106,19 @@ export default function EditUserPage() {
           />
         </div>
 
-        <div className="form-group">
-          <label className="label">Role</label>
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text text-secondary">Role</span>
+          </label>
           <select
-            className="input"
+            name="role"
             value={formData.role}
             onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+            className="select w-full bg-primary text-primary border-subtle focus:border-accent"
           >
             <option value="CLIENT">Client</option>
             <option value="ADMIN">Admin</option>
+            <option value="OWNER">Owner</option>
           </select>
         </div>
 

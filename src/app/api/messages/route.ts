@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Project not found" }, { status: 404 });
   }
 
-  const isAdmin = session.user.role === "ADMIN";
+  const isAdmin = (session.user.role === 'ADMIN' || session.user.role === 'OWNER');
   if (!isAdmin && project.clientId !== session.user.id) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
-    const isAdmin = session.user.role === "ADMIN";
+    const isAdmin = (session.user.role === 'ADMIN' || session.user.role === 'OWNER');
     if (!isAdmin && project.clientId !== session.user.id) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }

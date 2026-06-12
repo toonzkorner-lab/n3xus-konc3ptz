@@ -6,6 +6,24 @@ import { prisma } from '@/lib/prisma';
 export const metadata = {
   title: 'Blog | N3xUs Konc3pt\'z',
   description: 'Insights, tutorials, and cosmic transmissions from the N3xUs team.',
+  alternates: {
+    canonical: 'https://n3xuskonceptz.com/blog',
+  },
+  openGraph: {
+    title: 'Blog | N3xUs Konc3pt\'z',
+    description: 'Insights, tutorials, and cosmic transmissions from the N3xUs team.',
+    url: 'https://n3xuskonceptz.com/blog',
+    siteName: 'N3xUs Konc3pt\'z',
+    images: [{ url: 'https://n3xuskonceptz.com/logo.jpg', width: 800, height: 800, alt: 'N3xUs Logo' }],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Blog | N3xUs Konc3pt\'z',
+    description: 'Insights, tutorials, and cosmic transmissions from the N3xUs team.',
+    images: ['https://n3xuskonceptz.com/logo.jpg'],
+  },
 };
 
 export default async function BlogPage() {

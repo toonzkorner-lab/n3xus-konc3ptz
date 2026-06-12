@@ -17,7 +17,7 @@ export default async function DashboardLayout({
   }
 
   // Redirect admins to admin portal
-  if (session.user.role === 'ADMIN') {
+  if ((session.user.role === 'ADMIN' || session.user.role === 'OWNER')) {
     redirect('/admin');
   }
 
