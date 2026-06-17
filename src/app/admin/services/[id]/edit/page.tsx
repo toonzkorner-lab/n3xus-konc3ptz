@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { upload } from '@vercel/blob/client';
 
 export default function EditServicePage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
@@ -18,13 +19,13 @@ export default function EditServicePage({ params }: { params: Promise<{ id: stri
     if (!e.target.files || e.target.files.length === 0) return;
     setUploading(true);
     setError('');
-    const data = new FormData();
-    data.append('files', e.target.files[0]);
     try {
-      const res = await fetch('/api/upload', { method: 'POST', body: data });
-      if (!res.ok) { const err = await res.json(); throw new Error(err.error || 'Upload failed'); }
-      const { urls } = await res.json();
-      if (urls.length > 0) setIconValue(urls[0]);
+      const file = e.target.files[0];
+      const newBlob = await upload(file.name, file, {
+        access: 'public',
+        handleUploadUrl: '/api/upload',
+      });
+      setIconValue(newBlob.url);
       e.target.value = '';
     } catch (err: any) {
       setError(err.message);

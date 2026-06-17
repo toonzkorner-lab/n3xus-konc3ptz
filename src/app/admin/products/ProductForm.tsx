@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { upload } from '@vercel/blob/client';
 
 export default function ProductForm({ initialData }: { initialData?: any }) {
   const router = useRouter();
@@ -30,17 +31,11 @@ export default function ProductForm({ initialData }: { initialData?: any }) {
   };
 
   const uploadFile = async (file: File) => {
-    const formData = new FormData();
-    formData.append('file', file);
-    
-    const res = await fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
+    const newBlob = await upload(file.name, file, {
+      access: 'public',
+      handleUploadUrl: '/api/upload',
     });
-    
-    if (!res.ok) throw new Error('Upload failed');
-    const data = await res.json();
-    return data.url; // e.g. /uploads/12345.jpg
+    return newBlob.url;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
