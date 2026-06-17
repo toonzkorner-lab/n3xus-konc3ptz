@@ -48,13 +48,13 @@ export default function AboutPage() {
               <div>
                 <h2 className="text-3xl mb-lg text-primary">Our Genesis</h2>
                 <p className="text-lg text-secondary mb-md leading-relaxed">
-                  N3xUs Konc3pt'z was born from a desire to bridge the gap between functional utility and stunning cosmic aesthetics. In a digital world cluttered with generic templates, we set out to create bespoke experiences that leave a lasting impression.
+                  N3xUs Konc3pt'z was founded to bridge the critical gap between high-performance engineering and visionary digital aesthetics. In an industry saturated with generic templates and uninspired functionality, we operate as an elite architectural firm for the digital frontier, engineering bespoke ecosystems that command attention and drive real business outcomes.
                 </p>
                 <p className="text-lg text-secondary mb-md leading-relaxed">
-                  Specializing in custom Discord and Telegram bots, robust APIs, and immersive web designs, we combine cutting-edge technology with our signature cyberpunk-inspired visual language.
+                  Our technical expertise spans a comprehensive suite of digital solutions. We specialize in scalable E-commerce platforms, immersive web applications, sophisticated Discord architectures, intelligent Telegram automation, custom CRMs, and seamless API integrations. By fusing cutting-edge backend technologies with our signature cyberpunk-inspired visual language, we deliver products that are as robust as they are striking.
                 </p>
-                <p className="text-lg text-secondary leading-relaxed">
-                  Our mission is simple: elevate your digital presence beyond the stratosphere.
+                <p className="text-lg text-secondary leading-relaxed font-bold text-primary">
+                  Our mission is definitive: to engineer superior digital experiences that elevate your brand's presence far beyond the ordinary.
                 </p>
               </div>
               
