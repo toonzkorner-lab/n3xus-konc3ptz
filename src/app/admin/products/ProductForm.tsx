@@ -33,7 +33,7 @@ export default function ProductForm({ initialData }: { initialData?: any }) {
   const uploadFile = async (file: File) => {
     const newBlob = await upload(file.name, file, {
       access: 'public',
-      handleUploadUrl: '/api/upload',
+      handleUploadUrl: '/api/blob-upload',
     });
     return newBlob.url;
   };

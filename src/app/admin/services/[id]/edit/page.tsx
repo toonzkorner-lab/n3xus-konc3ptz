@@ -23,7 +23,7 @@ export default function EditServicePage({ params }: { params: Promise<{ id: stri
       const file = e.target.files[0];
       const newBlob = await upload(file.name, file, {
         access: 'public',
-        handleUploadUrl: '/api/upload',
+        handleUploadUrl: '/api/blob-upload',
       });
       setIconValue(newBlob.url);
       e.target.value = '';

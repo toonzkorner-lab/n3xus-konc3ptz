@@ -66,7 +66,7 @@ export default function EditPortfolioPage() {
       for (const file of Array.from(e.target.files)) {
         const newBlob = await upload(file.name, file, {
           access: 'public',
-          handleUploadUrl: '/api/upload',
+          handleUploadUrl: '/api/blob-upload',
         });
         urls.push(newBlob.url);
       }
