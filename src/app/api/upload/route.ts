@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
-import { v4 as uuidv4 } from 'uuid';
+import { put } from '@vercel/blob';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
@@ -20,34 +18,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No files uploaded' }, { status: 400 });
     }
 
-    const uploadDir = join(process.cwd(), 'public', 'uploads');
-    
-    // Ensure the uploads directory exists
-    try {
-      await mkdir(uploadDir, { recursive: true });
-    } catch (e) {
-      // Ignore if it already exists
-    }
-
     const urls = [];
     
     for (const file of files) {
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      
-      // Get the original extension or fallback
-      let extension = file.name.split('.').pop() || 'bin';
+      // Get the original extension
+      const extension = file.name.split('.').pop() || 'bin';
       
       // Prevent uploading potentially dangerous files
       if (['exe', 'sh', 'bat', 'cmd'].includes(extension.toLowerCase())) {
         continue;
       }
       
-      const filename = `${uuidv4()}.${extension}`;
-      const filePath = join(uploadDir, filename);
+      // Upload directly to Vercel Blob Storage
+      const blob = await put(file.name, file, {
+        access: 'public',
+      });
       
-      await writeFile(filePath, buffer);
-      urls.push(`/uploads/${filename}`);
+      urls.push(blob.url);
     }
 
     return NextResponse.json({ urls });
