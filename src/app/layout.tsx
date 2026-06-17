@@ -33,8 +33,8 @@ import AuthProvider from "@/components/AuthProvider";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
-const FloatingDigitalDesigns = dynamic(() => import("@/components/FloatingDigitalDesigns"), { ssr: false });
-const CartSlideout = dynamic(() => import("@/components/CartSlideout"), { ssr: false });
+import FloatingDigitalDesigns from "@/components/FloatingDigitalDesigns";
+import CartSlideout from "@/components/CartSlideout";
 
 const orbitron = Orbitron({
   subsets: ["latin"],

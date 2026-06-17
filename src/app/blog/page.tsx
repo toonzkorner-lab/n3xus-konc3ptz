@@ -3,6 +3,8 @@ import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Blog | N3xUs Konc3pt\'z',
   description: 'Insights, tutorials, and cosmic transmissions from the N3xUs team.',

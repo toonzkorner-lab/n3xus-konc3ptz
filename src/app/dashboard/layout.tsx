@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import LogoutButton from './LogoutButton';
+import BillingPortalButton from './BillingPortalButton';
 
 export default async function DashboardLayout({
   children,
@@ -45,8 +46,9 @@ export default async function DashboardLayout({
             <span>🚀</span> Active Projects
           </Link>
           <Link href="/dashboard/invoices" className="flex items-center gap-md p-md rounded-md hover:bg-primary-subtle hover:text-primary transition-colors text-secondary">
-            <span>💳</span> Invoices
+            <span>🧾</span> My Invoices
           </Link>
+          <BillingPortalButton />
           <Link href="/dashboard/messages" className="flex items-center gap-md p-md rounded-md hover:bg-primary-subtle hover:text-primary transition-colors text-secondary">
             <span>💬</span> Communications
           </Link>

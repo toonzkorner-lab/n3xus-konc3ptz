@@ -1,15 +1,22 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import PayInvoiceButton from './PayInvoiceButton';
 
 export const metadata = {
   title: 'My Invoices | N3xUs Konc3pt\'z',
   description: 'View and track your invoices.',
 };
 
-export default async function DashboardInvoicesPage() {
+export default async function DashboardInvoicesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ success?: string; canceled?: string }>;
+}) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return null;
+
+  const resolvedParams = await searchParams;
 
   const invoices = await prisma.invoice.findMany({
     where: { clientId: session.user.id },
@@ -33,6 +40,18 @@ export default async function DashboardInvoicesPage() {
 
   return (
     <div className="flex flex-col gap-2xl">
+      {resolvedParams.success === 'true' && (
+        <div className="bg-success/15 border border-success/30 rounded-xl p-lg text-success text-center">
+          ⚡ <strong>Payment Verified!</strong> Thank you for your payment. Your invoice has been updated.
+        </div>
+      )}
+
+      {resolvedParams.canceled === 'true' && (
+        <div className="bg-warning/15 border border-warning/30 rounded-xl p-lg text-warning text-center">
+          ⚠️ <strong>Redirection Cancelled.</strong> The checkout process was cancelled. No charges were made.
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl text-primary mb-xs">My Invoices</h1>
@@ -63,9 +82,14 @@ export default async function DashboardInvoicesPage() {
                   <h3 className="text-lg font-heading text-primary font-mono">{invoice.number}</h3>
                   <p className="text-sm text-secondary">{invoice.project?.title || 'General'}</p>
                 </div>
-                <span className={`badge ${statusColors[invoice.status] || 'badge-primary'}`}>
-                  {invoice.status}
-                </span>
+                <div className="flex items-center gap-md">
+                  <span className={`badge ${statusColors[invoice.status] || 'badge-primary'}`}>
+                    {invoice.status}
+                  </span>
+                  {(invoice.status === 'SENT' || invoice.status === 'OVERDUE') && (
+                    <PayInvoiceButton invoiceId={invoice.id} />
+                  )}
+                </div>
               </div>
 
               <div className="border-t border-subtle pt-md">
