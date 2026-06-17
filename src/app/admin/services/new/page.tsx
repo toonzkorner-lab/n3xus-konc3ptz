@@ -22,6 +22,7 @@ export default function NewServicePage() {
       const newBlob = await upload(file.name, file, {
         access: 'public',
         handleUploadUrl: '/api/blob-upload',
+          multipart: true,
       });
       setIconValue(newBlob.url);
       e.target.value = '';

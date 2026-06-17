@@ -45,6 +45,7 @@ export default function NewPortfolioPage() {
         const newBlob = await upload(file.name, file, {
           access: 'public',
           handleUploadUrl: '/api/blob-upload',
+          multipart: true,
         });
         urls.push(newBlob.url);
       }
