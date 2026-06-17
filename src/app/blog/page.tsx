@@ -37,14 +37,14 @@ export default async function BlogPage() {
   return (
     <>
       <Navbar />
-      <main className="pt-navbar">
+      <main style={{ paddingTop: 'calc(var(--navbar-height) + var(--space-xl))' }}>
         {/* Page Header */}
         <section className="bg-secondary relative overflow-hidden py-3xl">
           <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ background: 'var(--gradient-card)' }}></div>
           <div className="container relative z-10 text-center">
             <h1 className="text-4xl mb-sm glow-text">Transmissions Log</h1>
             <p className="text-lg text-secondary max-w-2xl mx-auto">
-              Insights, updates, and tutorials from the bleeding edge of the digital frontier.
+              Insights, updates, and tutorials from the bleeding edge of the digital frontier. New articles and transmissions are added weekly.
             </p>
           </div>
         </section>
