@@ -37,7 +37,7 @@ export default async function ServicesPage() {
         {/* Services Grid */}
         <section className="section">
           <div className="container">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-xl">
+            <div className="grid grid-3">
               {services.map((service, idx) => {
                 const features = JSON.parse(service.features || '[]');
                 
