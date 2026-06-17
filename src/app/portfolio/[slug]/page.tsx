@@ -93,11 +93,11 @@ export default async function PortfolioItemPage(
                 images.map((url, idx) => {
                   const isVideo = /\.(mp4|webm|ogg|mov)$/i.test(url);
                   return (
-                    <div key={idx} className="rounded-xl overflow-hidden border border-subtle shadow-glow-primary relative w-full aspect-video bg-card mb-lg">
+                    <div key={idx} className="rounded-xl overflow-hidden border border-subtle shadow-glow-primary bg-card mb-lg flex justify-center">
                       {isVideo ? (
-                        <video src={url} autoPlay muted loop playsInline controls className="absolute inset-0 w-full h-full object-contain" />
+                        <video src={url} autoPlay muted loop playsInline controls className="w-full max-h-[600px] object-contain" />
                       ) : (
-                        <Image src={url} alt={`${item.title} preview ${idx + 1}`} fill className="object-contain" />
+                        <Image src={url} alt={`${item.title} preview ${idx + 1}`} width={1200} height={800} className="w-full max-h-[600px] object-contain" />
                       )}
                     </div>
                   );
