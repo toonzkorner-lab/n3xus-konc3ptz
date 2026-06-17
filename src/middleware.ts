@@ -20,7 +20,7 @@ export default withAuth(
     );
 
     const token = req.nextauth.token;
-    const isAdmin = ((token?.role === 'ADMIN' || token?.role === 'OWNER') || token?.role === "OWNER") || token?.role === "OWNER";
+    const isAdmin = token?.role === 'ADMIN' || token?.role === 'OWNER';
     
     // Protect /admin routes
     if (req.nextUrl.pathname.startsWith("/admin") && !isAdmin) {

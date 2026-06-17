@@ -4,6 +4,7 @@ import Footer from '@/components/Footer';
 import AddToCartButton from '@/components/AddToCartButton';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { ServiceJsonLd } from '@/components/JsonLd';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -44,7 +45,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-export const dynamic = 'force-dynamic';
+export async function generateStaticParams() {
+  const services = await prisma.service.findMany({
+    where: { active: true },
+    select: { slug: true },
+  });
+  return services.map((service) => ({ slug: service.slug }));
+}
+
+export const revalidate = 3600; // Revalidate every hour
 
 export default async function ServiceDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -61,6 +70,12 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
   return (
     <>
+      <ServiceJsonLd
+        name={service.name}
+        description={service.shortDesc || service.description || ''}
+        slug={slug}
+        price={service.price}
+      />
       <Navbar />
       <main className="pt-navbar min-h-screen flex flex-col">
         <section className="section flex-1">

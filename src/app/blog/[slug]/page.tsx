@@ -3,6 +3,15 @@ import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
+import { BlogPostJsonLd } from '@/components/JsonLd';
+
+export async function generateStaticParams() {
+  const posts = await prisma.blogPost.findMany({
+    where: { published: true },
+    select: { slug: true },
+  });
+  return posts.map((post) => ({ slug: post.slug }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -16,10 +25,20 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${post.title} | N3xUs Konc3pt'z Blog`,
     description: desc,
+    alternates: {
+      canonical: `https://n3xuskonceptz.com/blog/${slug}`,
+    },
     openGraph: {
       title: `${post.title} | N3xUs Konc3pt'z Blog`,
       description: desc,
-      images: [ogImage],
+      url: `https://n3xuskonceptz.com/blog/${slug}`,
+      siteName: "N3xUs Konc3pt'z",
+      images: [{ url: ogImage, width: 1200, height: 630, alt: post.title }],
+      locale: 'en_US',
+      type: 'article',
+      publishedTime: post.createdAt.toISOString(),
+      modifiedTime: post.updatedAt.toISOString(),
+      authors: ['Juan Socarras'],
     },
     twitter: {
       card: "summary_large_image",
@@ -29,6 +48,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     }
   };
 }
+
+export const revalidate = 3600; // Revalidate every hour
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -51,6 +72,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <Navbar />
       <main>
         <article className="section" style={{ paddingTop: 'calc(var(--navbar-height) + var(--space-4xl))' }}>
+          <BlogPostJsonLd
+            title={post.title}
+            description={post.excerpt || 'Read more on the N3xUs blog.'}
+            slug={slug}
+            datePublished={post.createdAt.toISOString()}
+            dateModified={post.updatedAt.toISOString()}
+            coverImage={post.coverImage || undefined}
+          />
           <div className="container container-md">
             <div className="mb-xl">
               <Link href="/blog" className="text-sm text-tertiary hover:text-primary transition-colors">

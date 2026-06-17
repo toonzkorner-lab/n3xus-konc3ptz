@@ -6,7 +6,23 @@ import StoreItemCard from '@/components/StoreItemCard';
 
 export const metadata = {
   title: 'Store | N3xUs Konc3pt\'z',
-  description: 'Purchase pre-made Discord bots, digital assets, and cosmic design kits.',
+  description: 'Purchase pre-built Discord bots, digital design assets, and premium development tools from N3xUs Konc3pt\'z.',
+  alternates: { canonical: 'https://n3xuskonceptz.com/store' },
+  openGraph: {
+    title: 'Store | N3xUs Konc3pt\'z',
+    description: 'Purchase pre-built Discord bots, digital design assets, and premium development tools from N3xUs Konc3pt\'z.',
+    url: 'https://n3xuskonceptz.com/store',
+    siteName: 'N3xUs Konc3pt\'z',
+    images: [{ url: 'https://n3xuskonceptz.com/logo.jpg', width: 800, height: 800, alt: 'N3xUs Logo' }],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Store | N3xUs Konc3pt\'z',
+    description: 'Purchase pre-built Discord bots, digital design assets, and premium development tools from N3xUs Konc3pt\'z.',
+    images: ['https://n3xuskonceptz.com/logo.jpg'],
+  },
 };
 
 export default async function StorePage() {

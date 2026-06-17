@@ -7,11 +7,26 @@ import AddToCartButton from '@/components/AddToCartButton';
 
 export const metadata = {
   title: 'Services | N3xUs Konc3pt\'z',
-  description: 'Explore our premium digital design and development services.',
+  description: 'Explore our premium digital design and development services including Discord bots, Telegram automation, custom APIs, e-commerce platforms, and web applications.',
+  alternates: { canonical: 'https://n3xuskonceptz.com/services' },
+  openGraph: {
+    title: 'Services | N3xUs Konc3pt\'z',
+    description: 'Explore our premium digital design and development services including Discord bots, Telegram automation, custom APIs, e-commerce platforms, and web applications.',
+    url: 'https://n3xuskonceptz.com/services',
+    siteName: 'N3xUs Konc3pt\'z',
+    images: [{ url: 'https://n3xuskonceptz.com/logo.jpg', width: 800, height: 800, alt: 'N3xUs Logo' }],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Services | N3xUs Konc3pt\'z',
+    description: 'Explore our premium digital design and development services including Discord bots, Telegram automation, custom APIs, e-commerce platforms, and web applications.',
+    images: ['https://n3xuskonceptz.com/logo.jpg'],
+  },
 };
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 3600; // Revalidate every hour
 
 export default async function ServicesPage() {
   const services = await prisma.service.findMany({
