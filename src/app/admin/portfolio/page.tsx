@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import DeletePortfolioButton from './DeletePortfolioButton';
+
+export const dynamic = 'force-dynamic';
 export const metadata = {
   title: 'Manage Portfolio | N3xUs Admin',
   description: 'Portfolio management console.',
