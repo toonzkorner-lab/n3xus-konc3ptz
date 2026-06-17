@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import { upload } from '@vercel/blob/client';
 
 export default function EditPortfolioPage() {
   const router = useRouter();
@@ -60,23 +61,15 @@ export default function EditPortfolioPage() {
     setUploading(true);
     setError('');
     
-    const data = new FormData();
-    Array.from(e.target.files).forEach(file => {
-      data.append('files', file);
-    });
-
     try {
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: data,
-      });
-      
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || 'Upload failed');
+      const urls: string[] = [];
+      for (const file of Array.from(e.target.files)) {
+        const newBlob = await upload(file.name, file, {
+          access: 'public',
+          handleUploadUrl: '/api/upload',
+        });
+        urls.push(newBlob.url);
       }
-      
-      const { urls } = await res.json();
       
       const currentImages = formData.images ? formData.images.split(',').map(s => s.trim()).filter(Boolean) : [];
       const newImagesString = [...currentImages, ...urls].join(', ');
