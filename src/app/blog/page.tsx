@@ -52,7 +52,7 @@ export default async function BlogPage() {
         {/* Blog Feed */}
         <section className="section">
           <div className="container">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg max-w-7xl mx-auto">
+            <div className="grid grid-3">
               {posts.map((post, idx) => {
                 const tags = JSON.parse(post.tags || '[]');
                 const delay = idx * 100;
@@ -63,24 +63,15 @@ export default async function BlogPage() {
                     className="card flex flex-col h-full hover:border-primary transition-colors shadow-md hover:shadow-glow-primary group"
                     style={{ animationDelay: `${delay}ms`, animation: 'fadeInUp 0.6s ease backwards' }}
                   >
-                    <Link href={`/blog/${post.slug}`} className="block w-full h-48 mb-lg bg-tertiary rounded-lg border border-subtle overflow-hidden relative flex-shrink-0">
+                    <Link href={`/blog/${post.slug}`} className="block overflow-hidden relative flex-shrink-0" style={{ width: '60px', height: '60px', borderRadius: 'var(--radius-md)', background: 'var(--bg-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 'var(--space-lg)', border: '1px solid var(--border-subtle)', transition: 'all var(--transition-base)' }}>
                       {post.coverImage ? (
-                        <img src={post.coverImage} alt={post.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        <img src={post.coverImage} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'var(--radius-md)' }} className="group-hover:scale-105 transition-transform duration-500" />
                       ) : (
-                        <>
-                          <div className="absolute inset-0 bg-gradient-to-tr from-primary-subtle to-secondary-subtle opacity-50 group-hover:scale-105 transition-transform duration-500"></div>
-                          <div className="absolute inset-0 flex items-center justify-center text-4xl opacity-20">N3xUs</div>
-                        </>
+                        <span style={{ fontSize: '32px' }} className="group-hover:scale-105 transition-transform duration-500">📡</span>
                       )}
                     </Link>
                     
-                    <div className="flex items-center justify-between mb-sm">
-                      <span className="text-xs font-mono text-primary uppercase border border-primary/20 bg-primary/5 px-2 py-1 rounded-full">
-                        {tags.length > 0 ? tags[0] : 'General'}
-                      </span>
-                    </div>
-                    
-                    <h2 className="text-xl font-bold mb-xs text-primary-hover leading-tight">
+                    <h2 className="text-xl font-bold mb-xs text-primary-hover leading-tight transition-colors group-hover:text-primary">
                       <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                     </h2>
                     
@@ -89,12 +80,12 @@ export default async function BlogPage() {
                     </p>
                     
                     <div className="flex items-center justify-between mt-auto pt-lg border-t border-subtle">
+                      <span className="text-xs font-mono text-primary uppercase">
+                        {tags.length > 0 ? tags[0] : 'General'}
+                      </span>
                       <span className="text-xs text-tertiary font-mono">
                         {new Date(post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                       </span>
-                      <Link href={`/blog/${post.slug}`} className="text-sm text-primary font-heading font-bold hover:underline flex items-center gap-1">
-                        Read More <span className="group-hover:translate-x-1 transition-transform">→</span>
-                      </Link>
                     </div>
                   </article>
                 );
