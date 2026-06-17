@@ -52,40 +52,49 @@ export default async function BlogPage() {
         {/* Blog Feed */}
         <section className="section">
           <div className="container">
-            <div className="flex flex-col gap-lg max-w-5xl mx-auto">
-              {posts.map(post => {
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg max-w-7xl mx-auto">
+              {posts.map((post, idx) => {
                 const tags = JSON.parse(post.tags || '[]');
+                const delay = idx * 100;
                 
                 return (
-                  <article key={post.id} className="bg-card border border-subtle rounded-xl overflow-hidden hover:border-primary transition-colors flex flex-col md:flex-row shadow-md hover:shadow-glow-primary group">
-                    <div className="w-full md:w-1/3 h-48 md:h-auto min-h-[200px] bg-tertiary relative overflow-hidden flex-shrink-0">
+                  <article 
+                    key={post.id} 
+                    className="card flex flex-col h-full hover:border-primary transition-colors shadow-md hover:shadow-glow-primary group"
+                    style={{ animationDelay: `${delay}ms`, animation: 'fadeInUp 0.6s ease backwards' }}
+                  >
+                    <Link href={`/blog/${post.slug}`} className="block w-full h-48 mb-lg bg-tertiary rounded-lg border border-subtle overflow-hidden relative flex-shrink-0">
                       {post.coverImage ? (
                         <img src={post.coverImage} alt={post.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       ) : (
                         <>
-                          <div className="absolute inset-0 bg-gradient-to-tr from-primary-subtle to-secondary-subtle opacity-50"></div>
+                          <div className="absolute inset-0 bg-gradient-to-tr from-primary-subtle to-secondary-subtle opacity-50 group-hover:scale-105 transition-transform duration-500"></div>
                           <div className="absolute inset-0 flex items-center justify-center text-4xl opacity-20">N3xUs</div>
                         </>
                       )}
+                    </Link>
+                    
+                    <div className="flex items-center justify-between mb-sm">
+                      <span className="text-xs font-mono text-primary uppercase border border-primary/20 bg-primary/5 px-2 py-1 rounded-full">
+                        {tags.length > 0 ? tags[0] : 'General'}
+                      </span>
                     </div>
-                    <div className="p-lg flex flex-col flex-grow">
-                      <div className="flex items-center justify-between mb-sm">
-                        <span className="text-xs font-mono text-primary uppercase">
-                          {tags.length > 0 ? tags[0] : 'General'}
-                        </span>
-                      </div>
-                      <h2 className="text-lg font-bold mb-xs text-primary-hover leading-tight">
-                        <Link href={`/blog/${post.slug}`}>{post.title}</Link>
-                      </h2>
-                      <p className="text-secondary text-sm mb-md flex-grow line-clamp-2">
-                        {post.excerpt || post.content.substring(0, 120) + '...'}
-                      </p>
-                      <div className="flex items-center justify-between mt-auto pt-sm border-t border-subtle">
-                        <span className="text-xs text-tertiary">
-                          {new Date(post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                        </span>
-                        <Link href={`/blog/${post.slug}`} className="text-sm text-primary font-heading font-bold hover:underline">Read More →</Link>
-                      </div>
+                    
+                    <h2 className="text-xl font-bold mb-xs text-primary-hover leading-tight">
+                      <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                    </h2>
+                    
+                    <p className="text-secondary text-sm mb-lg flex-grow line-clamp-3">
+                      {post.excerpt || post.content.substring(0, 120) + '...'}
+                    </p>
+                    
+                    <div className="flex items-center justify-between mt-auto pt-lg border-t border-subtle">
+                      <span className="text-xs text-tertiary font-mono">
+                        {new Date(post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                      </span>
+                      <Link href={`/blog/${post.slug}`} className="text-sm text-primary font-heading font-bold hover:underline flex items-center gap-1">
+                        Read More <span className="group-hover:translate-x-1 transition-transform">→</span>
+                      </Link>
                     </div>
                   </article>
                 );
