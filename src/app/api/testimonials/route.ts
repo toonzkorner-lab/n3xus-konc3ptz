@@ -13,9 +13,11 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id || (session.user.role !== 'ADMIN' && session.user.role !== 'OWNER')) {
+  if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const isAdmin = session.user.role === 'ADMIN' || session.user.role === 'OWNER';
 
   try {
     const body = await req.json();
@@ -36,7 +38,8 @@ export async function POST(req: NextRequest) {
         content,
         rating: rating || 5,
         avatar: avatar || null,
-        featured: featured || false,
+        // Enforce unfeatured for clients unless an admin explicitly features it
+        featured: isAdmin ? (featured || false) : false,
       },
     });
 

@@ -52,6 +52,9 @@ export default async function DashboardLayout({
           <Link href="/dashboard/messages" className="flex items-center gap-md p-md rounded-md hover:bg-primary-subtle hover:text-primary transition-colors text-secondary">
             <span>💬</span> Communications
           </Link>
+          <Link href="/dashboard/testimonials" className="flex items-center gap-md p-md rounded-md hover:bg-primary-subtle hover:text-primary transition-colors text-secondary mt-auto border border-primary/20 bg-primary/5 shadow-glow-sm">
+            <span>⭐</span> Leave a Review
+          </Link>
         </nav>
         
         <div className="p-lg border-t border-subtle">
