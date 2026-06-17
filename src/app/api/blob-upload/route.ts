@@ -19,7 +19,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
         return {
           allowedContentTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/quicktime', 'video/webm'],
-          maximumSizeInBytes: 524288000, // 500 MB
+          maximumSizeInBytes: 500000000, // 500 MB exact
           tokenPayload: JSON.stringify({
             userId: session.user.id,
           }),
