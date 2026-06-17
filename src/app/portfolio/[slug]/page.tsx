@@ -86,14 +86,14 @@ export default async function PortfolioItemPage(
 
         {/* Media & Details Section */}
         <section className="section container py-3xl">
-          <div className="grid md:grid-cols-[2fr_1fr] gap-3xl">
+          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-2xl lg:gap-3xl items-start">
             {/* Left Column: Media */}
             <div className="flex flex-col gap-xl">
               {images.length > 0 ? (
                 images.map((url, idx) => {
                   const isVideo = /\.(mp4|webm|ogg|mov)$/i.test(url);
                   return (
-                    <div key={idx} className="rounded-xl overflow-hidden border border-subtle shadow-glow-primary relative aspect-video bg-card">
+                    <div key={idx} className="rounded-xl overflow-hidden border border-subtle shadow-glow-primary relative w-full h-[300px] md:h-[400px] lg:h-[500px] bg-card">
                       {isVideo ? (
                         <video src={url} autoPlay muted loop playsInline controls className="absolute inset-0 w-full h-full object-contain" />
                       ) : (
