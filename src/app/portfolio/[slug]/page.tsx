@@ -85,15 +85,15 @@ export default async function PortfolioItemPage(
         </section>
 
         {/* Media & Details Section */}
-        <section className="section container py-3xl">
-          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-2xl lg:gap-3xl items-start">
-            {/* Left Column: Media */}
-            <div className="flex flex-col gap-xl">
+        <section className="section container py-xl">
+          <div className="flex flex-col gap-2xl">
+            {/* Top Row: Media */}
+            <div className="w-full max-w-4xl mx-auto">
               {images.length > 0 ? (
                 images.map((url, idx) => {
                   const isVideo = /\.(mp4|webm|ogg|mov)$/i.test(url);
                   return (
-                    <div key={idx} className="rounded-xl overflow-hidden border border-subtle shadow-glow-primary relative w-full h-[300px] md:h-[400px] lg:h-[500px] bg-card">
+                    <div key={idx} className="rounded-xl overflow-hidden border border-subtle shadow-glow-primary relative w-full aspect-video bg-card mb-lg">
                       {isVideo ? (
                         <video src={url} autoPlay muted loop playsInline controls className="absolute inset-0 w-full h-full object-contain" />
                       ) : (
@@ -109,8 +109,8 @@ export default async function PortfolioItemPage(
               )}
             </div>
 
-            {/* Right Column: Project Info */}
-            <div className="sticky top-32 self-start flex flex-col gap-xl bg-card p-xl rounded-xl border border-subtle shadow-lg">
+            {/* Bottom Row: Project Info */}
+            <div className="w-full max-w-4xl mx-auto flex flex-col gap-xl bg-card p-xl rounded-xl border border-subtle shadow-lg">
               <div>
                 <h3 className="text-2xl text-primary mb-md font-heading border-b border-subtle pb-sm">Project Details</h3>
                 <div className="prose prose-invert max-w-none text-secondary">
@@ -124,14 +124,14 @@ export default async function PortfolioItemPage(
                 </div>
               </div>
 
-              <div className="flex flex-col gap-md pt-lg border-t border-subtle">
+              <div className="flex gap-md pt-lg border-t border-subtle flex-wrap">
                 {item.liveUrl && (
-                  <a href={item.liveUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary w-full text-center">
+                  <a href={item.liveUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary flex-1 min-w-[200px] text-center">
                     View Live Site
                   </a>
                 )}
                 {item.githubUrl && (
-                  <a href={item.githubUrl} target="_blank" rel="noopener noreferrer" className="btn btn-outline w-full text-center">
+                  <a href={item.githubUrl} target="_blank" rel="noopener noreferrer" className="btn btn-outline flex-1 min-w-[200px] text-center">
                     Source Code
                   </a>
                 )}
