@@ -113,8 +113,8 @@ export default function EditPortfolioPage() {
         throw new Error('Failed to update portfolio item');
       }
 
-      router.push('/admin/portfolio');
       router.refresh();
+      router.push('/admin/portfolio');
     } catch (err: any) {
       setError(err.message);
       setSaving(false);

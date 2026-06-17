@@ -3,6 +3,8 @@ import Footer from '@/components/Footer';
 import PortfolioGrid from '@/components/PortfolioGrid';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Portfolio | N3xUs Konc3pt\'z',
   description: 'View our past projects, custom bots, and digital design work.',
