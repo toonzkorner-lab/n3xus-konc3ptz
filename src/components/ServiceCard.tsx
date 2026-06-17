@@ -81,7 +81,7 @@ export default function ServiceCard({
         </div>
         
         <div className="flex gap-2">
-          <Link href={`/services#${slug}`} className="btn btn-ghost flex-1 justify-center">
+          <Link href={`/services/${slug}`} className="btn btn-ghost flex-1 justify-center">
             Details
           </Link>
           <button 

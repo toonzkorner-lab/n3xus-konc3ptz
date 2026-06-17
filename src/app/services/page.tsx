@@ -10,6 +10,9 @@ export const metadata = {
   description: 'Explore our premium digital design and development services.',
 };
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function ServicesPage() {
   const services = await prisma.service.findMany({
     where: { active: true },
@@ -31,76 +34,25 @@ export default async function ServicesPage() {
           </div>
         </section>
 
-        {/* Services Detail List */}
+        {/* Services Grid */}
         <section className="section">
           <div className="container">
-            <div className="flex flex-col gap-3xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-xl">
               {services.map((service, idx) => {
-                const isEven = idx % 2 === 0;
                 const features = JSON.parse(service.features || '[]');
                 
                 return (
-                  <div key={service.id} id={service.slug} className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-2xl items-center`}>
-                    <div className="flex-1">
-                      {service.icon && (service.icon.startsWith('/uploads') || service.icon.startsWith('http')) ? (
-                        <div className="w-20 h-20 rounded-xl overflow-hidden mb-md border border-subtle">
-                          {/\.(mp4|webm|ogg|mov)$/i.test(service.icon) ? (
-                            <video src={service.icon} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          ) : (
-                            <img src={service.icon} alt={service.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          )}
-                        </div>
-                      ) : (
-                        <div className="text-6xl mb-md">{service.icon}</div>
-                      )}
-                      <h2 className="text-3xl mb-md text-primary">{service.name}</h2>
-                      <p className="text-lg text-secondary mb-xl leading-relaxed">
-                        {service.description}
-                      </p>
-                      
-                      <div className="bg-card border border-subtle p-lg rounded-lg mb-xl">
-                        <h4 className="text-lg mb-md">Key Features</h4>
-                        <ul className="grid grid-2 gap-md">
-                          {features.map((feature: string, fIdx: number) => (
-                            <li key={fIdx} className="flex items-center gap-sm text-secondary">
-                              <svg width="16" height="16" viewBox="0 0 20 20" fill="var(--color-primary)">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                              {feature}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                      
-                      <div className="flex items-center gap-lg mt-xl">
-                        <div className="flex flex-col">
-                          <span className="text-xs text-tertiary uppercase tracking-wide">Base Deposit</span>
-                          <span className="text-2xl font-heading font-bold glow-text">${(service.price / 100).toLocaleString()}</span>
-                        </div>
-                        <div className="flex gap-sm">
-                          <Link href={`/contact?service=${service.slug}`} className="btn btn-primary">
-                            Request Proposal
-                          </Link>
-                          <AddToCartButton 
-                            id={service.id}
-                            title={service.name}
-                            price={service.price}
-                            type="SERVICE"
-                            image={service.icon || undefined}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex-1 w-full">
-                      <div className="aspect-video bg-tertiary rounded-xl border border-subtle flex items-center justify-center overflow-hidden relative group">
-                         <div className="absolute inset-0 bg-gradient-card opacity-50 group-hover:opacity-80 transition-opacity duration-500"></div>
-                         <div className="relative z-10 text-center p-xl">
-                            <h3 className="text-2xl mb-sm font-heading">{service.name} Representation</h3>
-                            <p className="text-secondary font-mono text-sm">Visualizing digital excellence</p>
-                         </div>
-                      </div>
-                    </div>
+                  <div key={service.id} id={service.slug}>
+                    <ServiceCard
+                      id={service.id}
+                      slug={service.slug}
+                      title={service.name}
+                      description={service.description || ''}
+                      icon={service.icon || ''}
+                      features={features}
+                      startingPrice={service.price}
+                      delay={idx * 100}
+                    />
                   </div>
                 );
               })}
