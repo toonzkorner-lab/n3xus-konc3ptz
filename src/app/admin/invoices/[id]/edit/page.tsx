@@ -12,8 +12,10 @@ export default function EditInvoicePage() {
     status: 'DRAFT',
     notes: '',
   });
+  const [paymentLinkUrl, setPaymentLinkUrl] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [generatingLink, setGeneratingLink] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -27,6 +29,7 @@ export default function EditInvoicePage() {
           status: data.status || 'DRAFT',
           notes: data.notes || '',
         });
+        if (data.paymentLinkUrl) setPaymentLinkUrl(data.paymentLinkUrl);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -60,6 +63,23 @@ export default function EditInvoicePage() {
     }
   };
 
+  const handleGenerateLink = async () => {
+    setGeneratingLink(true);
+    setError('');
+    try {
+      const res = await fetch(`/api/invoices/${invoiceId}/stripe`, {
+        method: 'POST',
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to generate link');
+      setPaymentLinkUrl(data.url);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setGeneratingLink(false);
+    }
+  };
+
   if (loading) return <div className="text-secondary">Loading...</div>;
 
   return (
@@ -69,6 +89,12 @@ export default function EditInvoicePage() {
       {error && (
         <div className="bg-red-500/10 border border-red-500/50 text-red-500 p-md rounded-md mb-xl">
           {error}
+        </div>
+      )}
+
+      {paymentLinkUrl && (
+        <div className="bg-primary/10 border border-primary/50 text-primary p-md rounded-md mb-xl break-all">
+          <strong>Payment Link:</strong> <a href={paymentLinkUrl} target="_blank" className="underline">{paymentLinkUrl}</a>
         </div>
       )}
 
@@ -97,6 +123,14 @@ export default function EditInvoicePage() {
         </div>
 
         <div className="flex justify-end gap-md mt-md">
+          <button
+            type="button"
+            onClick={handleGenerateLink}
+            className="btn btn-secondary mr-auto"
+            disabled={generatingLink}
+          >
+            {generatingLink ? 'Generating...' : 'Generate Stripe Link'}
+          </button>
           <button
             type="button"
             onClick={() => router.push('/admin/invoices')}

@@ -3,6 +3,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+import dynamic from 'next/dynamic';
+
+const RichTextEditor = dynamic(() => import('@/components/RichTextEditor'), { ssr: false });
+
 export default function NewBlogPage() {
   const router = useRouter();
 
@@ -15,7 +19,7 @@ export default function NewBlogPage() {
     published: false,
     tags: '',
   });
-  
+
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
@@ -85,8 +89,12 @@ export default function NewBlogPage() {
         </div>
 
         <div className="form-group">
-          <label className="label">Content (Markdown / HTML)</label>
-          <textarea required className="input min-h-[400px] font-mono text-sm" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} />
+          <label className="label">Content</label>
+          <RichTextEditor 
+            content={formData.content} 
+            onChange={(content) => setFormData({ ...formData, content })} 
+            placeholder="Write your blog post here..." 
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-md">

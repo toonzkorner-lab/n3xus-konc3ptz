@@ -1,14 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 
-export default function EditBlogPage() {
+const RichTextEditor = dynamic(() => import('@/components/RichTextEditor'), { ssr: false });
+
+export default function EditBlogPage(props: { params: Promise<{ id: string }> }) {
   const router = useRouter();
-  const params = useParams();
-  const postId = params.id as string;
-
+  
   const [formData, setFormData] = useState({
+    id: '',
     title: '',
     slug: '',
     content: '',
@@ -23,13 +25,15 @@ export default function EditBlogPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchPost = async () => {
+    async function loadPost() {
+      const params = await props.params;
       try {
-        const res = await fetch(`/api/blog/${postId}`);
-        if (!res.ok) throw new Error('Failed to fetch blog post');
+        const res = await fetch(`/api/blog/${params.id}`);
+        if (!res.ok) throw new Error('Failed to load blog post');
         const data = await res.json();
         
         setFormData({
+          id: data.id,
           title: data.title || '',
           slug: data.slug || '',
           content: data.content || '',
@@ -43,9 +47,18 @@ export default function EditBlogPage() {
       } finally {
         setLoading(false);
       }
-    };
-    fetchPost();
-  }, [postId]);
+    }
+    loadPost();
+  }, [props.params]);
+
+  const generateSlug = (title: string) => {
+    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+  };
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const title = e.target.value;
+    setFormData({ ...formData, title, slug: generateSlug(title) });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,7 +71,7 @@ export default function EditBlogPage() {
         tags: formData.tags ? JSON.stringify(formData.tags.split(',').map(s => s.trim()).filter(s => s)) : '[]',
       };
 
-      const res = await fetch(`/api/blog/${postId}`, {
+      const res = await fetch(`/api/blog/${formData.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(submitData),
@@ -76,7 +89,7 @@ export default function EditBlogPage() {
     }
   };
 
-  if (loading) return <div className="text-secondary">Loading...</div>;
+  if (loading) return <div className="p-xl text-center"><span className="spinner"></span></div>;
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -92,7 +105,7 @@ export default function EditBlogPage() {
         <div className="grid grid-cols-2 gap-md">
           <div className="form-group">
             <label className="label">Title</label>
-            <input type="text" required className="input" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
+            <input type="text" required className="input" value={formData.title} onChange={handleTitleChange} />
           </div>
           <div className="form-group">
             <label className="label">Slug</label>
@@ -106,8 +119,12 @@ export default function EditBlogPage() {
         </div>
 
         <div className="form-group">
-          <label className="label">Content (Markdown / HTML)</label>
-          <textarea required className="input min-h-[400px] font-mono text-sm" value={formData.content} onChange={(e) => setFormData({ ...formData, content: e.target.value })} />
+          <label className="label">Content</label>
+          <RichTextEditor 
+            content={formData.content} 
+            onChange={(content) => setFormData({ ...formData, content })} 
+            placeholder="Write your blog post here..." 
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-md">

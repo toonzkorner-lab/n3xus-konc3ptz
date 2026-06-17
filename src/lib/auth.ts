@@ -37,6 +37,67 @@ export const authOptions: NextAuthOptions = {
           role: user.role,
         };
       }
+    }),
+    CredentialsProvider({
+      id: "webauthn",
+      name: "Passkey",
+      credentials: {
+        email: { label: "Email", type: "text" },
+        response: { label: "Response", type: "text" }
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.response) return null;
+        
+        const { verifyAuthenticationResponse } = await import("@simplewebauthn/server");
+        
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+          include: { authenticators: true }
+        });
+        
+        if (!user || !user.currentChallenge) return null;
+        
+        const response = JSON.parse(credentials.response);
+        const authenticator = user.authenticators.find(a => a.credentialID === response.id);
+        
+        if (!authenticator) return null;
+        
+        try {
+          const verification = await verifyAuthenticationResponse({
+            response,
+            expectedChallenge: user.currentChallenge,
+            expectedOrigin: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+            expectedRPID: process.env.NEXT_PUBLIC_RP_ID || "localhost",
+            authenticator: {
+              credentialID: Buffer.from(authenticator.credentialID, 'base64url'),
+              credentialPublicKey: Buffer.from(authenticator.credentialPublicKey, 'base64url'),
+              counter: authenticator.counter,
+              transports: authenticator.transports ? authenticator.transports.split(',') as any : undefined,
+            }
+          });
+          
+          if (verification.verified) {
+            await prisma.authenticator.update({
+              where: { credentialID: authenticator.credentialID },
+              data: { counter: verification.authenticationInfo.newCounter }
+            });
+            // Clear challenge
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { currentChallenge: null }
+            });
+            return {
+              id: user.id,
+              email: user.email,
+              name: user.name,
+              role: user.role,
+            };
+          }
+        } catch (error) {
+          console.error("Passkey verification failed", error);
+        }
+        return null;
+      }
     })
   ],
   callbacks: {

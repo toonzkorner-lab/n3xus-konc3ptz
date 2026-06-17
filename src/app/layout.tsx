@@ -35,6 +35,8 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 
 import FloatingDigitalDesigns from "@/components/FloatingDigitalDesigns";
 import CartSlideout from "@/components/CartSlideout";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -61,18 +63,20 @@ export default function RootLayout({
       <body suppressHydrationWarning className={`${orbitron.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
           <div className="cosmic-bg">
-          <div className="stars"></div>
-        </div>
-        <FloatingDigitalDesigns />
-        <ErrorBoundary>
-          <AuthProvider>
-            <CartProvider>
-              {children}
-              <CartSlideout />
-            </CartProvider>
-          </AuthProvider>
-        </ErrorBoundary>
+            <div className="stars"></div>
+          </div>
+          <FloatingDigitalDesigns />
+          <ErrorBoundary>
+            <AuthProvider>
+              <CartProvider>
+                {children}
+                <CartSlideout />
+              </CartProvider>
+            </AuthProvider>
+          </ErrorBoundary>
         </ThemeProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -51,7 +51,10 @@ export default async function DashboardProjectsPage() {
               <div className="flex justify-between items-start mb-lg">
                 <div>
                   <h2 className="text-xl text-primary font-heading mb-xs">{project.title}</h2>
-                  <p className="text-sm text-secondary">{project.description}</p>
+                  <p className="text-sm text-secondary mb-md">{project.description}</p>
+                  <Link href={`/dashboard/projects/${project.id}`} className="btn btn-secondary btn-sm inline-flex">
+                    View Timeline
+                  </Link>
                 </div>
                 <span className={`badge ${statusColors[project.status] || 'badge-primary'}`}>
                   {project.status.replace('_', ' ')}

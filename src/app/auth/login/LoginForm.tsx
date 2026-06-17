@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { startAuthentication } from '@simplewebauthn/browser';
 
 export default function LoginForm() {
   const router = useRouter();
@@ -13,6 +14,40 @@ export default function LoginForm() {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const handlePasskeyLogin = async () => {
+    if (!formData.email) {
+      setError("Please enter your email first to use a Passkey.");
+      return;
+    }
+    setLoading(true);
+    setError('');
+
+    try {
+      const optionsRes = await fetch(`/api/webauthn/generate-authentication-options?email=${encodeURIComponent(formData.email)}`);
+      if (!optionsRes.ok) throw new Error('No passkey found for this email');
+      const options = await optionsRes.json();
+
+      const authResp = await startAuthentication(options);
+
+      const res = await signIn('webauthn', {
+        email: formData.email,
+        response: JSON.stringify(authResp),
+        redirect: false
+      });
+
+      if (res?.error) {
+        setError('Passkey verification failed');
+        setLoading(false);
+      } else {
+        router.push('/dashboard');
+        router.refresh();
+      }
+    } catch (err: any) {
+      setError(err.message || 'Passkey login failed');
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -96,6 +131,25 @@ export default function LoginForm() {
           className="btn btn-primary w-full mt-sm flex justify-center"
         >
           {loading ? <span className="spinner spinner-sm"></span> : 'Authenticate'}
+        </button>
+
+        <div className="relative flex py-sm items-center">
+          <div className="flex-grow border-t border-subtle"></div>
+          <span className="flex-shrink-0 mx-md text-tertiary text-xs">OR</span>
+          <div className="flex-grow border-t border-subtle"></div>
+        </div>
+        
+        <button 
+          type="button" 
+          onClick={handlePasskeyLogin}
+          disabled={loading}
+          className="btn btn-outline w-full flex justify-center gap-sm"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <circle cx="12" cy="11" r="3"></circle>
+          </svg>
+          Sign in with Passkey / FaceID
         </button>
       </form>
 
