@@ -19,7 +19,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
         return {
           allowedContentTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/quicktime', 'video/webm'],
-          maximumSizeInBytes: 500000000, // 500 MB exact
+          maximumSizeInBytes: 100000000, // 100 MB
           tokenPayload: JSON.stringify({
             userId: session.user.id,
           }),
@@ -32,6 +32,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     return NextResponse.json(jsonResponse);
   } catch (error) {
+    console.error("Vercel Blob handleUpload error:", error);
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 400 } // The client SDK expects 400 on error
