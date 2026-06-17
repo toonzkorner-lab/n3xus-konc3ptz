@@ -74,10 +74,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <div className="flex items-center gap-md text-sm text-tertiary border-t border-b border-subtle py-md">
                 <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold"
                   style={{ background: 'var(--color-primary-subtle)', color: 'var(--color-primary)', border: '1px solid rgba(0, 240, 255, 0.3)' }}>
-                  {(post.author.name || 'A').charAt(0).toUpperCase()}
+                  J
                 </div>
                 <div>
-                  <p className="text-primary text-sm">{post.author.name}</p>
+                  <p className="text-primary text-sm font-bold">Juan Socarras</p>
+                  <p className="text-xs text-secondary mb-1">Founder & Principal Designer</p>
                   <p className="text-xs">{new Date(post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                 </div>
               </div>
