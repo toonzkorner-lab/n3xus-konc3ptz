@@ -153,11 +153,6 @@ export default function LoginForm() {
         </button>
       </form>
 
-      <div className="mt-xl text-center text-sm text-secondary">
-        <p>Seed Credentials:</p>
-        <p className="font-mono mt-xs text-xs">admin@n3xuskonc3ptz.com / Admin123!</p>
-        <p className="font-mono mt-xs text-xs">client@example.com / Client123!</p>
-      </div>
     </div>
   );
 }
