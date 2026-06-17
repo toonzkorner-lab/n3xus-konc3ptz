@@ -51,11 +51,11 @@ export default function Hero() {
         </div>
         
         <h1 className={styles.title}>
-          <span className={styles.glitch} data-text="Where Code Meets Cosmos">Where Code Meets Cosmos</span>
+          <span className={styles.glitch} data-text="Architecting the Digital Frontier">Architecting the Digital Frontier</span>
         </h1>
         
         <p className={styles.subtitle}>
-          Premium digital design studio crafting custom bots, APIs, and stunning digital experiences
+          We engineer elite Discord infrastructures, high-performance APIs, and immersive web ecosystems that propel your brand beyond the ordinary.
         </p>
         
         <div className={styles.actions}>

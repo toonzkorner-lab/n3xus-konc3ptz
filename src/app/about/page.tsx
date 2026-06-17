@@ -36,7 +36,7 @@ export default function AboutPage() {
           <div className="container relative z-10 text-center">
             <h1 className="text-5xl mb-md glow-text">About N3xUs</h1>
             <p className="text-xl text-secondary max-w-2xl mx-auto">
-              Where Code Meets Cosmos: The premier digital design studio for the next generation of the web.
+              Architecting the Digital Frontier: We engineer elite Discord infrastructures, high-performance APIs, and immersive web ecosystems that propel your brand beyond the ordinary.
             </p>
           </div>
         </section>
