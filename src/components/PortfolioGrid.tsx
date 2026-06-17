@@ -62,13 +62,13 @@ export default function PortfolioGrid({ items, limit }: PortfolioGridProps) {
                       muted 
                       loop 
                       playsInline 
-                      className="absolute inset-0 w-full h-full object-cover"
+                      className="absolute inset-0 w-full h-full object-contain bg-[#0a0a1a]"
                     />
                   ) : (
                     <img 
                       src={mediaUrl} 
                       alt={item.title} 
-                      className="absolute inset-0 w-full h-full object-cover"
+                      className="absolute inset-0 w-full h-full object-contain bg-[#0a0a1a]"
                     />
                   );
                 })()
