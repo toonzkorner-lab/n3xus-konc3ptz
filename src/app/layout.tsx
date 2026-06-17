@@ -38,6 +38,7 @@ import FloatingDigitalDesigns from "@/components/FloatingDigitalDesigns";
 import CartSlideout from "@/components/CartSlideout";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Toaster } from 'react-hot-toast';
 
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -81,6 +82,7 @@ export default function RootLayout({
             </AuthProvider>
           </ErrorBoundary>
         </ThemeProvider>
+        <Toaster position="bottom-right" />
         <Analytics />
         <SpeedInsights />
       </body>

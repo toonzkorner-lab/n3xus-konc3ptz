@@ -5,19 +5,41 @@ import Image from 'next/image';
 import styles from './Footer.module.css';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
     setStatus('loading');
-    setTimeout(() => {
+    
+    try {
+      const res = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to subscribe');
+      }
+      
       setStatus('success');
       setEmail('');
-    }, 1000);
+      toast.success('Successfully subscribed to the newsletter!');
+      
+      setTimeout(() => {
+        setStatus('idle');
+      }, 3000);
+    } catch (error: any) {
+      setStatus('idle');
+      toast.error(error.message || 'Something went wrong');
+    }
   };
 
   return (

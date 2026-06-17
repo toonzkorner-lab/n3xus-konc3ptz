@@ -263,11 +263,13 @@
     bottom: 0;
     background: var(--bg-secondary);
     flex-direction: column;
-    justify-content: center;
-    gap: var(--space-2xl);
+    justify-content: flex-start;
+    padding: 100px 20px 40px;
+    overflow-y: auto;
+    gap: var(--space-xl);
     transform: translateX(100%);
     transition: transform var(--transition-spring);
-    z-index: var(--z-fixed);
+    z-index: calc(var(--z-fixed) - 1);
     pointer-events: none;
     display: none;
   }
