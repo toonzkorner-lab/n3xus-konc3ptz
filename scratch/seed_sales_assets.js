@@ -56,7 +56,7 @@ async function main() {
         slug: "neon-galactic-nights",
         category: "E-Commerce",
         tags: JSON.stringify(["Next.js", "Stripe"]),
-        images: JSON.stringify(["/dark_web_design_1781611408830.png"]),
+        images: JSON.stringify(["/design-seo.png"]),
         shortDesc: "A high-conversion futuristic storefront.",
         description: "A complete e-commerce solution built from the ground up for a boutique digital agency. Leveraging Next.js for lightning-fast server-side rendering and Stripe for seamless checkout flows, this project boosted conversion rates by over 40% in its first quarter of deployment. Features a custom neon aesthetic that perfectly matches the client's brand."
       },
@@ -65,7 +65,7 @@ async function main() {
         slug: "zenith-automation",
         category: "API",
         tags: JSON.stringify(["Node.js", "Discord"]),
-        images: JSON.stringify(["/discord_bot_1781611373533.png"]),
+        images: JSON.stringify(["/discord-bot-seo.png"]),
         shortDesc: "Enterprise-grade community management bot.",
         description: "Zenith Automation is a bespoke Discord bot designed for a large-scale gaming community. It handles everything from automated role assignments and robust moderation logging to custom API integrations that sync in-game statistics directly into Discord channels in real-time. Built on a scalable Node.js microservice architecture."
       },
@@ -74,7 +74,7 @@ async function main() {
         slug: "crypto-pulse",
         category: "Web3",
         tags: JSON.stringify(["React", "Websockets"]),
-        images: JSON.stringify(["/telegram_bot_1781611384107.png"]),
+        images: JSON.stringify(["/telegram-seo.png"]),
         shortDesc: "Real-time cryptocurrency tracking platform.",
         description: "A sleek, highly responsive web dashboard that tracks real-time cryptocurrency movements across multiple exchanges. Utilizing React and a complex Websockets architecture, Crypto Pulse delivers sub-second latency updates directly to the user's browser. Includes customizable alerting systems and deep historical data analysis tools."
       }
