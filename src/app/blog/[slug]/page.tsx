@@ -7,9 +7,26 @@ import Link from 'next/link';
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post = await prisma.blogPost.findUnique({ where: { slug } });
+
+  if (!post) return { title: 'Post Not Found' };
+
+  const ogImage = post.coverImage || '/logo.jpg';
+  const desc = post.excerpt || 'Read more on the N3xUs blog.';
+
   return {
-    title: post ? `${post.title} | N3xUs Konc3pt'z Blog` : 'Post Not Found',
-    description: post?.excerpt || 'Read more on the N3xUs blog.',
+    title: `${post.title} | N3xUs Konc3pt'z Blog`,
+    description: desc,
+    openGraph: {
+      title: `${post.title} | N3xUs Konc3pt'z Blog`,
+      description: desc,
+      images: [ogImage],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${post.title} | N3xUs Konc3pt'z Blog`,
+      description: desc,
+      images: [ogImage],
+    }
   };
 }
 

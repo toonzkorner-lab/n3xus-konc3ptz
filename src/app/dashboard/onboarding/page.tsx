@@ -3,24 +3,58 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { upload } from '@vercel/blob/client';
 
 export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  
   const [formData, setFormData] = useState({
     title: '',
     type: 'DISCORD_BOT',
     budget: '',
     timeline: '',
     description: '',
+    brandAssets: '',
+    socialHandles: '',
+    targetReferences: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const nextStep = () => setStep(s => Math.min(s + 1, 3));
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    
+    setUploading(true);
+    
+    try {
+      const urls: string[] = [];
+      for (const file of Array.from(e.target.files)) {
+        const newBlob = await upload(file.name, file, {
+          access: 'public',
+          handleUploadUrl: '/api/blob-upload',
+        });
+        urls.push(newBlob.url);
+      }
+      
+      const currentImages = formData.brandAssets ? formData.brandAssets.split(',').map(s => s.trim()).filter(Boolean) : [];
+      const newImagesString = [...currentImages, ...urls].join(', ');
+      
+      setFormData({ ...formData, brandAssets: newImagesString });
+      
+      e.target.value = '';
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const nextStep = () => setStep(s => Math.min(s + 1, 4));
   const prevStep = () => setStep(s => Math.max(s - 1, 1));
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,15 +62,21 @@ export default function OnboardingPage() {
     setLoading(true);
 
     try {
+      const submitData = {
+        ...formData,
+        brandAssets: formData.brandAssets ? formData.brandAssets.split(',').map(s => s.trim()) : [],
+        socialHandles: formData.socialHandles ? formData.socialHandles.split(',').map(s => s.trim()) : [],
+      };
+
       const res = await fetch('/api/projects/onboard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(submitData),
       });
 
       if (!res.ok) throw new Error('Failed to submit onboarding form');
       
-      const data = await res.json();
+      await res.json();
       router.push('/dashboard/projects?onboarded=true');
       router.refresh();
     } catch (error) {
@@ -47,7 +87,7 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto pb-3xl">
       <div className="mb-xl text-center">
         <h1 className="text-3xl font-heading text-primary mb-xs">Project Onboarding</h1>
         <p className="text-secondary text-sm">Let's get some basic details down before our consultation.</p>
@@ -56,9 +96,9 @@ export default function OnboardingPage() {
       {/* Progress Bar */}
       <div className="flex items-center justify-between mb-xl relative">
         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-subtle -z-10 rounded-full"></div>
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-accent -z-10 transition-all duration-300 rounded-full" style={{ width: `${((step - 1) / 2) * 100}%` }}></div>
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-accent -z-10 transition-all duration-300 rounded-full" style={{ width: `${((step - 1) / 3) * 100}%` }}></div>
         
-        {[1, 2, 3].map(i => (
+        {[1, 2, 3, 4].map(i => (
           <div key={i} className={cn(
             "w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition-colors",
             step >= i ? "bg-accent text-inverse" : "bg-card border-2 border-subtle text-secondary"
@@ -149,22 +189,78 @@ export default function OnboardingPage() {
             </div>
           )}
 
-          {/* STEP 3: Details */}
+          {/* STEP 3: Brand Assets */}
           {step === 3 && (
             <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-              <h2 className="text-xl font-heading text-primary mb-md">Step 3: Vision</h2>
+              <h2 className="text-xl font-heading text-primary mb-md">Step 3: Brand Assets</h2>
+              <div className="space-y-md">
+                <div className="p-md bg-tertiary border border-subtle rounded-md">
+                  <label className="block text-sm text-secondary mb-xs">Upload Logos or Moodboards</label>
+                  <input 
+                    type="file" 
+                    multiple 
+                    accept="image/*" 
+                    onChange={handleFileUpload} 
+                    disabled={uploading}
+                    className="w-full text-sm text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary-subtle file:text-primary hover:file:bg-primary hover:file:text-inverse"
+                  />
+                  {uploading && <p className="text-sm text-primary mt-sm animate-pulse">Uploading files...</p>}
+                </div>
+                
+                {formData.brandAssets && (
+                  <div>
+                    <label className="block text-sm text-secondary mb-xs">Uploaded Asset URLs (comma separated)</label>
+                    <input
+                      type="text"
+                      name="brandAssets"
+                      value={formData.brandAssets}
+                      onChange={handleChange}
+                      className="w-full bg-primary border border-subtle rounded-md px-md py-sm text-primary focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* STEP 4: Vision & Socials */}
+          {step === 4 && (
+            <div className="animate-in fade-in slide-in-from-right-4 duration-300">
+              <h2 className="text-xl font-heading text-primary mb-md">Step 4: Vision & Socials</h2>
               <div className="space-y-md">
                 <div>
-                  <label className="block text-sm text-secondary mb-xs">Describe your project and core features</label>
+                  <label className="block text-sm text-secondary mb-xs">Project Vision & Features</label>
                   <textarea
                     name="description"
                     required
-                    rows={6}
+                    rows={4}
                     value={formData.description}
                     onChange={handleChange}
-                    placeholder="Tell us what you want to build, specific features you need, and any examples you like..."
+                    placeholder="Tell us what you want to build, specific features you need..."
                     className="w-full bg-primary border border-subtle rounded-md px-md py-sm text-primary focus:border-accent focus:ring-1 focus:ring-accent outline-none resize-none"
                   ></textarea>
+                </div>
+                <div>
+                  <label className="block text-sm text-secondary mb-xs">Target References (Sites/Bots you like)</label>
+                  <input
+                    type="text"
+                    name="targetReferences"
+                    value={formData.targetReferences}
+                    onChange={handleChange}
+                    placeholder="e.g. Midjourney Bot, specific websites..."
+                    className="w-full bg-primary border border-subtle rounded-md px-md py-sm text-primary focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm text-secondary mb-xs">Your Social Handles (comma separated)</label>
+                  <input
+                    type="text"
+                    name="socialHandles"
+                    value={formData.socialHandles}
+                    onChange={handleChange}
+                    placeholder="e.g. @twitter, @instagram"
+                    className="w-full bg-primary border border-subtle rounded-md px-md py-sm text-primary focus:border-accent focus:ring-1 focus:ring-accent outline-none"
+                  />
                 </div>
               </div>
             </div>
@@ -172,17 +268,17 @@ export default function OnboardingPage() {
 
           <div className="mt-xl pt-lg border-t border-subtle flex justify-between">
             {step > 1 ? (
-              <button type="button" onClick={prevStep} className="btn btn-outline">
+              <button type="button" onClick={prevStep} className="btn btn-outline" disabled={uploading || loading}>
                 Back
               </button>
             ) : <div></div>}
 
-            {step < 3 ? (
-              <button type="button" onClick={nextStep} className="btn btn-primary" disabled={!formData.title}>
+            {step < 4 ? (
+              <button type="button" onClick={nextStep} className="btn btn-primary" disabled={!formData.title || uploading}>
                 Next Step
               </button>
             ) : (
-              <button type="submit" disabled={loading} className="btn btn-primary">
+              <button type="submit" disabled={loading || uploading} className="btn btn-primary">
                 {loading ? 'Submitting...' : 'Submit Project Brief'}
               </button>
             )}

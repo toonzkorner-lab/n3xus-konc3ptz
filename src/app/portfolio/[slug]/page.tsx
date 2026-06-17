@@ -15,9 +15,25 @@ export async function generateMetadata(
 
   if (!item) return { title: "Not Found" };
 
+  const images: string[] = item.images ? JSON.parse(item.images) : [];
+  const ogImage = images.length > 0 ? images[0] : '/logo.jpg';
+
+  const desc = item.shortDesc || item.description?.substring(0, 160) || '';
+
   return {
     title: `${item.title} | Portfolio | N3xUs Konc3pt'z`,
-    description: item.shortDesc || item.description?.substring(0, 160),
+    description: desc,
+    openGraph: {
+      title: `${item.title} | Portfolio | N3xUs Konc3pt'z`,
+      description: desc,
+      images: [ogImage],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${item.title} | Portfolio | N3xUs Konc3pt'z`,
+      description: desc,
+      images: [ogImage],
+    }
   };
 }
 

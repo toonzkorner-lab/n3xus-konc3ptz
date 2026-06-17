@@ -92,9 +92,12 @@ model Project {
   status      String    @default("PLANNING") // PLANNING, IN_PROGRESS, REVIEW, COMPLETED, ON_HOLD, CANCELLED
   budget      Int       @default(0) // In cents
   progress    Int       @default(0) // 0-100
-  deadline    DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  deadline         DateTime?
+  brandAssets      String    @default("[]") // JSON string array
+  socialHandles    String    @default("[]") // JSON string array
+  targetReferences String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
   
   clientId    String
   client      User      @relation(fields: [clientId], references: [id])

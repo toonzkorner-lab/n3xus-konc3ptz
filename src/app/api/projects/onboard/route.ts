@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { title, type, budget, timeline, description } = body;
+    const { title, type, budget, timeline, description, brandAssets, socialHandles, targetReferences } = body;
 
     if (!title || !description) {
       return NextResponse.json({ error: 'Title and description are required' }, { status: 400 });
@@ -33,6 +33,9 @@ ${description}
         description: fullDescription,
         status: 'PLANNING',
         clientId: session.user.id,
+        brandAssets: brandAssets ? JSON.stringify(brandAssets) : "[]",
+        socialHandles: socialHandles ? JSON.stringify(socialHandles) : "[]",
+        targetReferences: targetReferences || "",
       },
     });
 
