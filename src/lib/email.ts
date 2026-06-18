@@ -1,4 +1,8 @@
 import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
+
+export const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+export const DEFAULT_SENDER = 'N3xUs Konc3ptz <onboarding@resend.dev>';
 
 // Create reusable transporter
 const transporter = nodemailer.createTransport({
