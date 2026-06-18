@@ -83,6 +83,13 @@ export default function LiveChatWidget() {
         .chat-btn.telegram:hover {
           background-color: rgba(0, 136, 204, 0.2);
         }
+        .chat-btn.sms {
+          background-color: rgba(16, 185, 129, 0.1);
+          border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .chat-btn.sms:hover {
+          background-color: rgba(16, 185, 129, 0.2);
+        }
         .chat-btn span {
           font-weight: 600;
           font-size: 14px;
@@ -128,6 +135,12 @@ export default function LiveChatWidget() {
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.46.93-4.12 2.73-.39.27-.74.41-1.05.4-.34-.01-1-.19-1.49-.35-.6-.2-1.08-.31-1.04-.66.02-.18.27-.36.75-.55 2.94-1.28 4.9-2.12 5.88-2.53 2.79-1.16 3.37-1.36 3.75-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/>
               </svg>
               <span style={{ color: '#0088cc' }}>Telegram</span>
+            </Link>
+            <Link href="sms:+1234567890" className="chat-btn sms">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#10B981">
+                <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+              </svg>
+              <span style={{ color: '#10B981' }}>Text Us</span>
             </Link>
           </div>
         </div>
