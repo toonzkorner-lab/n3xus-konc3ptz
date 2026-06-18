@@ -6,9 +6,10 @@ import Link from 'next/link';
 export default function LiveChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
 
-  // You can replace these links with your actual Discord/Telegram profile or invite links
+  // You can replace these links with your actual Discord/Telegram profile or phone number
   const discordLink = "https://discord.gg/your-invite-code";
   const telegramLink = "https://t.me/your_telegram_username";
+  const phoneNumber = "+1234567890"; // e.g., "+15551234567"
 
   return (
     <>
@@ -136,7 +137,7 @@ export default function LiveChatWidget() {
               </svg>
               <span style={{ color: '#0088cc' }}>Telegram</span>
             </Link>
-            <Link href="sms:+1234567890" className="chat-btn sms">
+            <Link href={`sms:${phoneNumber}`} className="chat-btn sms">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="#10B981">
                 <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
               </svg>
