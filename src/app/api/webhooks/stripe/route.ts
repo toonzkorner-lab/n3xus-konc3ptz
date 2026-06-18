@@ -127,7 +127,7 @@ export async function POST(req: Request) {
               amount: amountTotal,
               currency: session.currency || 'usd',
               items: [{ title: 'N3xUs Services & Digital Assets', price: amountTotal, quantity: 1 }],
-              receiptUrl: session.receipt_url || 'https://n3xuskonceptz.com/dashboard',
+              receiptUrl: 'https://n3xuskonceptz.com/dashboard',
             }),
           });
           console.log(`Receipt email sent to ${customerEmail}`);
