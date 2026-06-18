@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import LiveChatWidget from '@/components/LiveChatWidget';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://n3xuskonceptz.com'),
@@ -64,7 +65,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning className={`${orbitron.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
         <OrganizationJsonLd />
         <WebSiteJsonLd />
@@ -83,6 +84,7 @@ export default function RootLayout({
           </ErrorBoundary>
         </ThemeProvider>
         <Toaster position="bottom-right" />
+        <LiveChatWidget />
         <Analytics />
         <SpeedInsights />
       </body>

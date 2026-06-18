@@ -3,6 +3,8 @@ import { stripe } from '@/lib/stripe';
 import { prisma } from '@/lib/prisma';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
+import { resend, DEFAULT_SENDER } from '@/lib/email';
+import ReceiptEmail from '@/emails/ReceiptEmail';
 
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -102,6 +104,36 @@ export async function POST(req: Request) {
         console.log(`Invoice ${invoiceId} successfully marked as PAID`);
       } catch (e) {
         console.error('Error updating invoice status', e);
+      }
+    }
+
+    // Send Receipt Email
+    if (resend) {
+      const customerEmail = session.customer_details?.email || undefined;
+      const amountTotal = session.amount_total || 0;
+      
+      // If we have an order, we can get specific items, otherwise fallback
+      // Since we just updated the order, we can fetch it again or use the variables we have.
+      // We will do a generic receipt if we can't find specific items easily.
+      
+      if (customerEmail) {
+        try {
+          await resend.emails.send({
+            from: DEFAULT_SENDER,
+            to: customerEmail,
+            subject: `Payment Receipt - N3xUs Konc3pt'z`,
+            react: ReceiptEmail({
+              name: session.customer_details?.name || 'Valued Client',
+              amount: amountTotal,
+              currency: session.currency || 'usd',
+              items: [{ title: 'N3xUs Services & Digital Assets', price: amountTotal, quantity: 1 }],
+              receiptUrl: session.receipt_url || 'https://n3xuskonceptz.com/dashboard',
+            }),
+          });
+          console.log(`Receipt email sent to ${customerEmail}`);
+        } catch (emailErr) {
+          console.error('Failed to send receipt email', emailErr);
+        }
       }
     }
   }
