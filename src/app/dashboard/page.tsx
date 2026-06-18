@@ -57,9 +57,14 @@ export default async function DashboardPage() {
           <h1 className="text-3xl text-primary mb-xs">Welcome back, {session.user.name?.split(' ')[0]}</h1>
           <p className="text-secondary">Here's the current status of your digital assets.</p>
         </div>
-        <Link href="/services" className="btn btn-primary">
-          Start New Project
-        </Link>
+        <div className="flex gap-md">
+          <Link href="/dashboard/onboarding" className="btn btn-primary bg-accent hover:bg-accent/90 border-transparent shadow-glow-sm">
+            ✨ Start Custom Project
+          </Link>
+          <Link href="/services" className="btn btn-outline">
+            Browse Services
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-3 gap-xl">
@@ -103,7 +108,10 @@ export default async function DashboardPage() {
               <div className="text-5xl mb-md">🌌</div>
               <h3 className="text-xl text-primary mb-sm">The void is empty</h3>
               <p className="text-secondary mb-lg">You don't have any active projects yet.</p>
-              <Link href="/services" className="btn btn-secondary">Explore Services</Link>
+              <div className="flex gap-md justify-center">
+                <Link href="/dashboard/onboarding" className="btn btn-primary bg-accent hover:bg-accent/90 border-transparent shadow-glow-sm">Start Custom Project</Link>
+                <Link href="/services" className="btn btn-secondary">Explore Services</Link>
+              </div>
             </div>
           ) : (
             <div className="flex flex-col gap-xl">

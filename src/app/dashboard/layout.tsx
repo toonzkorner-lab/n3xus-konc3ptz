@@ -42,6 +42,9 @@ export default async function DashboardLayout({
           <Link href="/dashboard" className="flex items-center gap-md p-md rounded-md hover:bg-primary-subtle hover:text-primary transition-colors text-secondary">
             <span>📊</span> Overview
           </Link>
+          <Link href="/dashboard/onboarding" className="flex items-center gap-md p-md rounded-md hover:bg-primary-subtle hover:text-primary transition-colors text-secondary font-bold border border-subtle bg-card shadow-sm">
+            <span>✨</span> Start Custom Project
+          </Link>
           <Link href="/dashboard/projects" className="flex items-center gap-md p-md rounded-md hover:bg-primary-subtle hover:text-primary transition-colors text-secondary">
             <span>🚀</span> Active Projects
           </Link>
