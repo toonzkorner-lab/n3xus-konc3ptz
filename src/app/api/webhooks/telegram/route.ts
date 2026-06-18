@@ -37,7 +37,7 @@ async function handleCommand(chatId: number, command: string) {
       [{ text: '🛠 Services', callback_data: '/services' }],
       [{ text: '📦 Products', callback_data: '/products' }],
       [{ text: '🖼 Portfolio', callback_data: '/portfolio' }],
-      [{ text: '🌐 Visit Website', url: 'https://n3xuskonceptz.com' }],
+      [{ text: '🌐 Visit Website', url: 'https://n3xus-konc3ptz.vercel.app' }],
     ];
     await sendMessage(chatId, welcomeMsg, keyboard);
   } else if (command === '/services') {
@@ -57,7 +57,7 @@ async function handleCommand(chatId: number, command: string) {
         if (s.shortDesc) msg += `<i>${s.shortDesc}</i>\n`;
         msg += `\n`;
         keyboard.push([
-          { text: `📋 ${s.name}`, url: `https://n3xuskonceptz.com/services/${s.slug}` },
+          { text: `📋 ${s.name}`, url: `https://n3xus-konc3ptz.vercel.app/services/${s.slug}` },
         ]);
       });
       keyboard.push([{ text: '🔙 Main Menu', callback_data: '/start' }]);
@@ -79,7 +79,7 @@ async function handleCommand(chatId: number, command: string) {
         if (p.shortDesc) msg += `<i>${p.shortDesc}</i>\n`;
         msg += `\n`;
         keyboard.push([
-          { text: `🛒 ${p.title}`, url: `https://n3xuskonceptz.com/store/${p.slug}` },
+          { text: `🛒 ${p.title}`, url: `https://n3xus-konc3ptz.vercel.app/store/${p.slug}` },
         ]);
       });
       keyboard.push([{ text: '🔙 Main Menu', callback_data: '/start' }]);
@@ -97,16 +97,16 @@ async function handleCommand(chatId: number, command: string) {
         if (i.shortDesc) msg += `<i>${i.shortDesc}</i>\n`;
         msg += `\n`;
         keyboard.push([
-          { text: `👁 ${i.title}`, url: `https://n3xuskonceptz.com/portfolio/${i.slug}` },
+          { text: `👁 ${i.title}`, url: `https://n3xus-konc3ptz.vercel.app/portfolio/${i.slug}` },
         ]);
       });
       keyboard.push([{ text: '🔙 Main Menu', callback_data: '/start' }]);
       await sendMessage(chatId, msg, keyboard);
     }
   } else if (command === '/contact') {
-    const msg = `📩 <b>Get In Touch</b>\n\n💬 Discord: discord.gg/your-invite-code\n📱 Telegram: @N3xUsGBot\n📞 Text Us: 210-906-3069\n🌐 Website: n3xuskonceptz.com/contact`;
+    const msg = `📩 <b>Get In Touch</b>\n\n💬 Discord: discord.gg/your-invite-code\n📱 Telegram: @N3xUsGBot\n📞 Text Us: 210-906-3069\n🌐 Website: n3xus-konc3ptz.vercel.app/contact`;
     const keyboard = [
-      [{ text: '🌐 Contact Form', url: 'https://n3xuskonceptz.com/contact' }],
+      [{ text: '🌐 Contact Form', url: 'https://n3xus-konc3ptz.vercel.app/contact' }],
       [{ text: '🔙 Main Menu', callback_data: '/start' }],
     ];
     await sendMessage(chatId, msg, keyboard);
