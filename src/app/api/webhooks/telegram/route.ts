@@ -46,7 +46,7 @@ function parseJsonArray(jsonStr: string): string[] {
 // ─── Command Handlers ───────────────────────────────────────────
 
 async function handleStart(chatId: number) {
-  const msg = `🚀 <b>Welcome to N3xUs Konc3ptz!</b>\n\nYour premium digital design & development studio. Browse our catalog and checkout directly from Telegram!\n\nChoose an option below:`;
+  const msg = `━━━━━━━━━━━━━━━━━━━━━━\n🛸 <b>N3xUs Konc3ptz</b>\n<i>Digital Design Studio</i>\n━━━━━━━━━━━━━━━━━━━━━━\n\nWelcome! We are an elite digital design and software development studio specializing in next-generation web experiences, custom bot automation, and scalable architecture.\n\nWhether you're looking to elevate your brand, automate your workflow, or launch a digital product — we engineer solutions that perform.\n\n<b>How can we help you today?</b>`;
   const keyboard = [
     [{ text: '🛠 Services', callback_data: 'cmd_services' }, { text: '📦 Products', callback_data: 'cmd_products' }],
     [{ text: '🖼 Portfolio', callback_data: 'cmd_portfolio' }, { text: '📩 Contact', callback_data: 'cmd_contact' }],
