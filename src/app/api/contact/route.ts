@@ -27,6 +27,24 @@ export async function POST(req: NextRequest) {
       data: { name, email, subject: subject || null, message },
     });
 
+    // Send emails in the background
+    import("@/lib/email").then(({ sendEmail, buildContactNotificationEmail, buildContactAutoReplyEmail, CONTACT_EMAIL }) => {
+      // 1. Notify the site owner
+      sendEmail({
+        to: CONTACT_EMAIL,
+        subject: `New Contact: ${subject || 'Website Inquiry'}`,
+        html: buildContactNotificationEmail(name, email, subject || 'Website Inquiry', message),
+        replyTo: email,
+      });
+
+      // 2. Send auto-reply to the customer
+      sendEmail({
+        to: email,
+        subject: "We received your message! 👋",
+        html: buildContactAutoReplyEmail(name),
+      });
+    }).catch(err => console.error("Failed to load email module:", err));
+
     return NextResponse.json(
       { success: true, id: submission.id },
       { status: 201 }

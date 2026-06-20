@@ -10,11 +10,20 @@ export async function POST(request: Request) {
     }
 
     // Upsert so if they try to subscribe again it just activates them or succeeds
-    await prisma.subscriber.upsert({
+    const isNew = await prisma.subscriber.upsert({
       where: { email },
       update: { active: true },
       create: { email },
     });
+
+    // Send welcome email if they were just created or reactivated
+    import("@/lib/email").then(({ sendEmail, buildNewsletterWelcomeEmail }) => {
+      sendEmail({
+        to: email,
+        subject: "Welcome to the N3xUs! 🚀",
+        html: buildNewsletterWelcomeEmail(),
+      });
+    }).catch(err => console.error("Failed to load email module:", err));
 
     return NextResponse.json({ success: true, message: 'Subscribed successfully' });
   } catch (error) {

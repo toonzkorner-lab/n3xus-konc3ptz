@@ -224,6 +224,34 @@ export function buildContactAutoReplyEmail(name: string): string {
   `);
 }
 
+// ─── Newsletter Welcome Email ──────────────────────────────────────────────
+
+export function buildNewsletterWelcomeEmail(): string {
+  return wrapTemplate(`
+    <div style="text-align: center; margin-bottom: 20px;">
+      <h2 style="color: #00f0ff; margin: 0 0 10px; font-size: 24px;">Welcome to the N3xUs! 🚀</h2>
+    </div>
+
+    <p style="color: #a0a0c0; line-height: 1.7; font-size: 15px;">
+      You're officially on the list. We'll be sending you our best insights on digital design, tech news, and exclusive updates.
+    </p>
+
+    <div style="margin: 25px 0; padding: 20px; background: rgba(139,92,246,0.08); border-left: 3px solid #8b5cf6; border-radius: 0 8px 8px 0;">
+      <p style="color: #e8e8f0; margin: 0; font-style: italic;">
+        "Where Code Meets Cosmos."
+      </p>
+    </div>
+
+    <p style="color: #a0a0c0; line-height: 1.7;">
+      Stay tuned for our next transmission. Until then, explore what we're building.
+    </p>
+
+    <div style="text-align: center; margin-top: 30px;">
+      <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/portfolio" style="display: inline-block; padding: 12px 30px; background: transparent; color: #00f0ff; text-decoration: none; border: 1px solid #00f0ff; border-radius: 6px; font-weight: bold; letter-spacing: 1px;">VIEW PORTFOLIO</a>
+    </div>
+  `);
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────
 
 function formatCents(cents: number): string {
