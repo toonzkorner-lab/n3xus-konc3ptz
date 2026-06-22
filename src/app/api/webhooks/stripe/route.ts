@@ -136,6 +136,27 @@ export async function POST(req: Request) {
         }
       }
     }
+    // Send Discord Notification
+    import("@/lib/discord").then(({ sendDiscordNotification }) => {
+      const customerEmail = session.customer_details?.email || 'Unknown Email';
+      const customerName = session.customer_details?.name || 'Unknown User';
+      const amountTotal = session.amount_total || 0;
+      
+      sendDiscordNotification('💰 **New Sale / Order Complete!**', [
+        {
+          title: 'Payment Received',
+          color: 0x57F287, // Green
+          fields: [
+            { name: 'Customer', value: customerName, inline: true },
+            { name: 'Email', value: customerEmail, inline: true },
+            { name: 'Amount', value: `$${(amountTotal / 100).toFixed(2)}`, inline: true },
+            { name: 'Order ID', value: orderId || invoiceId || 'Unknown ID', inline: true }
+          ],
+          timestamp: new Date().toISOString()
+        }
+      ]);
+    }).catch(err => console.error("Failed to load discord module:", err));
+
   }
 
   return NextResponse.json({ received: true });

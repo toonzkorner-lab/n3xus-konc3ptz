@@ -27,9 +27,9 @@ export async function POST(req: NextRequest) {
       data: { name, email, subject: subject || null, message },
     });
 
-    // Send emails in the background
+    // Send emails and Discord notification in the background
     import("@/lib/email").then(({ sendEmail, buildContactNotificationEmail, buildContactAutoReplyEmail, CONTACT_EMAIL }) => {
-      // 1. Notify the site owner
+      // 1. Notify the site owner via email
       sendEmail({
         to: CONTACT_EMAIL,
         subject: `New Contact: ${subject || 'Website Inquiry'}`,
@@ -44,6 +44,21 @@ export async function POST(req: NextRequest) {
         html: buildContactAutoReplyEmail(name),
       });
     }).catch(err => console.error("Failed to load email module:", err));
+
+    import("@/lib/discord").then(({ sendDiscordNotification }) => {
+      sendDiscordNotification('🚨 **New Contact Form Submission**', [
+        {
+          title: subject || 'Website Inquiry',
+          color: 0xFEE75C, // Yellow
+          fields: [
+            { name: 'Name', value: name, inline: true },
+            { name: 'Email', value: email, inline: true },
+            { name: 'Message', value: message }
+          ],
+          timestamp: new Date().toISOString()
+        }
+      ]);
+    }).catch(err => console.error("Failed to load discord module:", err));
 
     return NextResponse.json(
       { success: true, id: submission.id },
