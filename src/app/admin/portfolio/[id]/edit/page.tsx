@@ -85,7 +85,7 @@ export default function EditPortfolioPage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setSaving(true);
     setError('');

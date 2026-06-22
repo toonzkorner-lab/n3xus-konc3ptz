@@ -39,7 +39,7 @@ export default function ProductForm({ initialData }: { initialData?: any }) {
     return newBlob.url;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     

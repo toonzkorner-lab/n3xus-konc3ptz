@@ -74,7 +74,7 @@ export default function EditServicePage({ params }: { params: Promise<{ id: stri
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setLoading(true);
     setError('');
