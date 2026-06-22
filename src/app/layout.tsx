@@ -80,6 +80,7 @@ export default function RootLayout({
                 {children}
                 <CartSlideout />
               </CartProvider>
+              <LiveChatWidget />
             </AuthProvider>
           </ErrorBoundary>
         </ThemeProvider>
@@ -88,7 +89,6 @@ export default function RootLayout({
           containerStyle={{ pointerEvents: 'none' }}
           toastOptions={{ style: { pointerEvents: 'auto' } }}
         />
-        <LiveChatWidget />
         <Analytics />
         <SpeedInsights />
       </body>
