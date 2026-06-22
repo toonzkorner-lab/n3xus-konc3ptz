@@ -24,7 +24,9 @@ export default function AddToCartButton({
   const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
     addToCart({
       id,
       title,

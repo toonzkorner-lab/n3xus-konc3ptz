@@ -57,7 +57,7 @@ export default function ContactPage() {
                     <div>
                       <h4 className="text-lg font-heading text-primary mb-xs">Email Transmission</h4>
                       <p className="text-secondary text-sm mb-sm">For general inquiries and project proposals.</p>
-                      <a href="mailto:jsocarras499@outlook.com" className="text-md font-mono text-accent hover:underline">jsocarras499@outlook.com</a>
+                      <a href="mailto:contact@n3xuskonc3ptz.com" className="text-md font-mono text-accent hover:underline">contact@n3xuskonc3ptz.com</a>
                     </div>
                   </div>
                   

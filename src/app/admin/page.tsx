@@ -110,7 +110,7 @@ export default async function AdminPage() {
               <span className="text-sm font-bold">Create Invoice</span>
             </Link>
             
-            <Link href="/admin/services" className="flex flex-col items-center justify-center gap-sm p-lg rounded-lg border border-subtle bg-tertiary hover:bg-success/10 hover:border-success hover:text-success transition-all text-secondary group">
+            <Link href="/admin/services/new" className="flex flex-col items-center justify-center gap-sm p-lg rounded-lg border border-subtle bg-tertiary hover:bg-success/10 hover:border-success hover:text-success transition-all text-secondary group">
               <span className="text-3xl group-hover:scale-110 transition-transform">🛠️</span>
               <span className="text-sm font-bold">Add Service</span>
             </Link>

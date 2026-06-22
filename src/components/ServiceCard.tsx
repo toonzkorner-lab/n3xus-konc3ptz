@@ -29,7 +29,9 @@ export default function ServiceCard({
 }: ServiceCardProps) {
   const { addToCart } = useCart();
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
     addToCart({
       id,
       type: 'SERVICE',
