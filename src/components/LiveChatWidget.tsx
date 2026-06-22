@@ -7,8 +7,8 @@ export default function LiveChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
 
   // You can replace these links with your actual Discord/Telegram profile or phone number
-  const discordLink = "https://discord.gg/your-invite-code";
-  const telegramLink = "https://t.me/your_telegram_username";
+  const discordLink = "https://discord.gg/3UHWMa7rC";
+  const telegramLink = "https://t.me/n3xusg";
   const phoneNumber = "+12109063069"; // 210-906-3069
 
   return (

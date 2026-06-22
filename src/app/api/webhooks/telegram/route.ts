@@ -168,7 +168,7 @@ async function handlePortfolio(chatId: number) {
 }
 
 async function handleContact(chatId: number) {
-  const msg = `📩 <b>Get In Touch</b>\n\n💬 Discord: discord.gg/your-invite-code\n📱 Telegram: @N3xUsGBot\n📞 Text Us: 210-906-3069\n🌐 Website: ${SITE_URL}/contact`;
+  const msg = `📩 <b>Get In Touch</b>\n\n💬 Discord: discord.gg/3UHWMa7rC\n📱 Telegram: t.me/n3xusg\n📞 Text Us: 210-906-3069\n🌐 Website: ${SITE_URL}/contact`;
   const keyboard = [
     [{ text: '🌐 Contact Form', url: `${SITE_URL}/contact` }],
     [{ text: '📅 Book Consultation', url: `${SITE_URL}/book` }],

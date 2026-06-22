@@ -6,14 +6,14 @@ export const metadata = {
   title: 'Contact | N3xUs Konc3pt\'z',
   description: 'Get in touch with us to start your next digital project.',
   alternates: {
-    canonical: 'https://n3xuskonceptz.com/contact',
+    canonical: 'https://n3xuskonc3ptz.com/contact',
   },
   openGraph: {
     title: 'Contact | N3xUs Konc3pt\'z',
     description: 'Get in touch with us to start your next digital project.',
-    url: 'https://n3xuskonceptz.com/contact',
+    url: 'https://n3xuskonc3ptz.com/contact',
     siteName: 'N3xUs Konc3pt\'z',
-    images: [{ url: 'https://n3xuskonceptz.com/logo.jpg', width: 800, height: 800, alt: 'N3xUs Logo' }],
+    images: [{ url: 'https://n3xuskonc3ptz.com/logo.jpg', width: 800, height: 800, alt: 'N3xUs Logo' }],
     locale: 'en_US',
     type: 'website',
   },
@@ -21,7 +21,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Contact | N3xUs Konc3pt\'z',
     description: 'Get in touch with us to start your next digital project.',
-    images: ['https://n3xuskonceptz.com/logo.jpg'],
+    images: ['https://n3xuskonc3ptz.com/logo.jpg'],
   },
 };
 
@@ -67,6 +67,24 @@ export default function ContactPage() {
                       <h4 className="text-lg font-heading text-secondary mb-xs">Facebook Page</h4>
                       <p className="text-secondary text-sm mb-sm">Connect with us on Facebook for updates and messaging.</p>
                       <a href="https://www.facebook.com/profile.php?id=61590253607463" target="_blank" rel="noopener noreferrer" className="text-md font-mono text-primary hover:underline">N3xUs Konc3pt'z FB</a>
+                    </div>
+                  </div>
+
+                  <div className="bg-card p-lg rounded-lg border border-subtle flex items-start gap-md">
+                    <div className="text-3xl mt-1" style={{ color: '#5865F2' }}>💬</div>
+                    <div>
+                      <h4 className="text-lg font-heading mb-xs" style={{ color: '#5865F2' }}>Discord Server</h4>
+                      <p className="text-secondary text-sm mb-sm">Join our community and chat with our team directly.</p>
+                      <a href="https://discord.gg/3UHWMa7rC" target="_blank" rel="noopener noreferrer" className="text-md font-mono text-primary hover:underline">discord.gg/3UHWMa7rC</a>
+                    </div>
+                  </div>
+
+                  <div className="bg-card p-lg rounded-lg border border-subtle flex items-start gap-md">
+                    <div className="text-3xl mt-1" style={{ color: '#0088cc' }}>📱</div>
+                    <div>
+                      <h4 className="text-lg font-heading mb-xs" style={{ color: '#0088cc' }}>Telegram</h4>
+                      <p className="text-secondary text-sm mb-sm">Message us directly on Telegram for fast responses.</p>
+                      <a href="https://t.me/n3xusg" target="_blank" rel="noopener noreferrer" className="text-md font-mono text-primary hover:underline">t.me/n3xusg</a>
                     </div>
                   </div>
                 </div>

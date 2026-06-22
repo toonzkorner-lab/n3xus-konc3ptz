@@ -201,7 +201,10 @@ export default async function Home() {
                       <span style={{ color: 'var(--color-primary)' }}>📧</span> contact@n3xuskonc3ptz.com
                     </li>
                     <li style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--text-secondary)' }}>
-                      <span style={{ color: 'var(--color-primary)' }}>💬</span> discord.gg/n3xus
+                      <span style={{ color: 'var(--color-primary)' }}>💬</span> discord.gg/3UHWMa7rC
+                    </li>
+                    <li style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--text-secondary)' }}>
+                      <span style={{ color: 'var(--color-primary)' }}>📱</span> t.me/n3xusg
                     </li>
                   </ul>
                 </div>
