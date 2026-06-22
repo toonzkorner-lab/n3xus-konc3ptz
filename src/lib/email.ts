@@ -37,7 +37,7 @@ export async function sendEmail({ to, subject, html, replyTo }: EmailOptions): P
         to,
         subject,
         html,
-        reply_to: replyTo,
+        replyTo,
       });
       console.log(`[Email] Sent successfully via Resend to ${to}: ${subject}`);
       return true;
