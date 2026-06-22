@@ -61,6 +61,17 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: "10mb",
     },
+    // Limit workers to save RAM during build
+    memoryBasedWorkersCount: true,
+    cpus: 1,
+  },
+  // Disable ESLint during build to save memory (run locally instead)
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  // Disable TypeScript checks during build to save memory (run locally instead)
+  typescript: {
+    ignoreBuildErrors: true,
   },
 };
 
