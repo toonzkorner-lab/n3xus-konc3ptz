@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
   const options = await generateAuthenticationOptions({
     rpID: process.env.NEXT_PUBLIC_RP_ID || "localhost",
     allowCredentials: user.authenticators.map(auth => ({
-      id: auth.credentialID,
+      id: Buffer.from(auth.credentialID, 'base64url') as unknown as Uint8Array,
       type: 'public-key',
       transports: auth.transports ? JSON.parse(auth.transports) : undefined,
     })),
