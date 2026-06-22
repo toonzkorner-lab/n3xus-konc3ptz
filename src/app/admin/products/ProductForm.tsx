@@ -85,7 +85,7 @@ export default function ProductForm({ initialData }: { initialData?: any }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-card border border-subtle p-lg rounded-xl flex flex-col gap-lg">
+    <form onSubmit={handleSubmit} noValidate className="bg-card border border-subtle p-lg rounded-xl flex flex-col gap-lg">
       
       <div className="grid grid-2 gap-md">
         <div className="form-group">

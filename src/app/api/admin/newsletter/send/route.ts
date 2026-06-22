@@ -61,7 +61,7 @@ export async function POST(req: Request) {
     // but a basic loop is fine for starting out.
     for (const email of emails) {
       await resend.emails.send({
-        from: "N3xUs Konc3pt'z <hello@n3xuskonceptz.com>", // You must verify this domain in Resend
+        from: "N3xUs Konc3pt'z <contact@n3xuskonc3ptz.com>", // You must verify this domain in Resend
         to: email,
         subject: subject,
         html: content,

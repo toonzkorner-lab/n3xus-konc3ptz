@@ -132,7 +132,7 @@ export default function EditServicePage({ params }: { params: Promise<{ id: stri
       <div className="bg-card border border-subtle rounded-xl p-2xl">
         {error && <div className="bg-error/20 border border-error text-error p-md rounded-md mb-xl">{error}</div>}
         
-        <form onSubmit={handleSubmit} className="flex flex-col gap-lg">
+        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-lg">
           <div className="grid grid-2 gap-lg">
             <div className="form-group">
               <label className="form-label" htmlFor="name">Service Name</label>

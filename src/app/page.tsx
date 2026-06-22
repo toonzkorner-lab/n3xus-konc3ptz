@@ -198,7 +198,7 @@ export default async function Home() {
                   <h4 className="text-xl mb-md text-primary">Direct Comm Channels</h4>
                   <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     <li style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--text-secondary)' }}>
-                      <span style={{ color: 'var(--color-primary)' }}>📧</span> hello@n3xuskonc3ptz.com
+                      <span style={{ color: 'var(--color-primary)' }}>📧</span> contact@n3xuskonc3ptz.com
                     </li>
                     <li style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--text-secondary)' }}>
                       <span style={{ color: 'var(--color-primary)' }}>💬</span> discord.gg/n3xus

@@ -14,7 +14,7 @@ export function OrganizationJsonLd() {
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'customer service',
-      email: 'jsocarras499@outlook.com',
+      email: 'contact@n3xuskonc3ptz.com',
     },
     sameAs: [
       'https://www.facebook.com/profile.php?id=61590253607463',

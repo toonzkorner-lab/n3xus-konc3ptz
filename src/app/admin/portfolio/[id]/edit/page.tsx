@@ -127,7 +127,7 @@ export default function EditPortfolioPage() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="card flex flex-col gap-lg">
+      <form onSubmit={handleSubmit} noValidate className="card flex flex-col gap-lg">
         <div className="grid grid-cols-2 gap-md">
           <div className="form-group">
             <label className="label">Title</label>

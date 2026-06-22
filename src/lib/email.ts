@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransport({
 
 const FROM_NAME = "N3xUs Konc3pt'z";
 const FROM_EMAIL = process.env.SMTP_USER || 'noreply@n3xuskonc3ptz.com';
-const CONTACT_EMAIL = process.env.CONTACT_EMAIL || FROM_EMAIL;
+const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'contact@n3xuskonc3ptz.com';
 
 interface EmailOptions {
   to: string;
