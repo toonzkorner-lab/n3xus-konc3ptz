@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
+import DeleteMessageButton from './DeleteMessageButton';
 
 export const metadata = {
   title: 'Messages | Admin | N3xUs Konc3pt\'z',
@@ -28,12 +29,13 @@ export default async function AdminMessagesPage() {
               <th className="p-md font-heading">From</th>
               <th className="p-md font-heading">Subject</th>
               <th className="p-md font-heading">Message</th>
+              <th className="p-md font-heading text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-subtle">
             {messages.length === 0 ? (
               <tr>
-                <td colSpan={5} className="p-xl text-center text-secondary">
+                <td colSpan={6} className="p-xl text-center text-secondary">
                   No transmissions received yet.
                 </td>
               </tr>
@@ -57,6 +59,9 @@ export default async function AdminMessagesPage() {
                   <td className="p-md font-bold text-secondary">{msg.subject || 'No Subject'}</td>
                   <td className="p-md text-sm text-secondary max-w-xs truncate" title={msg.message}>
                     {msg.message}
+                  </td>
+                  <td className="p-md text-right">
+                    <DeleteMessageButton id={msg.id} />
                   </td>
                 </tr>
               ))

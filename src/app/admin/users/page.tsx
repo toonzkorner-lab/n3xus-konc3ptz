@@ -76,7 +76,7 @@ export default async function AdminUsersPage() {
                 </td>
                 <td className="text-right">
                   <div className="flex items-center justify-end gap-md">
-                    <Link href={`/admin/users/${user.id}/edit`} className="text-primary hover:text-primary-focus text-sm font-bold uppercase">
+                    <Link href={`/admin/users/${user.id}/edit`} className="btn btn-sm btn-ghost">
                       Edit
                     </Link>
                     <DeleteUserButton userId={user.id} />
