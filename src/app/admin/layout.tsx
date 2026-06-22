@@ -72,6 +72,9 @@ export default async function AdminLayout({
           <Link href="/admin/blog" className="flex items-center gap-md p-md rounded-md hover:bg-accent/10 hover:text-accent transition-colors text-secondary">
             <span>📡</span> Blog & News
           </Link>
+          <Link href="/admin/security" className="flex items-center gap-md p-md rounded-md hover:bg-accent/10 hover:text-accent transition-colors text-secondary">
+            <span>🔐</span> Security & Passkeys
+          </Link>
           <Link href="/admin/testimonials" className="flex items-center gap-md p-md rounded-md hover:bg-accent/10 hover:text-accent transition-colors text-secondary">
             <span>⭐</span> Testimonials
           </Link>
