@@ -173,6 +173,73 @@ export async function POST(req: Request) {
         }
       });
     }
+
+    if (name === 'ticket') {
+      const subCommand = options?.[0]?.name;
+
+      if (subCommand === 'open') {
+        const subject = options[0].options?.find((opt: any) => opt.name === 'subject')?.value;
+        const message = options[0].options?.find((opt: any) => opt.name === 'message')?.value;
+        
+        // Extract Discord User
+        const discordUser = interaction.member?.user || interaction.user;
+        if (!discordUser || !subject || !message) {
+          return NextResponse.json({
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+            data: { content: 'Failed to process ticket. Missing user or arguments.' }
+          });
+        }
+
+        // 1. Find or Create a dummy User for this Discord member to satisfy the foreign key
+        const dummyEmail = `discord_${discordUser.id}@discord.n3xuskonc3ptz.com`;
+        let user = await prisma.user.findUnique({ where: { email: dummyEmail } });
+        
+        if (!user) {
+          user = await prisma.user.create({
+            data: {
+              name: discordUser.username,
+              email: dummyEmail,
+              role: 'CLIENT'
+            }
+          });
+        }
+
+        // 2. Create the Ticket
+        const ticket = await prisma.ticket.create({
+          data: {
+            subject: `[Discord] ${subject}`,
+            description: message,
+            clientId: user.id,
+            priority: 'NORMAL'
+          }
+        });
+
+        // 3. (Optional) Ping Admin Channel using the existing sendDiscordNotification method
+        import("@/lib/discord").then(({ sendDiscordNotification }) => {
+          sendDiscordNotification('🎫 **New Discord Ticket Created**', [
+            {
+              title: ticket.subject,
+              color: 0x00FFFF, // Cyan
+              fields: [
+                { name: 'User', value: `@${discordUser.username}`, inline: true },
+                { name: 'Ticket ID', value: ticket.id, inline: true },
+                { name: 'Message', value: ticket.description }
+              ],
+              timestamp: new Date().toISOString()
+            }
+          ]);
+        }).catch(err => console.error("Failed to load discord module:", err));
+
+        // 4. Respond to the Discord user
+        return NextResponse.json({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: {
+            content: `✅ Your ticket **"${subject}"** has been created!\n\nOur team has been notified. You can check the status on the website dashboard or wait for an admin to reply.`,
+            flags: 64 // EPHEMERAL - Only the user sees this
+          }
+        });
+      }
+    }
   }
 
   // Fallback

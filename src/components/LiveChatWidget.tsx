@@ -2,14 +2,64 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
 export default function LiveChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
+  const [view, setView] = useState<'menu' | 'form' | 'success'>('menu');
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+  const [guestEmail, setGuestEmail] = useState('');
+  const [guestName, setGuestName] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const { data: session } = useSession();
 
-  // You can replace these links with your actual Discord/Telegram profile or phone number
   const discordLink = "https://discord.gg/3UHWMa7rC";
   const telegramLink = "https://t.me/n3xusg";
-  const phoneNumber = "+12109063069"; // 210-906-3069
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!subject || !message) return;
+    if (!session && (!guestEmail || !guestName)) return;
+
+    setIsSubmitting(true);
+
+    try {
+      if (session) {
+        // Logged in user: Create a Ticket
+        const res = await fetch('/api/tickets', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ subject, description: message, priority: 'NORMAL' })
+        });
+        if (res.ok) setView('success');
+      } else {
+        // Guest user: Create a Contact Submission
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: guestName, email: guestEmail, subject, message })
+        });
+        if (res.ok) setView('success');
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+    if (!isOpen) {
+      setView('menu');
+      setSubject('');
+      setMessage('');
+      setGuestEmail('');
+      setGuestName('');
+    }
+  };
 
   return (
     <>
@@ -32,10 +82,12 @@ export default function LiveChatWidget() {
           border-radius: 12px;
           box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
           margin-bottom: 16px;
-          width: 280px;
+          width: 320px;
           transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
           transform-origin: bottom right;
           pointer-events: auto;
+          max-height: 500px;
+          overflow-y: auto;
         }
         .chat-menu.closed {
           transform: scale(0) translateY(32px);
@@ -71,32 +123,60 @@ export default function LiveChatWidget() {
           border-radius: 8px;
           text-decoration: none;
           transition: background-color 0.2s;
+          cursor: pointer;
+          background: none;
+          text-align: left;
+          width: 100%;
         }
-        .chat-btn.discord {
-          background-color: rgba(88, 101, 242, 0.1);
-          border: 1px solid rgba(88, 101, 242, 0.3);
+        .chat-btn.discord { background-color: rgba(88, 101, 242, 0.1); border: 1px solid rgba(88, 101, 242, 0.3); }
+        .chat-btn.discord:hover { background-color: rgba(88, 101, 242, 0.2); }
+        .chat-btn.telegram { background-color: rgba(0, 136, 204, 0.1); border: 1px solid rgba(0, 136, 204, 0.3); }
+        .chat-btn.telegram:hover { background-color: rgba(0, 136, 204, 0.2); }
+        .chat-btn.ticket { background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .chat-btn.ticket:hover { background-color: rgba(16, 185, 129, 0.2); }
+        .chat-btn span { font-weight: 600; font-size: 14px; }
+        
+        .chat-form {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
         }
-        .chat-btn.discord:hover {
-          background-color: rgba(88, 101, 242, 0.2);
-        }
-        .chat-btn.telegram {
-          background-color: rgba(0, 136, 204, 0.1);
-          border: 1px solid rgba(0, 136, 204, 0.3);
-        }
-        .chat-btn.telegram:hover {
-          background-color: rgba(0, 136, 204, 0.2);
-        }
-        .chat-btn.sms {
-          background-color: rgba(16, 185, 129, 0.1);
-          border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-        .chat-btn.sms:hover {
-          background-color: rgba(16, 185, 129, 0.2);
-        }
-        .chat-btn span {
-          font-weight: 600;
+        .chat-input {
+          background-color: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 6px;
+          padding: 10px;
+          color: white;
           font-size: 14px;
+          width: 100%;
         }
+        .chat-input:focus {
+          outline: none;
+          border-color: #00f0ff;
+        }
+        .chat-submit {
+          background-color: #00f0ff;
+          color: #0a0a1a;
+          border: none;
+          padding: 12px;
+          border-radius: 6px;
+          font-weight: bold;
+          cursor: pointer;
+          transition: background-color 0.2s;
+        }
+        .chat-submit:hover { background-color: #00d0e0; }
+        .chat-submit:disabled { background-color: #666; cursor: not-allowed; }
+        .chat-back {
+          background: none;
+          border: none;
+          color: #00f0ff;
+          cursor: pointer;
+          font-size: 14px;
+          margin-bottom: 12px;
+          text-align: left;
+          padding: 0;
+        }
+
         .chat-fab {
           width: 60px;
           height: 60px;
@@ -112,45 +192,63 @@ export default function LiveChatWidget() {
           transition: transform 0.2s, background-color 0.2s;
           pointer-events: auto;
         }
-        .chat-fab:hover {
-          transform: scale(1.05);
-          background-color: #00d0e0;
-        }
-        .chat-fab:active {
-          transform: scale(0.95);
-        }
+        .chat-fab:hover { transform: scale(1.05); background-color: #00d0e0; }
+        .chat-fab:active { transform: scale(0.95); }
       `}</style>
       <div className="chat-widget-container" style={{ pointerEvents: 'none' }}>
-        {/* Expanded Menu */}
         <div className={`chat-menu ${isOpen ? 'open' : 'closed'}`} style={{ pointerEvents: isOpen ? 'auto' : 'none' }}>
-          <h4>Chat with Us 🚀</h4>
-          <p>We're online! Choose your preferred platform to start a live chat.</p>
           
-          <div className="chat-options">
-            <Link href={discordLink} target="_blank" rel="noopener noreferrer" className="chat-btn discord">
-              <svg width="24" height="24" viewBox="0 0 127.14 96.36" fill="#5865F2">
-                <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.68,65.33C38.08,65.33,34.2,61,34.2,55.77s3.79-9.56,8.48-9.56c4.71,0,8.54,4.36,8.48,9.56C51.16,61,47.39,65.33,42.68,65.33Zm41.83,0c-4.6,0-8.48-4.36-8.48-9.56s3.79-9.56,8.48-9.56c4.71,0,8.54,4.36,8.48,9.56C84.51,61,80.74,65.33,84.51,65.33Z"/>
-              </svg>
-              <span style={{ color: '#5865F2' }}>Discord</span>
-            </Link>
+          {view === 'menu' && (
+            <>
+              <h4>N3xUs Support 🚀</h4>
+              <p>We're online! Choose your preferred platform or open a ticket directly.</p>
+              <div className="chat-options">
+                <Link href={discordLink} target="_blank" rel="noopener noreferrer" className="chat-btn discord">
+                  <span style={{ color: '#5865F2' }}>Join our Discord</span>
+                </Link>
+                <Link href={telegramLink} target="_blank" rel="noopener noreferrer" className="chat-btn telegram">
+                  <span style={{ color: '#0088cc' }}>Join our Telegram</span>
+                </Link>
+                <button onClick={() => setView('form')} className="chat-btn ticket">
+                  <span style={{ color: '#10B981' }}>🎫 Open a Support Ticket</span>
+                </button>
+              </div>
+            </>
+          )}
 
-            <Link href={telegramLink} target="_blank" rel="noopener noreferrer" className="chat-btn telegram">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="#0088cc">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.46.93-4.12 2.73-.39.27-.74.41-1.05.4-.34-.01-1-.19-1.49-.35-.6-.2-1.08-.31-1.04-.66.02-.18.27-.36.75-.55 2.94-1.28 4.9-2.12 5.88-2.53 2.79-1.16 3.37-1.36 3.75-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/>
-              </svg>
-              <span style={{ color: '#0088cc' }}>Telegram</span>
-            </Link>
-            <Link href={`sms:${phoneNumber}`} className="chat-btn sms">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="#10B981">
-                <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
-              </svg>
-              <span style={{ color: '#10B981' }}>Text Us</span>
-            </Link>
-          </div>
+          {view === 'form' && (
+            <>
+              <button onClick={() => setView('menu')} className="chat-back">← Back</button>
+              <h4>Open a Ticket 🎫</h4>
+              <p>Describe your issue and our team will get back to you shortly.</p>
+              <form onSubmit={handleSubmit} className="chat-form">
+                {!session && (
+                  <>
+                    <input required type="text" placeholder="Your Name" className="chat-input" value={guestName} onChange={e => setGuestName(e.target.value)} />
+                    <input required type="email" placeholder="Your Email" className="chat-input" value={guestEmail} onChange={e => setGuestEmail(e.target.value)} />
+                  </>
+                )}
+                <input required type="text" placeholder="Subject" className="chat-input" value={subject} onChange={e => setSubject(e.target.value)} />
+                <textarea required placeholder="How can we help?" className="chat-input" rows={4} value={message} onChange={e => setMessage(e.target.value)} />
+                <button type="submit" disabled={isSubmitting} className="chat-submit">
+                  {isSubmitting ? 'Submitting...' : 'Send Ticket'}
+                </button>
+              </form>
+            </>
+          )}
+
+          {view === 'success' && (
+            <div style={{ textAlign: 'center', padding: '20px 0' }}>
+              <div style={{ fontSize: '40px', marginBottom: '10px' }}>✅</div>
+              <h4 style={{ color: '#10B981' }}>Ticket Created!</h4>
+              <p>We have received your request and will be in touch shortly.</p>
+              {session && <Link href="/dashboard/tickets" style={{ color: '#00f0ff', textDecoration: 'underline' }}>View in Dashboard</Link>}
+            </div>
+          )}
+
         </div>
 
-        {/* Floating Action Button */}
-        <button onClick={() => setIsOpen(!isOpen)} className="chat-fab" aria-label="Toggle Live Chat" style={{ pointerEvents: 'auto' }}>
+        <button onClick={handleToggle} className="chat-fab" aria-label="Toggle Live Chat" style={{ pointerEvents: 'auto' }}>
           {isOpen ? (
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18"></line>

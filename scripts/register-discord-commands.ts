@@ -42,6 +42,31 @@ const commands = [
     name: 'services',
     description: 'Browse professional digital services offered by N3xUs Konc3pt\'z',
   },
+  {
+    name: 'ticket',
+    description: 'Manage Support Tickets',
+    options: [
+      {
+        name: 'open',
+        description: 'Open a new support ticket in the N3xUs Dashboard',
+        type: 1, // SUB_COMMAND
+        options: [
+          {
+            name: 'subject',
+            description: 'A brief subject for your issue',
+            type: 3, // STRING
+            required: true,
+          },
+          {
+            name: 'message',
+            description: 'Detailed description of your request',
+            type: 3, // STRING
+            required: true,
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 async function main() {
