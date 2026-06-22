@@ -23,6 +23,7 @@ export default function LiveChatWidget() {
           flex-direction: column;
           align-items: flex-end;
           gap: 16px;
+          pointer-events: none;
         }
         .chat-menu {
           background-color: #141432;
@@ -34,6 +35,7 @@ export default function LiveChatWidget() {
           width: 280px;
           transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
           transform-origin: bottom right;
+          pointer-events: auto;
         }
         .chat-menu.closed {
           transform: scale(0) translateY(32px);
@@ -108,6 +110,7 @@ export default function LiveChatWidget() {
           box-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
           cursor: pointer;
           transition: transform 0.2s, background-color 0.2s;
+          pointer-events: auto;
         }
         .chat-fab:hover {
           transform: scale(1.05);
