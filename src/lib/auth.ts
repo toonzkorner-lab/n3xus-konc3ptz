@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
             expectedOrigin: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
             expectedRPID: process.env.NEXT_PUBLIC_RP_ID || "localhost",
             authenticator: {
-              credentialID: Buffer.from(authenticator.credentialID, 'base64url'),
+              credentialID: authenticator.credentialID,
               credentialPublicKey: Buffer.from(authenticator.credentialPublicKey, 'base64url'),
               counter: authenticator.counter,
               transports: authenticator.transports ? authenticator.transports.split(',') as any : undefined,

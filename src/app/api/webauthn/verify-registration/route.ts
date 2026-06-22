@@ -36,12 +36,13 @@ export async function POST(req: NextRequest) {
   if (verification.verified && verification.registrationInfo) {
     const { credentialID, credentialPublicKey, counter, credentialDeviceType, credentialBackedUp } = verification.registrationInfo;
 
-    const credentialIDString = Buffer.from(credentialID).toString('base64url');
+    // In v9, credentialID is already a Base64URLString. credentialPublicKey is a Uint8Array.
+    const credentialIDString = credentialID;
 
     await prisma.authenticator.create({
       data: {
         credentialID: credentialIDString,
-        credentialPublicKey: Buffer.from(credentialPublicKey).toString('base64'),
+        credentialPublicKey: Buffer.from(credentialPublicKey).toString('base64url'),
         counter,
         credentialDeviceType,
         credentialBackedUp,

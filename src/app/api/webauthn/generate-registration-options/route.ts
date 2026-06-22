@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
     userName: user.email,
     attestationType: "none",
     excludeCredentials: user.authenticators.map(auth => ({
-      id: Buffer.from(auth.credentialID, 'base64url') as unknown as Uint8Array,
+      id: auth.credentialID,
       type: 'public-key',
       transports: auth.transports ? JSON.parse(auth.transports) : undefined,
     })),
