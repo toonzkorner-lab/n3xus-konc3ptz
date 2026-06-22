@@ -27,24 +27,45 @@ interface EmailOptions {
 }
 
 export async function sendEmail({ to, subject, html, replyTo }: EmailOptions): Promise<boolean> {
+  const from = `"${FROM_NAME}" <${CONTACT_EMAIL}>`;
+
+  // Try Resend first if API key is present
+  if (resend) {
+    try {
+      await resend.emails.send({
+        from,
+        to,
+        subject,
+        html,
+        reply_to: replyTo,
+      });
+      console.log(`[Email] Sent successfully via Resend to ${to}: ${subject}`);
+      return true;
+    } catch (error) {
+      console.error('[Email] Failed to send via Resend:', error);
+      // Fall through to try SMTP if Resend fails, though usually we'd just return false
+    }
+  }
+
+  // Fallback to SMTP
   if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-    console.warn('[Email] SMTP not configured — skipping email send.');
+    console.warn('[Email] Neither Resend nor SMTP configured — skipping email send.');
     console.log(`[Email] Would have sent to: ${to}, subject: ${subject}`);
     return false;
   }
 
   try {
     await transporter.sendMail({
-      from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
+      from,
       to,
       subject,
       html,
       replyTo,
     });
-    console.log(`[Email] Sent successfully to ${to}: ${subject}`);
+    console.log(`[Email] Sent successfully via SMTP to ${to}: ${subject}`);
     return true;
   } catch (error) {
-    console.error('[Email] Failed to send:', error);
+    console.error('[Email] Failed to send via SMTP:', error);
     return false;
   }
 }
