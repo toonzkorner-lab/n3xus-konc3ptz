@@ -120,9 +120,9 @@ export default function LiveChatWidget() {
           transform: scale(0.95);
         }
       `}</style>
-      <div className="chat-widget-container">
+      <div className="chat-widget-container" style={{ pointerEvents: 'none' }}>
         {/* Expanded Menu */}
-        <div className={`chat-menu ${isOpen ? 'open' : 'closed'}`}>
+        <div className={`chat-menu ${isOpen ? 'open' : 'closed'}`} style={{ pointerEvents: isOpen ? 'auto' : 'none' }}>
           <h4>Chat with Us 🚀</h4>
           <p>We're online! Choose your preferred platform to start a live chat.</p>
           
@@ -150,7 +150,7 @@ export default function LiveChatWidget() {
         </div>
 
         {/* Floating Action Button */}
-        <button onClick={() => setIsOpen(!isOpen)} className="chat-fab" aria-label="Toggle Live Chat">
+        <button onClick={() => setIsOpen(!isOpen)} className="chat-fab" aria-label="Toggle Live Chat" style={{ pointerEvents: 'auto' }}>
           {isOpen ? (
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18"></line>

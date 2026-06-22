@@ -14,7 +14,7 @@ export default function FloatingDigitalDesigns() {
   if (!mounted) return null;
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{ pointerEvents: 'none' }}>
       
       {/* Complex Neural / Server Node Network */}
       <div className={cn(styles.shape, styles.network)}>

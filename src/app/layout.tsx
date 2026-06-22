@@ -83,7 +83,11 @@ export default function RootLayout({
             </AuthProvider>
           </ErrorBoundary>
         </ThemeProvider>
-        <Toaster position="bottom-right" />
+        <Toaster 
+          position="bottom-right" 
+          containerStyle={{ pointerEvents: 'none' }}
+          toastOptions={{ style: { pointerEvents: 'auto' } }}
+        />
         <LiveChatWidget />
         <Analytics />
         <SpeedInsights />
