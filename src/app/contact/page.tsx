@@ -52,39 +52,60 @@ export default function ContactPage() {
                 </p>
                 
                 <div className="flex flex-col gap-lg mt-xl">
-                  <div className="bg-card p-lg rounded-lg border border-subtle flex items-start gap-md">
+                  {/* Email Card */}
+                  <div className="bg-card p-lg rounded-lg border border-subtle flex items-start gap-md group hover:border-primary transition-colors">
                     <div className="text-3xl text-primary mt-1">📧</div>
-                    <div>
+                    <div className="flex-1">
                       <h4 className="text-lg font-heading text-primary mb-xs">Email Transmission</h4>
                       <p className="text-secondary text-sm mb-sm">For general inquiries and project proposals.</p>
-                      <a href="mailto:contact@n3xuskonc3ptz.com" className="text-md font-mono text-accent hover:underline">contact@n3xuskonc3ptz.com</a>
+                      <a href="mailto:contact@n3xuskonc3ptz.com" className="inline-flex items-center justify-center p-2 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-all hover:scale-110" aria-label="Email Us">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                          <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                      </a>
                     </div>
                   </div>
                   
-                  <div className="bg-card p-lg rounded-lg border border-subtle flex items-start gap-md">
-                    <div className="text-3xl text-secondary mt-1">📘</div>
-                    <div>
-                      <h4 className="text-lg font-heading text-secondary mb-xs">Facebook Page</h4>
+                  {/* Facebook Card */}
+                  <div className="bg-card p-lg rounded-lg border border-subtle flex items-start gap-md group hover:border-[#1877F2] transition-colors">
+                    <div className="text-3xl mt-1">📘</div>
+                    <div className="flex-1">
+                      <h4 className="text-lg font-heading mb-xs" style={{ color: '#1877F2' }}>Facebook Page</h4>
                       <p className="text-secondary text-sm mb-sm">Connect with us on Facebook for updates and messaging.</p>
-                      <a href="https://www.facebook.com/profile.php?id=61590253607463" target="_blank" rel="noopener noreferrer" className="text-md font-mono text-primary hover:underline">N3xUs Konc3pt'z FB</a>
+                      <a href="https://www.facebook.com/profile.php?id=61590253607463" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center p-2 rounded-full hover:scale-110 transition-all" style={{ backgroundColor: 'rgba(24, 119, 242, 0.1)', color: '#1877F2' }} aria-label="Facebook">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                      </a>
                     </div>
                   </div>
 
-                  <div className="bg-card p-lg rounded-lg border border-subtle flex items-start gap-md">
-                    <div className="text-3xl mt-1" style={{ color: '#5865F2' }}>💬</div>
-                    <div>
+                  {/* Discord Card */}
+                  <div className="bg-card p-lg rounded-lg border border-subtle flex items-start gap-md group hover:border-[#5865F2] transition-colors">
+                    <div className="text-3xl mt-1">💬</div>
+                    <div className="flex-1">
                       <h4 className="text-lg font-heading mb-xs" style={{ color: '#5865F2' }}>Discord Server</h4>
                       <p className="text-secondary text-sm mb-sm">Join our community and chat with our team directly.</p>
-                      <a href="https://discord.gg/3UHWMa7rC" target="_blank" rel="noopener noreferrer" className="text-md font-mono text-primary hover:underline">discord.gg/3UHWMa7rC</a>
+                      <a href="https://discord.gg/3UHWMa7rC" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center p-2 rounded-full hover:scale-110 transition-all" style={{ backgroundColor: 'rgba(88, 101, 242, 0.1)' }} aria-label="Discord">
+                        <svg width="24" height="24" viewBox="0 0 127.14 96.36" fill="#5865F2">
+                          <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.68,65.33C38.08,65.33,34.2,61,34.2,55.77s3.79-9.56,8.48-9.56c4.71,0,8.54,4.36,8.48,9.56C51.16,61,47.39,65.33,42.68,65.33Zm41.83,0c-4.6,0-8.48-4.36-8.48-9.56s3.79-9.56,8.48-9.56c4.71,0,8.54,4.36,8.48,9.56C84.51,61,80.74,65.33,84.51,65.33Z"/>
+                        </svg>
+                      </a>
                     </div>
                   </div>
 
-                  <div className="bg-card p-lg rounded-lg border border-subtle flex items-start gap-md">
-                    <div className="text-3xl mt-1" style={{ color: '#0088cc' }}>📱</div>
-                    <div>
+                  {/* Telegram Card */}
+                  <div className="bg-card p-lg rounded-lg border border-subtle flex items-start gap-md group hover:border-[#0088cc] transition-colors">
+                    <div className="text-3xl mt-1">📱</div>
+                    <div className="flex-1">
                       <h4 className="text-lg font-heading mb-xs" style={{ color: '#0088cc' }}>Telegram</h4>
                       <p className="text-secondary text-sm mb-sm">Message us directly on Telegram for fast responses.</p>
-                      <a href="https://t.me/n3xusg" target="_blank" rel="noopener noreferrer" className="text-md font-mono text-primary hover:underline">t.me/n3xusg</a>
+                      <a href="https://t.me/n3xusg" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center p-2 rounded-full hover:scale-110 transition-all" style={{ backgroundColor: 'rgba(0, 136, 204, 0.1)' }} aria-label="Telegram">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="#0088cc">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.46.93-4.12 2.73-.39.27-.74.41-1.05.4-.34-.01-1-.19-1.49-.35-.6-.2-1.08-.31-1.04-.66.02-.18.27-.36.75-.55 2.94-1.28 4.9-2.12 5.88-2.53 2.79-1.16 3.37-1.36 3.75-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/>
+                        </svg>
+                      </a>
                     </div>
                   </div>
                 </div>
