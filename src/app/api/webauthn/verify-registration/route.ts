@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     await prisma.authenticator.create({
       data: {
         credentialID: credentialIDString,
-        credentialPublicKey: Buffer.from(credentialPublicKey).toString('base64'),
+        credentialPublicKey: Buffer.from(credentialPublicKey).toString('base64url'),
         counter,
         credentialDeviceType,
         credentialBackedUp,
