@@ -3,7 +3,7 @@ import "./globals.css";
 import LiveChatWidget from '@/components/LiveChatWidget';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://n3xuskonceptz.com'),
+  metadataBase: new URL('https://n3xuskonc3ptz.com'),
   title: "N3xUs Konc3pt'z | Digital Design Studio",
   description: "Premium digital design studio specializing in custom Discord bots, Telegram bots, API development, client-server architecture, and stunning digital design. We turn your vision into reality.",
   keywords: ["digital design studio", "custom discord bots", "discord bot development", "telegram bots", "telegram automation", "API development", "custom API integration", "web development", "e-commerce development", "Next.js development", "custom web design", "CRM development", "client-server architecture", "web application development", "N3xUs Konc3pt'z", "freelance developer", "bot developer for hire"],
