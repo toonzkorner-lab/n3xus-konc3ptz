@@ -79,7 +79,9 @@ export default function EditServicePage({ params }: { params: Promise<{ id: stri
     setLoading(true);
     setError('');
 
-    const formData = new FormData(e.currentTarget);
+    const formElement = (e.currentTarget as HTMLElement).closest('form');
+    if (!formElement) return;
+    const formData = new FormData(formElement);
     const data = {
       name: formData.get('name'),
       slug: formData.get('slug'),
@@ -132,7 +134,7 @@ export default function EditServicePage({ params }: { params: Promise<{ id: stri
       <div className="bg-card border border-subtle rounded-xl p-2xl">
         {error && <div className="bg-error/20 border border-error text-error p-md rounded-md mb-xl">{error}</div>}
         
-        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-lg">
+        <form className="flex flex-col gap-lg">
           <div className="grid grid-2 gap-lg">
             <div className="form-group">
               <label className="form-label" htmlFor="name">Service Name</label>
@@ -235,7 +237,7 @@ export default function EditServicePage({ params }: { params: Promise<{ id: stri
 
           <div className="flex justify-end gap-md mt-xl pt-lg border-t border-subtle">
             <Link href="/admin/services" className="btn btn-secondary">Cancel</Link>
-            <button type="submit" className="btn btn-primary" disabled={loading}>
+            <button type="button" onClick={handleSubmit} className="btn btn-primary" disabled={loading}>
               {loading ? 'Updating...' : 'Save Changes'}
             </button>
           </div>

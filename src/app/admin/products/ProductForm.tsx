@@ -85,7 +85,7 @@ export default function ProductForm({ initialData }: { initialData?: any }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="bg-card border border-subtle p-lg rounded-xl flex flex-col gap-lg">
+    <form className="bg-card border border-subtle p-lg rounded-xl flex flex-col gap-lg">
       
       <div className="grid grid-2 gap-md">
         <div className="form-group">
@@ -207,7 +207,7 @@ export default function ProductForm({ initialData }: { initialData?: any }) {
       </div>
 
       <div className="flex gap-md pt-lg border-t border-subtle mt-lg">
-        <button type="submit" disabled={isSubmitting} className="btn btn-primary flex-1">
+        <button type="button" onClick={handleSubmit} disabled={isSubmitting} className="btn btn-primary flex-1">
           {isSubmitting ? 'Saving...' : (initialData ? 'Update Product' : 'Create Product')}
         </button>
         <button type="button" onClick={() => router.push('/admin/products')} className="btn btn-ghost">

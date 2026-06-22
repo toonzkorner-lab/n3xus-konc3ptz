@@ -127,7 +127,7 @@ export default function EditPortfolioPage() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} noValidate className="card flex flex-col gap-lg">
+      <form className="card flex flex-col gap-lg">
         <div className="grid grid-cols-2 gap-md">
           <div className="form-group">
             <label className="label">Title</label>
@@ -196,7 +196,7 @@ export default function EditPortfolioPage() {
 
         <div className="flex justify-end gap-md mt-md">
           <button type="button" onClick={() => router.push('/admin/portfolio')} className="btn btn-outline" disabled={saving}>Cancel</button>
-          <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? 'Saving...' : 'Save Changes'}</button>
+          <button type="button" onClick={handleSubmit} className="btn btn-primary" disabled={saving}>{saving ? 'Saving...' : 'Save Changes'}</button>
         </div>
       </form>
     </div>

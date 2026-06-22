@@ -4,7 +4,7 @@ import { stripe } from '@/lib/stripe';
 
 const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_API = `https://api.telegram.org/bot${TELEGRAM_TOKEN}`;
-const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://n3xus-konc3ptz.vercel.app';
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://n3xuskonc3ptz.com';
 
 // Helper to send a message
 async function sendMessage(chatId: number, text: string, inlineKeyboard?: any[]) {
