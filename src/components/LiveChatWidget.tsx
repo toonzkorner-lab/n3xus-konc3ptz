@@ -1,22 +1,77 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 
+type Message = { role: 'user' | 'model'; content: string };
+
 export default function LiveChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
-  const [view, setView] = useState<'menu' | 'form' | 'success'>('menu');
+  const [view, setView] = useState<'menu' | 'chat' | 'form' | 'success'>('menu');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [guestEmail, setGuestEmail] = useState('');
   const [guestName, setGuestName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
+  // Chat state
+  const [chatHistory, setChatHistory] = useState<Message[]>([]);
+  const [chatInput, setChatInput] = useState('');
+  const [isAiTyping, setIsAiTyping] = useState(false);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
   const { data: session } = useSession();
 
   const discordLink = "https://discord.gg/3UHWMa7rC";
   const telegramLink = "https://t.me/n3xusg";
+
+  useEffect(() => {
+    if (view === 'chat' && chatHistory.length === 0) {
+      setChatHistory([{ role: 'model', content: "Hello! I'm N3xUs AI. How can I assist you with our digital services today?" }]);
+    }
+  }, [view, chatHistory]);
+
+  useEffect(() => {
+    if (view === 'chat') {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [chatHistory, view]);
+
+  const handleChatSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chatInput.trim() || isAiTyping) return;
+
+    const userMsg = chatInput.trim();
+    setChatInput('');
+    const updatedHistory: Message[] = [...chatHistory, { role: 'user', content: userMsg }];
+    setChatHistory(updatedHistory);
+    setIsAiTyping(true);
+
+    try {
+      const res = await fetch('/api/tickets/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMsg, history: updatedHistory })
+      });
+      const data = await res.json();
+      
+      if (data.escalate) {
+        setChatHistory(prev => [...prev, { role: 'model', content: "Let me connect you to a human agent. Please fill out this short ticket form." }]);
+        setTimeout(() => setView('form'), 2000);
+      } else if (data.reply) {
+        setChatHistory(prev => [...prev, { role: 'model', content: data.reply }]);
+      } else {
+        setChatHistory(prev => [...prev, { role: 'model', content: "I'm having trouble connecting to my mainframe right now. Let's open a ticket instead." }]);
+        setTimeout(() => setView('form'), 2000);
+      }
+    } catch (err) {
+      setChatHistory(prev => [...prev, { role: 'model', content: "Connection error. Escalating to human support..." }]);
+      setTimeout(() => setView('form'), 2000);
+    } finally {
+      setIsAiTyping(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +82,6 @@ export default function LiveChatWidget() {
 
     try {
       if (session) {
-        // Logged in user: Create a Ticket
         const res = await fetch('/api/tickets', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -35,7 +89,6 @@ export default function LiveChatWidget() {
         });
         if (res.ok) setView('success');
       } else {
-        // Guest user: Create a Contact Submission
         const res = await fetch('/api/contact', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -52,12 +105,14 @@ export default function LiveChatWidget() {
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
-    if (!isOpen) {
-      setView('menu');
-      setSubject('');
-      setMessage('');
-      setGuestEmail('');
-      setGuestName('');
+    if (!isOpen && view === 'menu') {
+      // Just opening
+    } else if (!isOpen) {
+      // Closing
+      setTimeout(() => {
+        setView('menu');
+        setChatHistory([]);
+      }, 300);
     }
   };
 
@@ -86,8 +141,8 @@ export default function LiveChatWidget() {
           transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
           transform-origin: bottom right;
           pointer-events: auto;
-          max-height: 500px;
-          overflow-y: auto;
+          display: flex;
+          flex-direction: column;
         }
         .chat-menu.closed {
           transform: scale(0) translateY(32px);
@@ -128,6 +183,8 @@ export default function LiveChatWidget() {
           text-align: left;
           width: 100%;
         }
+        .chat-btn.ai { background-color: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.3); }
+        .chat-btn.ai:hover { background-color: rgba(0, 240, 255, 0.2); }
         .chat-btn.discord { background-color: rgba(88, 101, 242, 0.1); border: 1px solid rgba(88, 101, 242, 0.3); }
         .chat-btn.discord:hover { background-color: rgba(88, 101, 242, 0.2); }
         .chat-btn.telegram { background-color: rgba(0, 136, 204, 0.1); border: 1px solid rgba(0, 136, 204, 0.3); }
@@ -194,6 +251,52 @@ export default function LiveChatWidget() {
         }
         .chat-fab:hover { transform: scale(1.05); background-color: #00d0e0; }
         .chat-fab:active { transform: scale(0.95); }
+
+        .chat-messages {
+          flex: 1;
+          overflow-y: auto;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          margin-bottom: 12px;
+          max-height: 300px;
+          min-height: 200px;
+          padding-right: 4px;
+        }
+        .chat-bubble {
+          padding: 8px 12px;
+          border-radius: 12px;
+          font-size: 14px;
+          max-width: 85%;
+          line-height: 1.4;
+        }
+        .chat-bubble.user {
+          align-self: flex-end;
+          background-color: rgba(0, 240, 255, 0.2);
+          border-bottom-right-radius: 4px;
+          color: white;
+        }
+        .chat-bubble.model {
+          align-self: flex-start;
+          background-color: rgba(255, 255, 255, 0.1);
+          border-bottom-left-radius: 4px;
+          color: #e8e8f0;
+        }
+        .chat-input-row {
+          display: flex;
+          gap: 8px;
+        }
+        .chat-input-row .chat-input { margin: 0; }
+        .chat-input-row button {
+          background-color: #00f0ff;
+          border: none;
+          color: #0a0a1a;
+          border-radius: 6px;
+          padding: 0 16px;
+          cursor: pointer;
+          font-weight: bold;
+        }
+        .chat-input-row button:disabled { opacity: 0.5; cursor: not-allowed; }
       `}</style>
       <div className="chat-widget-container" style={{ pointerEvents: 'none' }}>
         <div className={`chat-menu ${isOpen ? 'open' : 'closed'}`} style={{ pointerEvents: isOpen ? 'auto' : 'none' }}>
@@ -201,8 +304,11 @@ export default function LiveChatWidget() {
           {view === 'menu' && (
             <>
               <h4>N3xUs Support 🚀</h4>
-              <p>We're online! Choose your preferred platform or open a ticket directly.</p>
+              <p>We're online! Choose your preferred platform or chat with our AI.</p>
               <div className="chat-options">
+                <button onClick={() => setView('chat')} className="chat-btn ai">
+                  <span style={{ color: '#00f0ff' }}>🤖 Chat with N3xUs AI</span>
+                </button>
                 <Link href={discordLink} target="_blank" rel="noopener noreferrer" className="chat-btn discord">
                   <span style={{ color: '#5865F2' }}>Join our Discord</span>
                 </Link>
@@ -213,6 +319,37 @@ export default function LiveChatWidget() {
                   <span style={{ color: '#10B981' }}>🎫 Open a Support Ticket</span>
                 </button>
               </div>
+            </>
+          )}
+
+          {view === 'chat' && (
+            <>
+              <button onClick={() => setView('menu')} className="chat-back">← Back</button>
+              <h4>N3xUs AI 🤖</h4>
+              <div className="chat-messages">
+                {chatHistory.map((msg, i) => (
+                  <div key={i} className={`chat-bubble ${msg.role}`}>
+                    {msg.content}
+                  </div>
+                ))}
+                {isAiTyping && (
+                  <div className="chat-bubble model" style={{ fontStyle: 'italic', opacity: 0.7 }}>
+                    Typing...
+                  </div>
+                )}
+                <div ref={chatEndRef} />
+              </div>
+              <form onSubmit={handleChatSubmit} className="chat-input-row">
+                <input 
+                  type="text" 
+                  className="chat-input" 
+                  placeholder="Ask a question..." 
+                  value={chatInput} 
+                  onChange={e => setChatInput(e.target.value)}
+                  disabled={isAiTyping}
+                />
+                <button type="submit" disabled={isAiTyping || !chatInput.trim()}>Send</button>
+              </form>
             </>
           )}
 

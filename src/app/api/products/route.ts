@@ -47,6 +47,24 @@ export async function POST(request: Request) {
       }
     });
 
+    if (product.active) {
+      import("@/lib/discord").then(({ sendDiscordNotification }) => {
+        sendDiscordNotification('🚀 **New Product Added to Store!**', [
+          {
+            title: product.title,
+            description: product.shortDesc || 'Check out our latest product.',
+            url: `${process.env.NEXT_PUBLIC_APP_URL}/store/${product.slug}`,
+            color: 0x39ff14, // Neon Green
+            fields: [
+              { name: 'Price', value: `$${(product.price / 100).toFixed(2)}`, inline: true },
+              { name: 'Category', value: product.category || 'Digital', inline: true }
+            ],
+            timestamp: new Date().toISOString()
+          }
+        ]);
+      }).catch(err => console.error(err));
+    }
+
     return NextResponse.json(product, { status: 201 });
   } catch (error) {
     console.error(error);

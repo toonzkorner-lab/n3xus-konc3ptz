@@ -6,8 +6,8 @@ export interface DiscordEmbed {
   timestamp?: string;
 }
 
-export async function sendDiscordNotification(content: string, embeds?: DiscordEmbed[]) {
-  const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+export async function sendDiscordNotification(content: string, embeds?: DiscordEmbed[], customWebhookUrl?: string) {
+  const webhookUrl = customWebhookUrl || process.env.DISCORD_ANNOUNCEMENTS_WEBHOOK_URL || process.env.DISCORD_WEBHOOK_URL;
   if (!webhookUrl) {
     console.warn('DISCORD_WEBHOOK_URL is not set. Skipping Discord notification.');
     return;

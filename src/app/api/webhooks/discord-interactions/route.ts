@@ -174,6 +174,42 @@ export async function POST(req: Request) {
       });
     }
 
+    if (name === 'link') {
+      const email = options?.find((opt: any) => opt.name === 'email')?.value;
+      const discordUser = interaction.member?.user || interaction.user;
+
+      if (!email || !discordUser) {
+        return NextResponse.json({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: { content: 'Missing email or user data.', flags: 64 }
+        });
+      }
+
+      const user = await prisma.user.findUnique({ where: { email } });
+      if (!user) {
+        return NextResponse.json({
+          type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+          data: { content: `No N3xUs account found for email: ${email}`, flags: 64 }
+        });
+      }
+
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          discordId: discordUser.id,
+          discordUsername: discordUser.username
+        }
+      });
+
+      return NextResponse.json({
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+        data: {
+          content: `✅ Successfully linked your Discord account to **${email}**!`,
+          flags: 64
+        }
+      });
+    }
+
     if (name === 'ticket') {
       const subCommand = options?.[0]?.name;
 

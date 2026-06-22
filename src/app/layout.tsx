@@ -69,7 +69,7 @@ export default function RootLayout({
       <body suppressHydrationWarning className={`${orbitron.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
         <OrganizationJsonLd />
         <WebSiteJsonLd />
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="dark" themes={['dark', 'light', 'neon']} enableSystem={false} disableTransitionOnChange>
           <div className="cosmic-bg">
             <div className="stars"></div>
           </div>

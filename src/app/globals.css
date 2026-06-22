@@ -1317,3 +1317,58 @@ code, pre {
   --gradient-button: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #7c3aed 100%);
   --gradient-button-hover: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 50%, #8b5cf6 100%);
 }
+
+/* ============================================================
+   NEON THEME VARIABLES
+   ============================================================ */
+:root.neon {
+  /* ---- Color Palette ---- */
+  --color-primary: #ff00ff;
+  --color-primary-dim: #cc00cc;
+  --color-primary-glow: rgba(255, 0, 255, 0.5);
+  --color-primary-subtle: rgba(255, 0, 255, 0.1);
+  
+  --color-secondary: #00ffff;
+  --color-secondary-dim: #00cccc;
+  --color-secondary-glow: rgba(0, 255, 255, 0.5);
+  --color-secondary-subtle: rgba(0, 255, 255, 0.1);
+  
+  --color-accent: #39ff14;
+  --color-accent-glow: rgba(57, 255, 20, 0.5);
+  
+  /* ---- Background Colors ---- */
+  --bg-primary: #05000a;
+  --bg-secondary: #0a0015;
+  --bg-tertiary: #100020;
+  --bg-card: rgba(10, 0, 20, 0.8);
+  --bg-card-hover: rgba(15, 0, 30, 0.9);
+  --bg-glass: rgba(10, 0, 20, 0.6);
+  --bg-glass-strong: rgba(10, 0, 20, 0.9);
+  --bg-input: rgba(10, 0, 20, 0.7);
+  --bg-overlay: rgba(0, 0, 0, 0.8);
+  
+  /* ---- Text Colors ---- */
+  --text-primary: #ffffff;
+  --text-secondary: #ffb3ff;
+  --text-tertiary: #cc66cc;
+  --text-inverse: #000000;
+  --text-link: #ff00ff;
+  
+  /* ---- Border Colors ---- */
+  --border-primary: rgba(255, 0, 255, 0.4);
+  --border-secondary: rgba(0, 255, 255, 0.4);
+  --border-subtle: rgba(255, 255, 255, 0.1);
+  --border-hover: rgba(255, 0, 255, 0.7);
+  
+  /* ---- Gradients ---- */
+  --gradient-primary: linear-gradient(135deg, #ff00ff, #00ffff);
+  --gradient-primary-reverse: linear-gradient(135deg, #00ffff, #ff00ff);
+  --gradient-hero: linear-gradient(180deg, #05000a 0%, #0a0015 50%, #100020 100%);
+  --gradient-card: linear-gradient(145deg, rgba(255, 0, 255, 0.1), rgba(0, 255, 255, 0.1));
+  --gradient-cosmic: linear-gradient(135deg, #05000a 0%, #15002a 25%, #0a0015 50%, #05002a 75%, #05000a 100%);
+  --gradient-nebula: radial-gradient(ellipse at 20% 50%, rgba(0, 255, 255, 0.2) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(255, 0, 255, 0.2) 0%, transparent 60%);
+  --gradient-text: linear-gradient(90deg, #ff00ff, #00ffff, #39ff14);
+  --gradient-glow: radial-gradient(circle, rgba(255, 0, 255, 0.3) 0%, transparent 70%);
+  --gradient-button: linear-gradient(135deg, #ff00ff 0%, #cc00cc 50%, #00ffff 100%);
+  --gradient-button-hover: linear-gradient(135deg, #ff33ff 0%, #ff00ff 50%, #33ffff 100%);
+}

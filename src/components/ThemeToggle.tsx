@@ -17,13 +17,17 @@ export default function ThemeToggle() {
 
   return (
     <button
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+      onClick={() => {
+        if (theme === 'dark') setTheme('light');
+        else if (theme === 'light') setTheme('neon');
+        else setTheme('dark');
+      }}
       className="btn btn-icon relative group"
-      aria-label="Toggle Dark Mode"
+      aria-label="Toggle Theme"
     >
       <div className="absolute inset-0 bg-primary/10 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
       <span className="relative z-10 text-xl flex items-center justify-center">
-        {theme === 'dark' ? '☀️' : '🌙'}
+        {theme === 'dark' ? '🌙' : theme === 'light' ? '☀️' : '⚡️'}
       </span>
     </button>
   );

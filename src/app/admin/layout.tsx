@@ -45,6 +45,9 @@ export default async function AdminLayout({
           <Link href="/admin" className="flex items-center gap-md p-md rounded-md hover:bg-accent/10 hover:text-accent transition-colors text-secondary">
             <span>🌐</span> Command Center
           </Link>
+          <Link href="/admin/analytics" className="flex items-center gap-md p-md rounded-md hover:bg-accent/10 hover:text-accent transition-colors text-secondary">
+            <span>📈</span> Analytics Dashboard
+          </Link>
           <Link href="/admin/users" className="flex items-center gap-md p-md rounded-md hover:bg-accent/10 hover:text-accent transition-colors text-secondary">
             <span>👥</span> Client Database
           </Link>

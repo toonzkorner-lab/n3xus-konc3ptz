@@ -89,6 +89,23 @@ export async function POST(req: Request) {
               console.log(`Automatically provisioned project ${project.id} for service "${item.title}"`);
             }
           }
+
+          // Auto-assign Premium Client Discord Role
+          if (user.discordId && process.env.DISCORD_BOT_TOKEN && process.env.DISCORD_GUILD_ID && process.env.DISCORD_PREMIUM_ROLE_ID) {
+            try {
+              const discordRes = await fetch(`https://discord.com/api/v10/guilds/${process.env.DISCORD_GUILD_ID}/members/${user.discordId}/roles/${process.env.DISCORD_PREMIUM_ROLE_ID}`, {
+                method: 'PUT',
+                headers: { Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}` }
+              });
+              if (!discordRes.ok) {
+                console.error('Failed to assign Discord role:', await discordRes.text());
+              } else {
+                console.log(`Assigned Premium role to Discord User ${user.discordId}`);
+              }
+            } catch (err) {
+              console.error('Error assigning Discord role:', err);
+            }
+          }
         }
       } catch (e) {
         console.error('Error updating order status / provisioning project', e);

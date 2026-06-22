@@ -67,6 +67,18 @@ const commands = [
       },
     ],
   },
+  {
+    name: 'link',
+    description: 'Link your N3xUs Konc3pt\'z account to your Discord account',
+    options: [
+      {
+        name: 'email',
+        description: 'The email address associated with your account',
+        type: 3, // STRING
+        required: true,
+      },
+    ],
+  },
 ];
 
 async function main() {

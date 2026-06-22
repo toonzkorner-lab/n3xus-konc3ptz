@@ -40,6 +40,20 @@ export async function POST(request: Request) {
       },
     });
 
+    if (post.published) {
+      import("@/lib/discord").then(({ sendDiscordNotification }) => {
+        sendDiscordNotification('📢 **New Blog Post Published!**', [
+          {
+            title: post.title,
+            description: post.excerpt || 'Check out our latest update.',
+            url: `${process.env.NEXT_PUBLIC_APP_URL}/blog/${post.slug}`,
+            color: 0x00f0ff,
+            timestamp: new Date().toISOString()
+          }
+        ]);
+      }).catch(err => console.error(err));
+    }
+
     return NextResponse.json(post, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

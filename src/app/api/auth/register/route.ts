@@ -56,6 +56,23 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    // Send Welcome Email
+    import('@/lib/email').then(async ({ resend, DEFAULT_SENDER }) => {
+      if (resend) {
+        try {
+          const WelcomeEmail = (await import('@/emails/WelcomeEmail')).default;
+          await resend.emails.send({
+            from: DEFAULT_SENDER,
+            to: email,
+            subject: 'Welcome to N3xUs Konc3pt\'z',
+            react: WelcomeEmail({ name }),
+          });
+        } catch (emailErr) {
+          console.error('Failed to send welcome email:', emailErr);
+        }
+      }
+    }).catch(err => console.error('Error loading email module:', err));
+
     return NextResponse.json(
       { success: true, id: user.id },
       { status: 201 }
