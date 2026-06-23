@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import Image from "next/image";
+import PortfolioCommentSection from "@/components/PortfolioCommentSection";
 
 export async function generateMetadata(
   props: { params: Promise<{ slug: string }> }
@@ -137,6 +138,8 @@ export default async function PortfolioItemPage(
                 )}
               </div>
             </div>
+            
+            <PortfolioCommentSection slug={item.slug} />
           </div>
         </section>
       </main>

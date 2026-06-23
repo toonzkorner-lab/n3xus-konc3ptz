@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { BlogPostJsonLd } from '@/components/JsonLd';
+import BlogCommentSection from '@/components/BlogCommentSection';
 
 export async function generateStaticParams() {
   const posts = await prisma.blogPost.findMany({
@@ -128,6 +129,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 ← More Transmissions
               </Link>
             </div>
+            
+            <BlogCommentSection slug={slug} />
           </div>
         </article>
       </main>
