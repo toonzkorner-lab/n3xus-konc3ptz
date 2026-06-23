@@ -25,7 +25,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Test
   const [company, setCompany] = useState('');
   const [role, setRole] = useState('');
   const [content, setContent] = useState('');
-  const [rating, setRating] = useState(5);
+  const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -113,12 +113,12 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Test
             </div>
             <div>
               <label className="block text-sm text-tertiary mb-2">Rating</label>
-              <div className="flex gap-1 py-1">
+              <div className="flex items-center gap-1 py-1">
                 {[1, 2, 3, 4, 5].map(star => (
                   <button
                     key={star}
                     type="button"
-                    className={`text-2xl transition-colors focus:outline-none ${star <= (hoveredRating || rating) ? 'text-yellow-400' : 'text-tertiary'}`}
+                    className={`text-3xl transition-all hover:scale-110 active:scale-90 focus:outline-none ${star <= (hoveredRating || rating) ? 'text-yellow-400 drop-shadow-sm' : 'text-tertiary/50'}`}
                     onMouseEnter={() => setHoveredRating(star)}
                     onMouseLeave={() => setHoveredRating(0)}
                     onClick={() => setRating(star)}
@@ -126,6 +126,9 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Test
                     ★
                   </button>
                 ))}
+                <span className="ml-3 text-sm font-medium text-secondary">
+                  {rating > 0 ? `${rating} / 5 Selected` : 'Select rating'}
+                </span>
               </div>
             </div>
           </div>
