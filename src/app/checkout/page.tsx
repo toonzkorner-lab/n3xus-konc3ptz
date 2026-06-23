@@ -1,13 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useCart } from '@/components/CartProvider';
 import { formatCurrency } from '@/lib/utils';
-import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+
+import { loadStripe } from '@stripe/stripe-js';
+import {
+  EmbeddedCheckoutProvider,
+  EmbeddedCheckout
+} from '@stripe/react-stripe-js';
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 
 export default function CheckoutPage() {
   const {
@@ -15,19 +22,17 @@ export default function CheckoutPage() {
     removeFromCart,
     updateQuantity,
     totalPrice,
-    clearCart,
     appliedCoupon,
     discountAmount,
     finalTotal,
   } = useCart();
-  const router = useRouter();
   const { data: session } = useSession();
 
   const [customerName, setCustomerName] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
   const [isClient, setIsClient] = useState(false);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [error, setError] = useState<string>('');
 
   // Pre-fill from session if logged in
   useEffect(() => {
@@ -36,15 +41,10 @@ export default function CheckoutPage() {
     if (session?.user?.email) setCustomerEmail(session.user.email);
   }, [session]);
 
-  const handleCheckout = async () => {
-    if (items.length === 0) {
-      setError('Your cart is empty.');
-      return;
-    }
-
+  const fetchClientSecret = useCallback(async () => {
+    if (items.length === 0) return null;
     setError('');
-    setIsLoading(true);
-
+    
     try {
       const res = await fetch('/api/checkout', {
         method: 'POST',
@@ -56,19 +56,30 @@ export default function CheckoutPage() {
       });
 
       const data = await res.json();
-
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        setError(data.error || 'Checkout failed. Please try again.');
-        setIsLoading(false);
+      
+      if (!res.ok) {
+        setError(data.error || 'Failed to initialize checkout');
+        return null;
       }
-    } catch (e) {
-      console.error(e);
-      setError('An error occurred during checkout. Please try again.');
-      setIsLoading(false);
+      
+      return data.clientSecret;
+    } catch (err) {
+      console.error(err);
+      setError('An error occurred. Please try again.');
+      return null;
     }
-  };
+  }, [items, appliedCoupon]);
+
+  useEffect(() => {
+    // Only fetch if we have items
+    if (items.length > 0 && isClient) {
+      fetchClientSecret().then(secret => {
+        if (secret) {
+          setClientSecret(secret);
+        }
+      });
+    }
+  }, [fetchClientSecret, items.length, isClient]);
 
   // Prevent hydration mismatch
   if (!isClient) {
@@ -112,7 +123,7 @@ export default function CheckoutPage() {
             </div>
           ) : (
             <div className="grid grid-2 gap-2xl" style={{ alignItems: 'start' }}>
-              {/* Left Column — Cart & Customer Info */}
+              {/* Left Column — Cart & Order Summary */}
               <div className="flex flex-col gap-2xl">
                 {/* Cart Items */}
                 <div className="bg-card border border-subtle rounded-xl p-xl shadow-md">
@@ -177,88 +188,9 @@ export default function CheckoutPage() {
                       </div>
                     ))}
                   </div>
-                </div>
-
-                {/* Applied Coupon (if any) */}
-                {appliedCoupon && (
-                  <div className="bg-card border border-subtle rounded-xl p-xl shadow-md">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h2 className="text-xl font-heading text-primary mb-sm">Promo Code Applied</h2>
-                        <div className="flex items-center gap-sm">
-                          <span className="badge badge-success">{appliedCoupon.code}</span>
-                          <span className="text-sm text-secondary">
-                            {appliedCoupon.type === 'PERCENTAGE'
-                              ? `${appliedCoupon.value}% off`
-                              : `${formatCurrency(appliedCoupon.value)} off`}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm text-secondary">You save</p>
-                        <p className="text-xl font-heading font-bold text-success">{formatCurrency(discountAmount)}</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Customer Info */}
-                <div className="bg-card border border-subtle rounded-xl p-xl shadow-md">
-                  <h2 className="text-xl font-heading text-primary mb-lg">Customer Information</h2>
-
-                  <div className="grid grid-2 gap-lg">
-                    <div className="form-group" style={{ marginBottom: 0 }}>
-                      <label className="form-label" htmlFor="customerName">Full Name</label>
-                      <input
-                        id="customerName"
-                        type="text"
-                        className="form-input"
-                        placeholder="John Doe"
-                        value={customerName}
-                        onChange={(e) => setCustomerName(e.target.value)}
-                      />
-                    </div>
-                    <div className="form-group" style={{ marginBottom: 0 }}>
-                      <label className="form-label" htmlFor="customerEmail">Email Address</label>
-                      <input
-                        id="customerEmail"
-                        type="email"
-                        className="form-input"
-                        placeholder="john@example.com"
-                        value={customerEmail}
-                        onChange={(e) => setCustomerEmail(e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  {!session && (
-                    <p className="text-xs text-tertiary mt-lg">
-                      Already have an account?{' '}
-                      <Link href="/auth/login" className="text-accent hover:underline">Log in</Link>{' '}
-                      for faster checkout.
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* Right Column — Order Summary */}
-              <div className="flex flex-col gap-2xl">
-                <div className="bg-card border border-subtle rounded-xl p-xl shadow-md sticky" style={{ top: 'calc(var(--navbar-height) + 2rem)' }}>
-                  <h2 className="text-xl font-heading text-primary mb-lg">Order Summary</h2>
-
-                  {/* Line items */}
-                  <div className="flex flex-col gap-sm mb-lg">
-                    {items.map((item, idx) => (
-                      <div key={`summary-${item.id}-${item.type}-${idx}`} className="flex justify-between text-sm">
-                        <span className="text-secondary">
-                          {item.title} <span className="text-tertiary">× {item.quantity}</span>
-                        </span>
-                        <span className="text-primary font-mono">{formatCurrency(item.price * item.quantity)}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="border-t border-subtle pt-lg mb-lg">
+                  
+                  {/* Order Totals Summary */}
+                  <div className="border-t border-subtle pt-lg mt-lg">
                     <div className="flex justify-between items-center mb-sm">
                       <span className="text-secondary">Subtotal</span>
                       <span className="text-primary font-mono">{formatCurrency(totalPrice)}</span>
@@ -280,51 +212,37 @@ export default function CheckoutPage() {
                     </div>
                   </div>
 
-                  <div className="border-t border-subtle pt-lg mb-xl">
+                  <div className="border-t border-subtle pt-lg mt-sm">
                     <div className="flex justify-between items-center">
                       <span className="text-lg font-heading text-primary">Total</span>
                       <span className="text-3xl font-heading font-bold glow-text text-primary">{formatCurrency(finalTotal)}</span>
                     </div>
-                    <p className="text-xs text-tertiary text-right mt-xs">USD</p>
                   </div>
+                </div>
+              </div>
 
-                  {error && (
-                    <div className="bg-error/10 border border-error/30 rounded-md p-md mb-lg">
-                      <p className="text-sm text-error">{error}</p>
+              {/* Right Column — Stripe Embedded Checkout */}
+              <div className="flex flex-col gap-2xl">
+                <div className="bg-white border border-subtle rounded-xl p-0 shadow-md sticky overflow-hidden" style={{ top: 'calc(var(--navbar-height) + 2rem)', minHeight: '400px' }}>
+                  {error ? (
+                    <div className="p-xl bg-error/10 border-b border-error/30 text-error">
+                      {error}
+                    </div>
+                  ) : clientSecret ? (
+                    <div id="checkout-container" className="w-full">
+                      <EmbeddedCheckoutProvider
+                        stripe={stripePromise}
+                        options={{ clientSecret }}
+                      >
+                        <EmbeddedCheckout className="w-full" />
+                      </EmbeddedCheckoutProvider>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center p-2xl h-full gap-md">
+                      <div className="spinner spinner-md"></div>
+                      <p className="text-tertiary text-sm">Preparing secure checkout...</p>
                     </div>
                   )}
-
-                  <button
-                    onClick={handleCheckout}
-                    disabled={isLoading}
-                    className="btn btn-primary w-full py-lg text-lg"
-                  >
-                    {isLoading ? (
-                      <span className="flex items-center gap-sm">
-                        <span className="spinner spinner-sm" />
-                        Processing...
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-sm">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-                          <line x1="1" y1="10" x2="23" y2="10" />
-                        </svg>
-                        Proceed to Payment
-                      </span>
-                    )}
-                  </button>
-
-                  <p className="text-xs text-center text-tertiary mt-lg">
-                    Payments processed securely via Stripe. Your card details are never stored on our servers.
-                  </p>
-
-                  <div className="flex items-center justify-center gap-md mt-lg">
-                    <span className="text-tertiary text-lg">🔒</span>
-                    <span className="text-xs text-tertiary">SSL Encrypted</span>
-                    <span className="text-tertiary">•</span>
-                    <span className="text-xs text-tertiary">PCI Compliant</span>
-                  </div>
                 </div>
               </div>
             </div>

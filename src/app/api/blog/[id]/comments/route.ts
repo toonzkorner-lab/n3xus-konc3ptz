@@ -1,53 +1,59 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 export async function GET(
   request: Request,
-  props: { params: Promise<{ slug: string }> }
+  props: { params: Promise<{ id: string }> }
 ) {
   try {
     const params = await props.params;
     const post = await prisma.blogPost.findUnique({
-      where: { slug: params.slug },
-      select: { id: true },
+      where: { slug: params.id },
+      include: {
+        comments: {
+          include: {
+            user: {
+              select: { id: true, name: true, image: true },
+            },
+          },
+          orderBy: { createdAt: 'desc' },
+        },
+      },
     });
 
     if (!post) {
       return NextResponse.json({ error: 'Post not found' }, { status: 404 });
     }
 
-    const comments = await prisma.blogComment.findMany({
-      where: { blogPostId: post.id },
-      orderBy: { createdAt: 'desc' },
-      select: {
-        id: true,
-        content: true,
-        authorName: true,
-        createdAt: true,
-      }
-    });
-
-    return NextResponse.json(comments);
+    return NextResponse.json(post.comments);
   } catch (error) {
-    console.error('Error fetching comments:', error);
+    console.error('Error fetching blog comments:', error);
     return NextResponse.json({ error: 'Failed to fetch comments' }, { status: 500 });
   }
 }
 
 export async function POST(
   request: Request,
-  props: { params: Promise<{ slug: string }> }
+  props: { params: Promise<{ id: string }> }
 ) {
   try {
     const params = await props.params;
-    const { content, authorName, authorEmail } = await request.json();
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-    if (!content || !authorName) {
-      return NextResponse.json({ error: 'Name and comment are required' }, { status: 400 });
+    const body = await request.json();
+    const { content } = body;
+
+    if (!content || typeof content !== 'string') {
+      return NextResponse.json({ error: 'Content is required' }, { status: 400 });
     }
 
     const post = await prisma.blogPost.findUnique({
-      where: { slug: params.slug },
+      where: { slug: params.id },
       select: { id: true },
     });
 
@@ -58,16 +64,14 @@ export async function POST(
     const comment = await prisma.blogComment.create({
       data: {
         content,
-        authorName,
-        authorEmail,
+        userId: session.user.id,
         blogPostId: post.id,
       },
-      select: {
-        id: true,
-        content: true,
-        authorName: true,
-        createdAt: true,
-      }
+      include: {
+        user: {
+          select: { id: true, name: true, image: true },
+        },
+      },
     });
 
     return NextResponse.json(comment, { status: 201 });
