@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 
 type Comment = {
   id: string;
@@ -11,6 +12,9 @@ type Comment = {
 };
 
 export default function PortfolioCommentSection({ slug }: { slug: string }) {
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.role === 'ADMIN';
+
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   
@@ -33,6 +37,22 @@ export default function PortfolioCommentSection({ slug }: { slug: string }) {
         setLoading(false);
       });
   }, [slug]);
+
+  const handleDelete = async (commentId: string) => {
+    if (!confirm('Are you sure you want to delete this comment?')) return;
+    
+    try {
+      const res = await fetch(`/api/portfolio/${slug}/comments/${commentId}`, {
+        method: 'DELETE',
+      });
+      
+      if (!res.ok) throw new Error('Failed to delete comment');
+      
+      setComments(comments.filter(c => c.id !== commentId));
+    } catch (err) {
+      alert('Failed to delete comment');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -138,10 +158,20 @@ export default function PortfolioCommentSection({ slug }: { slug: string }) {
           comments.map(comment => (
             <div key={comment.id} className="bg-card/50 p-md rounded-lg border border-subtle flex flex-col gap-sm">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-primary">{comment.authorName}</span>
-                <span className="text-xs text-tertiary">
-                  {new Date(comment.createdAt).toLocaleDateString()}
-                </span>
+                <div className="flex items-center gap-sm">
+                  <span className="font-bold text-primary">{comment.authorName}</span>
+                  <span className="text-xs text-tertiary">
+                    {new Date(comment.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+                {isAdmin && (
+                  <button 
+                    onClick={() => handleDelete(comment.id)}
+                    className="text-xs text-red-500 hover:text-red-400 transition-colors"
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
               {comment.rating && comment.rating > 0 && (
                 <div className="text-yellow-400 text-sm">
