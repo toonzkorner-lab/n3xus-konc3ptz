@@ -67,33 +67,12 @@ export default async function Home() {
     }
   ];
 
-  // Mock testimonials
-  const testimonials = [
-    {
-      id: 't1',
-      clientName: 'Alex Mercer',
-      clientRole: 'Community Manager',
-      clientCompany: 'Cyber Gaming',
-      content: 'N3xUs Konc3pt\'z built us a Discord bot that completely transformed our community engagement. The custom economy system and AI moderation are flawless.',
-      rating: 5
-    },
-    {
-      id: 't2',
-      clientName: 'Sarah Jenkins',
-      clientRole: 'CEO',
-      clientCompany: 'Future Tech Solutions',
-      content: 'The web design they delivered for our new SaaS platform was nothing short of spectacular. They truly understand the cosmic cyberpunk aesthetic.',
-      rating: 5
-    },
-    {
-      id: 't3',
-      clientName: 'Marcus Wright',
-      clientRole: 'Operations Director',
-      clientCompany: 'Global Trade',
-      content: 'Our Telegram automation workflows are now seamless. What used to take hours is now handled instantly by the custom bot they developed.',
-      rating: 4
-    }
-  ];
+  // Fetch testimonials
+  const testimonials = await prisma.testimonial.findMany({
+    where: { featured: true },
+    orderBy: { createdAt: 'desc' },
+    take: 5
+  });
 
   // Stats
   const stats = [
@@ -181,6 +160,12 @@ export default async function Home() {
             </div>
             
             <TestimonialCarousel testimonials={testimonials} />
+            
+            <div className="text-center mt-xl">
+              <Link href="/reviews" className="btn btn-secondary">
+                Read All Reviews & Leave Yours
+              </Link>
+            </div>
           </div>
         </section>
 

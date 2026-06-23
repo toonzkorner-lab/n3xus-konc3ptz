@@ -69,6 +69,7 @@ export default function Navbar() {
     },
     { name: 'Store', href: '/store' },
     { name: 'Blog', href: '/blog' },
+    { name: 'Reviews', href: '/reviews' },
     { name: 'Contact', href: '/contact' },
   ];
 

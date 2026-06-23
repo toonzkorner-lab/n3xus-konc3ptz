@@ -13,11 +13,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const isAdmin = session.user.role === 'ADMIN' || session.user.role === 'OWNER';
+  const isAdmin = session?.user?.role === 'ADMIN' || session?.user?.role === 'OWNER';
 
   try {
     const body = await req.json();
