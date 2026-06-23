@@ -189,7 +189,10 @@ export default async function Home() {
                       <span style={{ color: 'var(--color-primary)' }}>💬</span> discord.gg/3UHWMa7rC
                     </li>
                     <li style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--text-secondary)' }}>
-                      <span style={{ color: 'var(--color-primary)' }}>📱</span> t.me/n3xusg
+                      <span style={{ color: 'var(--color-primary)' }}>📞</span> <a href="tel:+12108900172" style={{ color: 'inherit', textDecoration: 'none' }} className="hover:text-primary transition-colors">(210) 890-0172 (Call or Text)</a>
+                    </li>
+                    <li style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--text-secondary)' }}>
+                      <span style={{ color: 'var(--color-primary)' }}>📱</span> <a href="https://t.me/n3xusg" style={{ color: 'inherit', textDecoration: 'none' }} className="hover:text-primary transition-colors">t.me/n3xusg</a>
                     </li>
                   </ul>
                 </div>
