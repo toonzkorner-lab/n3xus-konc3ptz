@@ -16,7 +16,7 @@ interface Testimonial {
 
 export default function ReviewsClient({ initialReviews }: { initialReviews: Testimonial[] }) {
   const { data: session } = useSession();
-  const isAdmin = session?.user?.role === 'ADMIN';
+  const isAdmin = session?.user?.role === 'ADMIN' || session?.user?.role === 'OWNER';
 
   const [reviews, setReviews] = useState<Testimonial[]>(initialReviews);
   

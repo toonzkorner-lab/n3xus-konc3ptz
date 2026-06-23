@@ -112,7 +112,7 @@ export default function Navbar() {
               <span className={styles.loginLink}>...</span>
             ) : session ? (
               <>
-                {session.user?.role === 'ADMIN' && (
+                {(session.user?.role === 'ADMIN' || session.user?.role === 'OWNER') && (
                   <Link href="/admin" className={cn(styles.loginLink, 'text-accent hover:text-accent-glow')} onClick={() => setMobileMenuOpen(false)}>Admin Panel</Link>
                 )}
                 <Link href="/dashboard" className={styles.loginLink} onClick={() => setMobileMenuOpen(false)}>Client Portal</Link>

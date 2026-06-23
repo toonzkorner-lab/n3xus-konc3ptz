@@ -12,7 +12,7 @@ type Comment = {
 
 export default function BlogCommentSection({ slug }: { slug: string }) {
   const { data: session } = useSession();
-  const isAdmin = session?.user?.role === 'ADMIN';
+  const isAdmin = session?.user?.role === 'ADMIN' || session?.user?.role === 'OWNER';
 
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
