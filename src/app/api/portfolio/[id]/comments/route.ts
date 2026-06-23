@@ -41,15 +41,15 @@ export async function POST(
   try {
     const params = await props.params;
     const session = await getServerSession(authOptions);
-    if (!session || !session.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
 
     const body = await request.json();
-    const { content, rating } = body;
+    const { content, authorName, rating } = body;
 
     if (!content || typeof content !== 'string') {
       return NextResponse.json({ error: 'Content is required' }, { status: 400 });
+    }
+    if (!authorName || typeof authorName !== 'string') {
+      return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
 
     const item = await prisma.portfolioItem.findUnique({
@@ -64,8 +64,9 @@ export async function POST(
     const comment = await prisma.portfolioComment.create({
       data: {
         content,
+        authorName,
         rating: rating ? parseInt(rating) : null,
-        userId: session.user.id,
+        userId: session?.user?.id || null,
         portfolioItemId: item.id,
       },
       include: {

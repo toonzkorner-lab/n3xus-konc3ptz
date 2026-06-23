@@ -41,15 +41,15 @@ export async function POST(
   try {
     const params = await props.params;
     const session = await getServerSession(authOptions);
-    if (!session || !session.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
 
     const body = await request.json();
-    const { content } = body;
+    const { content, authorName } = body;
 
     if (!content || typeof content !== 'string') {
       return NextResponse.json({ error: 'Content is required' }, { status: 400 });
+    }
+    if (!authorName || typeof authorName !== 'string') {
+      return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
 
     const post = await prisma.blogPost.findUnique({
@@ -64,7 +64,8 @@ export async function POST(
     const comment = await prisma.blogComment.create({
       data: {
         content,
-        userId: session.user.id,
+        authorName,
+        userId: session?.user?.id || null,
         blogPostId: post.id,
       },
       include: {
