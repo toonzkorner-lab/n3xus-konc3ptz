@@ -99,7 +99,10 @@ export default function Navbar() {
               <Link
                 href={link.href}
                 className={cn(styles.link, pathname === link.href && styles.active)}
-                onClick={() => !link.subLinks && setMobileMenuOpen(false)}
+                onClick={() => {
+                  if (!link.subLinks) setMobileMenuOpen(false);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
               >
                 {link.name}
               </Link>
@@ -110,7 +113,10 @@ export default function Navbar() {
                       key={sub.name}
                       href={sub.href}
                       className={styles.dropdownLink}
-                      onClick={() => setMobileMenuOpen(false)}
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
                     >
                       {sub.name}
                     </Link>
@@ -125,17 +131,17 @@ export default function Navbar() {
             ) : session ? (
               <>
                 {(session.user?.role === 'ADMIN' || session.user?.role === 'OWNER') && (
-                  <Link href="/admin" className={cn(styles.loginLink, 'text-accent hover:text-accent-glow')} onClick={() => setMobileMenuOpen(false)}>Admin Panel</Link>
+                  <Link href="/admin" className={cn(styles.loginLink, 'text-accent hover:text-accent-glow')} onClick={() => { setMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Admin Panel</Link>
                 )}
-                <Link href="/dashboard" className={styles.loginLink} onClick={() => setMobileMenuOpen(false)}>Client Portal</Link>
+                <Link href="/dashboard" className={styles.loginLink} onClick={() => { setMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Client Portal</Link>
               </>
             ) : (
               <>
-                <Link href="/auth/login" className={styles.loginLink} onClick={() => setMobileMenuOpen(false)}>Login</Link>
-                <Link href="/auth/register" className={cn('btn', 'btn-secondary', styles.ctaBtn, 'hidden md:inline-flex')} onClick={() => setMobileMenuOpen(false)}>Register</Link>
+                <Link href="/auth/login" className={styles.loginLink} onClick={() => { setMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Login</Link>
+                <Link href="/auth/register" className={cn('btn', 'btn-secondary', styles.ctaBtn, 'hidden md:inline-flex')} onClick={() => { setMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Register</Link>
               </>
             )}
-            <Link href="/book" className={cn('btn', 'btn-primary', styles.ctaBtn)} onClick={() => setMobileMenuOpen(false)}>Book Consultation</Link>
+            <Link href="/book" className={cn('btn', 'btn-primary', styles.ctaBtn)} onClick={() => { setMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Book Consultation</Link>
           </div>
         </nav>
 
