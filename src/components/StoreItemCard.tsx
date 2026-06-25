@@ -91,7 +91,7 @@ export default function StoreItemCard({
       <div className="flex items-center justify-between pt-lg border-t border-subtle mt-auto">
         <div className="flex flex-col">
           <span className="text-xs text-tertiary uppercase tracking-wide">
-            {type === 'SERVICE' ? 'Base Price' : 'Price'}
+            {type === 'SERVICE' ? 'Full Price' : 'Price'}
           </span>
           <div className="flex items-baseline gap-1">
             <span className="font-heading text-lg font-bold text-primary">

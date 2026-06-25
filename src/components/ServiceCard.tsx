@@ -81,7 +81,7 @@ export default function ServiceCard({
       
       <div className={styles.footer} style={{ flexDirection: 'column', gap: '1rem', alignItems: 'stretch' }}>
         <div className={styles.priceInfo} style={{ alignSelf: 'flex-start' }}>
-          <span className={styles.priceLabel}>{recurring ? 'Subscription' : 'Base Deposit'}</span>
+          <span className={styles.priceLabel}>{recurring ? 'Subscription' : 'Full Price'}</span>
           <span className={styles.price}>{formatCurrency(startingPrice)}{recurring ? ` / ${recurring === 'year' ? 'yr' : 'mo'}` : ''}</span>
         </div>
         

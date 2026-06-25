@@ -140,7 +140,7 @@ export default function NewServicePage() {
 
           <div className="grid grid-3 gap-lg">
             <div className="form-group">
-              <label className="form-label" htmlFor="price">Base Price ($)</label>
+              <label className="form-label" htmlFor="price">Full Price ($)</label>
               <input type="number" id="price" name="price" className="form-input" min="0" step="0.01" required placeholder="499.00" />
             </div>
 

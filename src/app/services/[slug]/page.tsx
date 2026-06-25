@@ -126,7 +126,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                 
                 <div className="flex flex-wrap items-center gap-xl mt-xl pt-xl border-t border-subtle">
                   <div className="flex flex-col">
-                    <span className="text-xs text-tertiary uppercase tracking-wide">{service.recurring ? 'Subscription' : 'Base Deposit'}</span>
+                    <span className="text-xs text-tertiary uppercase tracking-wide">{service.recurring ? 'Subscription' : 'Full Price'}</span>
                     <span className="text-3xl font-heading font-bold glow-text">${(service.price / 100).toLocaleString()}{service.recurring ? ` / ${service.recurring === 'year' ? 'yr' : 'mo'}` : ''}</span>
                   </div>
                   <div className="flex gap-md flex-1 md:flex-none">

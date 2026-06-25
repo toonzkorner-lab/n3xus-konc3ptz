@@ -35,7 +35,7 @@ export async function POST(request: Request) {
           currency: 'usd',
           product_data: {
             name: item.title,
-            description: item.type === 'SERVICE' ? 'Service Deposit' : 'Digital Product',
+            description: item.type === 'SERVICE' ? 'Service Payment' : 'Digital Product',
           },
           unit_amount: item.price,
         },

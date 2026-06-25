@@ -80,7 +80,7 @@ export async function POST(req: Request) {
               // Create initial channel message welcoming the user
               await prisma.message.create({
                 data: {
-                  content: `Greetings! Your deposit for "${item.title}" has been processed. We've created this dedicated workspace and communication channel for you. Please let us know details about your requirements here!`,
+                  content: `Greetings! Your payment for "${item.title}" has been processed. We've created this dedicated workspace and communication channel for you. Please let us know details about your requirements here!`,
                   projectId: project.id,
                   senderId: user.id // or admin sender
                 }

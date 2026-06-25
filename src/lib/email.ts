@@ -181,8 +181,8 @@ export function buildOrderConfirmationEmail(
     <div style="margin-top: 25px; padding: 20px; background: rgba(139,92,246,0.08); border-radius: 8px; border-left: 3px solid #8b5cf6;">
       <h3 style="color: #8b5cf6; margin: 0 0 10px; font-size: 16px;">What happens next?</h3>
       <ul style="color: #a0a0c0; margin: 0; padding-left: 18px; line-height: 1.8;">
-        <li><strong>Digital Products:</strong> Download links will be sent to this email shortly.</li>
-        <li><strong>Services:</strong> Our team will review your deposit and reach out to begin scoping your project.</li>
+        <li><strong>Digital Products:</strong> Access them anytime from your <a href="${appUrl}/dashboard" style="color: #6366f1;">Client Dashboard</a>.</li>
+        <li><strong>Services:</strong> Our team will review your payment and reach out to begin scoping your project.</li>
       </ul>
     </div>
   `);

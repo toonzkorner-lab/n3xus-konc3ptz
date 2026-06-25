@@ -208,7 +208,7 @@ async function handleBuy(chatId: number, type: 'svc' | 'prod', itemId: string) {
         currency: 'usd',
         product_data: {
           name: title,
-          description: type === 'svc' ? 'Service Deposit' : 'Digital Product',
+          description: type === 'svc' ? 'Service Payment' : 'Digital Product',
         },
         unit_amount: price,
       },

@@ -34,10 +34,10 @@ function SuccessContent() {
       </p>
       
       <div className="bg-card border border-subtle rounded-xl p-lg mb-2xl text-left">
-        <h3 className="font-bold text-lg mb-sm">What happens next?</h3>
-        <ul className="space-y-sm text-secondary">
-          <li>• For <strong>Digital Products</strong>, you will receive an email with your download links shortly.</li>
-          <li>• For <strong>Services</strong>, a member of our team will review your deposit and contact you to begin scoping.</li>
+        <ul className="text-left text-secondary space-y-md list-none mb-xl bg-primary-subtle/5 p-lg rounded-xl border border-subtle">
+          <li>• A receipt has been sent to your email.</li>
+          <li>• For <strong>Digital Products</strong>, you can download them directly from your Client Dashboard.</li>
+          <li>• For <strong>Services</strong>, a member of our team will review your payment and contact you to begin scoping.</li>
         </ul>
         {orderId && (
           <div className="mt-lg pt-md border-t border-subtle">
