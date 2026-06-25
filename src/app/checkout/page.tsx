@@ -36,76 +36,6 @@ export default function CheckoutPage() {
     if (session?.user?.email) setCustomerEmail(session.user.email);
   }, [session]);
 
-  const checkoutRef = useRef<HTMLDivElement>(null);
-  const mountedRef = useRef(false);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!isClient || items.length === 0 || mountedRef.current) return;
-
-    let checkoutInstance: any = null;
-
-    async function initCheckout() {
-      setLoading(true);
-      setError('');
-
-      try {
-        const res = await fetch('/api/checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            items,
-            couponCode: appliedCoupon?.code || null,
-          }),
-        });
-
-        const data = await res.json();
-        
-        if (!res.ok) {
-          throw new Error(data.error || 'Failed to initialize checkout');
-        }
-
-        if (!data.clientSecret) {
-          throw new Error('No client secret returned. Check server logs.');
-        }
-
-        const stripe = await stripePromise;
-        if (!stripe) {
-          throw new Error('Stripe failed to load. Check your publishable key.');
-        }
-
-        checkoutInstance = await stripe.initEmbeddedCheckout({
-          clientSecret: data.clientSecret,
-        });
-
-        if (checkoutRef.current) {
-          checkoutInstance.mount(checkoutRef.current);
-          mountedRef.current = true;
-        }
-
-        setLoading(false);
-      } catch (err: any) {
-        console.error('Checkout error:', err);
-        setError(err.message || 'An error occurred initializing checkout.');
-        setLoading(false);
-      }
-    }
-
-    // Optionally you can tie this to a "Start Checkout" button,
-    // or just let it initialize automatically when the component mounts.
-    // We'll initialize automatically here.
-    initCheckout();
-
-    return () => {
-      if (checkoutInstance) {
-        try {
-          checkoutInstance.unmount();
-        } catch (e) {}
-      }
-      mountedRef.current = false;
-    };
-  }, [isClient, items, appliedCoupon]);
-
   // Prevent hydration mismatch
   if (!isClient) {
     return (
@@ -248,26 +178,57 @@ export default function CheckoutPage() {
 
               {/* Right Column — Checkout Actions */}
               <div className="flex flex-col gap-2xl">
-                <div className="border border-subtle rounded-xl shadow-md sticky overflow-hidden" style={{ top: 'calc(var(--navbar-height) + 2rem)', minHeight: '400px', background: '#fff' }}>
-                  {error ? (
-                    <div className="flex flex-col items-center justify-center p-2xl gap-md" style={{ minHeight: '400px' }}>
-                      <div style={{ fontSize: '3rem' }}>⚠️</div>
-                      <p className="text-error text-center font-bold text-sm" style={{ maxWidth: '400px', wordBreak: 'break-word' }}>{error}</p>
-                      <button
-                        onClick={() => window.location.reload()}
-                        className="btn btn-secondary mt-md"
-                      >
-                        Try Again
-                      </button>
+                <div className="bg-card border border-subtle rounded-xl p-xl shadow-md sticky" style={{ top: 'calc(var(--navbar-height) + 2rem)' }}>
+                  <h3 className="text-xl font-heading text-primary mb-md">Payment Details</h3>
+                  <p className="text-secondary text-sm mb-lg">
+                    You will be redirected to Stripe's secure checkout page to complete your payment securely. We support all major credit cards, Apple Pay, and Google Pay.
+                  </p>
+                  
+                  {error && (
+                    <div className="mb-lg p-md bg-error/10 border-l-4 border-error text-error text-sm rounded">
+                      {error}
                     </div>
-                  ) : loading ? (
-                    <div className="flex flex-col items-center justify-center p-2xl gap-md" style={{ minHeight: '400px' }}>
-                      <div className="spinner spinner-md"></div>
-                      <p className="text-tertiary text-sm">Preparing secure checkout...</p>
-                    </div>
-                  ) : null}
-                  {/* Stripe mounts directly into this div */}
-                  <div ref={checkoutRef} id="checkout-container" className="w-full" style={{ display: loading || error ? 'none' : 'block' }} />
+                  )}
+
+                  <button
+                    onClick={async () => {
+                      setIsClient(false); // Disable button temporarily
+                      try {
+                        const res = await fetch('/api/checkout', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            items,
+                            couponCode: appliedCoupon?.code || null,
+                          }),
+                        });
+                        const data = await res.json();
+                        if (!res.ok) throw new Error(data.error || 'Checkout failed');
+                        if (data.url) window.location.href = data.url;
+                        else throw new Error('No checkout URL returned');
+                      } catch (err: any) {
+                        setError(err.message || 'An error occurred. Please try again.');
+                        setIsClient(true);
+                      }
+                    }}
+                    disabled={!isClient}
+                    className="btn btn-primary w-full py-lg text-lg flex justify-center items-center gap-sm"
+                  >
+                    {!isClient ? (
+                      <>
+                        <div className="spinner" style={{ width: '20px', height: '20px', borderWidth: '2px' }}></div>
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        🔒 Proceed to Payment
+                      </>
+                    )}
+                  </button>
+
+                  <div className="mt-lg flex items-center justify-center gap-md opacity-70">
+                    <span className="text-xs text-tertiary uppercase tracking-wider font-bold">Guaranteed Safe & Secure</span>
+                  </div>
                 </div>
               </div>
             </div>
