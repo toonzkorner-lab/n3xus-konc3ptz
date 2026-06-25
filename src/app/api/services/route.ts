@@ -21,14 +21,16 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { name, slug, description, shortDesc, price, features, category, icon, order, recurring } = body;
+    const { name, slug: rawSlug, description, shortDesc, price, features, category, icon, order, recurring } = body;
 
-    if (!name || !slug) {
+    if (!name || !rawSlug) {
       return NextResponse.json(
         { error: "Name and slug are required." },
         { status: 400 }
       );
     }
+
+    const slug = rawSlug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
     const service = await prisma.service.create({
       data: {

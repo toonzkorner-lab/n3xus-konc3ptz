@@ -32,7 +32,9 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await req.json();
-    const { name, slug, description, shortDesc, price, features, category, icon, order, active, recurring } = body;
+    const { name, slug: rawSlug, description, shortDesc, price, features, category, icon, order, active, recurring } = body;
+
+    const slug = rawSlug ? rawSlug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : undefined;
 
     const service = await prisma.service.update({
       where: { id },
