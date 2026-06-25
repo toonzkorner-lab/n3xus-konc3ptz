@@ -61,8 +61,7 @@ export default function CheckoutPage() {
         setError(data.error || 'Failed to initialize checkout');
         return null;
       }
-      
-      return data.clientSecret;
+      return data.url;
     } catch (err) {
       console.error(err);
       setError('An error occurred. Please try again.');
