@@ -105,12 +105,36 @@ export default function NewServicePage() {
           <div className="grid grid-2 gap-lg">
             <div className="form-group">
               <label className="form-label" htmlFor="name">Service Name</label>
-              <input type="text" id="name" name="name" className="form-input" required placeholder="e.g. AI Integration" />
+              <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                className="form-input" 
+                required 
+                placeholder="e.g. AI Integration"
+                onChange={(e) => {
+                  const name = e.target.value;
+                  const slugInput = document.getElementById('slug') as HTMLInputElement;
+                  if (slugInput && !slugInput.dataset.manual) {
+                    slugInput.value = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                  }
+                }}
+              />
             </div>
 
             <div className="form-group">
               <label className="form-label" htmlFor="slug">URL Slug</label>
-              <input type="text" id="slug" name="slug" className="form-input" required placeholder="e.g. ai-integration" />
+              <input 
+                type="text" 
+                id="slug" 
+                name="slug" 
+                className="form-input" 
+                required 
+                placeholder="e.g. ai-integration"
+                onChange={(e) => {
+                  e.target.dataset.manual = "true";
+                }}
+              />
             </div>
           </div>
 
