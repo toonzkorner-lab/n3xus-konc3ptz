@@ -61,7 +61,6 @@ export async function POST(request: Request) {
     }
 
     const sessionParams: any = {
-      payment_method_types: ['card'],
       line_items: lineItems,
       mode,
       ui_mode: 'embedded_page',

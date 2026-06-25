@@ -29,30 +29,47 @@ export default function CheckoutPage() {
   const { data: session } = useSession();
 
   const [isClient, setIsClient] = useState(false);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  const fetchClientSecret = useCallback(async () => {
-    const res = await fetch('/api/checkout', {
+  // Fetch client secret when items are available
+  useEffect(() => {
+    if (!isClient || items.length === 0) return;
+
+    setLoading(true);
+    setError('');
+
+    fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         items,
         couponCode: appliedCoupon?.code || null,
       }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.error || 'Failed to initialize checkout');
-    }
-
-    return data.clientSecret;
-  }, [items, appliedCoupon]);
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to initialize checkout');
+        }
+        if (!data.clientSecret) {
+          throw new Error('No client secret returned from server');
+        }
+        setClientSecret(data.clientSecret);
+      })
+      .catch((err) => {
+        console.error('Checkout error:', err);
+        setError(err.message || 'An error occurred. Please try again.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [isClient, items, appliedCoupon]);
 
   // Prevent hydration mismatch
   if (!isClient) {
@@ -197,14 +214,32 @@ export default function CheckoutPage() {
               {/* Right Column — Stripe Embedded Checkout */}
               <div className="flex flex-col gap-2xl">
                 <div className="border border-subtle rounded-xl shadow-md sticky overflow-hidden" style={{ top: 'calc(var(--navbar-height) + 2rem)', minHeight: '400px', background: '#fff' }}>
-                  <div id="checkout-container" className="w-full">
-                    <EmbeddedCheckoutProvider
-                      stripe={stripePromise}
-                      options={{ fetchClientSecret }}
-                    >
-                      <EmbeddedCheckout />
-                    </EmbeddedCheckoutProvider>
-                  </div>
+                  {error ? (
+                    <div className="flex flex-col items-center justify-center p-2xl h-full gap-md" style={{ minHeight: '400px' }}>
+                      <div style={{ fontSize: '3rem' }}>⚠️</div>
+                      <p className="text-error text-center font-bold">{error}</p>
+                      <button
+                        onClick={() => window.location.reload()}
+                        className="btn btn-secondary mt-md"
+                      >
+                        Try Again
+                      </button>
+                    </div>
+                  ) : loading || !clientSecret ? (
+                    <div className="flex flex-col items-center justify-center p-2xl h-full gap-md" style={{ minHeight: '400px' }}>
+                      <div className="spinner spinner-md"></div>
+                      <p className="text-tertiary text-sm">Preparing secure checkout...</p>
+                    </div>
+                  ) : (
+                    <div id="checkout-container" className="w-full">
+                      <EmbeddedCheckoutProvider
+                        stripe={stripePromise}
+                        options={{ clientSecret }}
+                      >
+                        <EmbeddedCheckout />
+                      </EmbeddedCheckoutProvider>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
