@@ -1,18 +1,13 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useCart } from '@/components/CartProvider';
 import { formatCurrency } from '@/lib/utils';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-
 import { loadStripe } from '@stripe/stripe-js';
-import {
-  EmbeddedCheckoutProvider,
-  EmbeddedCheckout
-} from '@stripe/react-stripe-js';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 
@@ -29,46 +24,82 @@ export default function CheckoutPage() {
   const { data: session } = useSession();
 
   const [isClient, setIsClient] = useState(false);
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string>('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const checkoutRef = useRef<HTMLDivElement>(null);
+  const mountedRef = useRef(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Fetch client secret when items are available
+  // Mount Stripe Embedded Checkout directly via vanilla JS
   useEffect(() => {
-    if (!isClient || items.length === 0) return;
+    if (!isClient || items.length === 0 || mountedRef.current) return;
 
-    setLoading(true);
-    setError('');
+    let checkoutInstance: any = null;
 
-    fetch('/api/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        items,
-        couponCode: appliedCoupon?.code || null,
-      }),
-    })
-      .then(async (res) => {
+    async function initCheckout() {
+      setLoading(true);
+      setError('');
+
+      try {
+        // 1. Fetch client secret from our API
+        const res = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            items,
+            couponCode: appliedCoupon?.code || null,
+          }),
+        });
+
         const data = await res.json();
+
         if (!res.ok) {
           throw new Error(data.error || 'Failed to initialize checkout');
         }
+
         if (!data.clientSecret) {
-          throw new Error('No client secret returned from server');
+          throw new Error('No client secret returned. Server response: ' + JSON.stringify(data));
         }
-        setClientSecret(data.clientSecret);
-      })
-      .catch((err) => {
-        console.error('Checkout error:', err);
-        setError(err.message || 'An error occurred. Please try again.');
-      })
-      .finally(() => {
+
+        // 2. Initialize Stripe
+        const stripe = await stripePromise;
+        if (!stripe) {
+          throw new Error('Stripe failed to load. Check your publishable key.');
+        }
+
+        // 3. Mount embedded checkout directly via Stripe.js
+        checkoutInstance = await stripe.initEmbeddedCheckout({
+          clientSecret: data.clientSecret,
+        });
+
+        if (checkoutRef.current) {
+          checkoutInstance.mount(checkoutRef.current);
+          mountedRef.current = true;
+        }
+
         setLoading(false);
-      });
+      } catch (err: any) {
+        console.error('Checkout init error:', err);
+        setError(err.message || 'An error occurred initializing checkout.');
+        setLoading(false);
+      }
+    }
+
+    initCheckout();
+
+    return () => {
+      if (checkoutInstance) {
+        try {
+          checkoutInstance.unmount();
+        } catch (e) {
+          // ignore unmount errors
+        }
+      }
+      mountedRef.current = false;
+    };
   }, [isClient, items, appliedCoupon]);
 
   // Prevent hydration mismatch
@@ -115,7 +146,6 @@ export default function CheckoutPage() {
             <div className="grid grid-2 gap-2xl" style={{ alignItems: 'start' }}>
               {/* Left Column — Cart & Order Summary */}
               <div className="flex flex-col gap-2xl">
-                {/* Cart Items */}
                 <div className="bg-card border border-subtle rounded-xl p-xl shadow-md">
                   <div className="flex items-center justify-between mb-lg border-b border-subtle pb-sm">
                     <h2 className="text-xl font-heading text-primary">Order Items ({items.reduce((s, i) => s + i.quantity, 0)})</h2>
@@ -128,7 +158,6 @@ export default function CheckoutPage() {
                         key={`${item.id}-${item.type}-${idx}`}
                         className="flex gap-md items-center p-md rounded-lg bg-tertiary border border-subtle hover:border-primary/30 transition-colors"
                       >
-                        {/* Thumbnail */}
                         <div className="w-16 h-16 rounded-md bg-secondary flex items-center justify-center border border-subtle flex-shrink-0 overflow-hidden">
                           {item.image && item.image.startsWith('/') ? (
                             <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
@@ -137,7 +166,6 @@ export default function CheckoutPage() {
                           )}
                         </div>
 
-                        {/* Info */}
                         <div className="flex-1 min-w-0">
                           <h4 className="font-bold text-primary truncate">{item.title}</h4>
                           <p className="text-xs text-secondary">{item.type}</p>
@@ -146,7 +174,6 @@ export default function CheckoutPage() {
                           </p>
                         </div>
 
-                        {/* Quantity Controls */}
                         <div className="flex items-center gap-sm flex-shrink-0">
                           <button
                             onClick={() => updateQuantity(item.id, item.type, item.quantity - 1)}
@@ -165,7 +192,6 @@ export default function CheckoutPage() {
                           </button>
                         </div>
 
-                        {/* Line Total & Remove */}
                         <div className="flex flex-col items-end gap-sm flex-shrink-0 min-w-[80px]">
                           <span className="font-heading font-bold text-primary">{formatCurrency(item.price * item.quantity)}</span>
                           <button
@@ -179,7 +205,6 @@ export default function CheckoutPage() {
                     ))}
                   </div>
                   
-                  {/* Order Totals Summary */}
                   <div className="border-t border-subtle pt-lg mt-lg">
                     <div className="flex justify-between items-center mb-sm">
                       <span className="text-secondary">Subtotal</span>
@@ -215,9 +240,9 @@ export default function CheckoutPage() {
               <div className="flex flex-col gap-2xl">
                 <div className="border border-subtle rounded-xl shadow-md sticky overflow-hidden" style={{ top: 'calc(var(--navbar-height) + 2rem)', minHeight: '400px', background: '#fff' }}>
                   {error ? (
-                    <div className="flex flex-col items-center justify-center p-2xl h-full gap-md" style={{ minHeight: '400px' }}>
+                    <div className="flex flex-col items-center justify-center p-2xl gap-md" style={{ minHeight: '400px' }}>
                       <div style={{ fontSize: '3rem' }}>⚠️</div>
-                      <p className="text-error text-center font-bold">{error}</p>
+                      <p className="text-error text-center font-bold text-sm" style={{ maxWidth: '400px', wordBreak: 'break-word' }}>{error}</p>
                       <button
                         onClick={() => window.location.reload()}
                         className="btn btn-secondary mt-md"
@@ -225,21 +250,14 @@ export default function CheckoutPage() {
                         Try Again
                       </button>
                     </div>
-                  ) : loading || !clientSecret ? (
-                    <div className="flex flex-col items-center justify-center p-2xl h-full gap-md" style={{ minHeight: '400px' }}>
+                  ) : loading ? (
+                    <div className="flex flex-col items-center justify-center p-2xl gap-md" style={{ minHeight: '400px' }}>
                       <div className="spinner spinner-md"></div>
                       <p className="text-tertiary text-sm">Preparing secure checkout...</p>
                     </div>
-                  ) : (
-                    <div id="checkout-container" className="w-full">
-                      <EmbeddedCheckoutProvider
-                        stripe={stripePromise}
-                        options={{ clientSecret }}
-                      >
-                        <EmbeddedCheckout />
-                      </EmbeddedCheckoutProvider>
-                    </div>
-                  )}
+                  ) : null}
+                  {/* Stripe mounts directly into this div */}
+                  <div ref={checkoutRef} id="checkout-container" className="w-full" style={{ display: loading || error ? 'none' : 'block' }} />
                 </div>
               </div>
             </div>
