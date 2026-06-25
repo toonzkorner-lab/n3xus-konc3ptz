@@ -64,7 +64,7 @@ export async function POST(request: Request) {
       payment_method_types: ['card'],
       line_items: lineItems,
       mode,
-      ui_mode: 'embedded',
+      ui_mode: 'embedded_page',
       return_url: `${baseUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       metadata: {
         itemsSummary: items.map((i: any) => `${i.title} x${i.quantity}`).join(', ').substring(0, 500),
