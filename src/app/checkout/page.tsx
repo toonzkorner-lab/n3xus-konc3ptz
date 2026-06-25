@@ -28,48 +28,31 @@ export default function CheckoutPage() {
   } = useCart();
   const { data: session } = useSession();
 
-  const [customerName, setCustomerName] = useState('');
-  const [customerEmail, setCustomerEmail] = useState('');
   const [isClient, setIsClient] = useState(false);
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string>('');
 
-  // Pre-fill from session if logged in
   useEffect(() => {
     setIsClient(true);
-    if (session?.user?.name) setCustomerName(session.user.name);
-    if (session?.user?.email) setCustomerEmail(session.user.email);
-  }, [session]);
+  }, []);
 
   const fetchClientSecret = useCallback(async () => {
-    if (items.length === 0) return null;
-    setError('');
-    
-    try {
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items,
-          couponCode: appliedCoupon?.code || null,
-        }),
-      });
+    const res = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items,
+        couponCode: appliedCoupon?.code || null,
+      }),
+    });
 
-      const data = await res.json();
-      
-      if (!res.ok) {
-        setError(data.error || 'Failed to initialize checkout');
-        return null;
-      }
-      return data.url;
-    } catch (err) {
-      console.error(err);
-      setError('An error occurred. Please try again.');
-      return null;
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Failed to initialize checkout');
     }
-  }, [items, appliedCoupon]);
 
-  // Removed auto-fetch to only create session on button click
+    return data.clientSecret;
+  }, [items, appliedCoupon]);
 
   // Prevent hydration mismatch
   if (!isClient) {
@@ -211,48 +194,16 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {/* Right Column — Checkout Actions */}
+              {/* Right Column — Stripe Embedded Checkout */}
               <div className="flex flex-col gap-2xl">
-                <div className="bg-card border border-subtle rounded-xl p-xl shadow-md sticky" style={{ top: 'calc(var(--navbar-height) + 2rem)' }}>
-                  <h3 className="text-xl font-heading text-primary mb-md">Payment Details</h3>
-                  <p className="text-secondary text-sm mb-lg">
-                    You will be redirected to Stripe's secure checkout page to complete your payment securely. We support all major credit cards, Apple Pay, and Google Pay.
-                  </p>
-                  
-                  {error && (
-                    <div className="mb-lg p-md bg-error/10 border-l-4 border-error text-error text-sm rounded">
-                      {error}
-                    </div>
-                  )}
-
-                  <button
-                    onClick={async () => {
-                      setIsClient(false); // Disable button
-                      const url = await fetchClientSecret();
-                      if (url) {
-                        window.location.href = url;
-                      } else {
-                        setIsClient(true);
-                      }
-                    }}
-                    disabled={!isClient}
-                    className="btn btn-primary w-full py-lg text-lg flex justify-center items-center gap-sm"
-                  >
-                    {!isClient ? (
-                      <>
-                        <div className="spinner" style={{ width: '20px', height: '20px', borderWidth: '2px' }}></div>
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        🔒 Proceed to Payment
-                      </>
-                    )}
-                  </button>
-
-                  <div className="mt-lg flex items-center justify-center gap-md opacity-70">
-                    {/* Trust badges placeholders */}
-                    <span className="text-xs text-tertiary uppercase tracking-wider font-bold">Guaranteed Safe & Secure</span>
+                <div className="border border-subtle rounded-xl shadow-md sticky overflow-hidden" style={{ top: 'calc(var(--navbar-height) + 2rem)', minHeight: '400px', background: '#fff' }}>
+                  <div id="checkout-container" className="w-full">
+                    <EmbeddedCheckoutProvider
+                      stripe={stripePromise}
+                      options={{ fetchClientSecret }}
+                    >
+                      <EmbeddedCheckout />
+                    </EmbeddedCheckoutProvider>
                   </div>
                 </div>
               </div>
