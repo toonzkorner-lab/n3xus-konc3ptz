@@ -126,6 +126,8 @@ export default async function AnalyticsPage() {
             </tbody>
           </table>
         </div>
+      </div>
+
       <div className="card">
         <h2 className="text-xl font-bold mb-4 font-orbitron">Top Pages (All Time)</h2>
         <div className="overflow-x-auto">
