@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export async function GET(
   req: NextRequest,
@@ -49,6 +50,9 @@ export async function PUT(
       },
     });
 
+    revalidatePath('/');
+    revalidatePath('/services');
+
     return NextResponse.json(service);
   } catch (error) {
     console.error("Service update error:", error);
@@ -73,6 +77,9 @@ export async function DELETE(
     await prisma.service.delete({
       where: { id },
     });
+
+    revalidatePath('/');
+    revalidatePath('/services');
 
     return NextResponse.json({ message: "Service deleted successfully" });
   } catch (error) {

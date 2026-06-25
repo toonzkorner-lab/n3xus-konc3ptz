@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export async function GET() {
   const services = await prisma.service.findMany({
@@ -43,6 +44,9 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    revalidatePath('/');
+    revalidatePath('/services');
+
     return NextResponse.json(service, { status: 201 });
   } catch (error) {
     console.error("Service creation error:", error);
@@ -81,6 +85,9 @@ export async function PATCH(req: NextRequest) {
       where: { id },
       data,
     });
+
+    revalidatePath('/');
+    revalidatePath('/services');
 
     return NextResponse.json(service);
   } catch (error) {

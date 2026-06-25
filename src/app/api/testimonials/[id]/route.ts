@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { revalidatePath } from 'next/cache';
 
 export async function GET(
   request: NextRequest,
@@ -56,6 +57,9 @@ export async function PUT(
       },
     });
 
+    revalidatePath('/');
+    revalidatePath('/reviews');
+
     return NextResponse.json(testimonial);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -77,6 +81,9 @@ export async function DELETE(
     await prisma.testimonial.delete({
       where: { id },
     });
+
+    revalidatePath('/');
+    revalidatePath('/reviews');
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
