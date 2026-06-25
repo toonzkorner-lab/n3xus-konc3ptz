@@ -74,7 +74,7 @@ export default function CheckoutPage() {
           throw new Error('Stripe failed to load. Check your publishable key.');
         }
 
-        checkoutInstance = await stripe.initEmbeddedCheckout({
+        checkoutInstance = await stripe.createEmbeddedCheckoutPage({
           clientSecret: data.clientSecret,
         });
 
