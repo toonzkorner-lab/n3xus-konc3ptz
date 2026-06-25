@@ -1,13 +1,18 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useCart } from '@/components/CartProvider';
 import { formatCurrency } from '@/lib/utils';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+
 import { loadStripe } from '@stripe/stripe-js';
+import {
+  EmbeddedCheckoutProvider,
+  EmbeddedCheckout
+} from '@stripe/react-stripe-js';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 
@@ -23,84 +28,48 @@ export default function CheckoutPage() {
   } = useCart();
   const { data: session } = useSession();
 
+  const [customerName, setCustomerName] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
   const [isClient, setIsClient] = useState(false);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string>('');
-  const [loading, setLoading] = useState(true);
-  const checkoutRef = useRef<HTMLDivElement>(null);
-  const mountedRef = useRef(false);
 
+  // Pre-fill from session if logged in
   useEffect(() => {
     setIsClient(true);
-  }, []);
+    if (session?.user?.name) setCustomerName(session.user.name);
+    if (session?.user?.email) setCustomerEmail(session.user.email);
+  }, [session]);
 
-  // Mount Stripe Embedded Checkout directly via vanilla JS
-  useEffect(() => {
-    if (!isClient || items.length === 0 || mountedRef.current) return;
+  const fetchClientSecret = useCallback(async () => {
+    if (items.length === 0) return null;
+    setError('');
+    
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items,
+          couponCode: appliedCoupon?.code || null,
+        }),
+      });
 
-    let checkoutInstance: any = null;
-
-    async function initCheckout() {
-      setLoading(true);
-      setError('');
-
-      try {
-        // 1. Fetch client secret from our API
-        const res = await fetch('/api/checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            items,
-            couponCode: appliedCoupon?.code || null,
-          }),
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.error || 'Failed to initialize checkout');
-        }
-
-        if (!data.clientSecret) {
-          throw new Error('No client secret returned. Server response: ' + JSON.stringify(data));
-        }
-
-        // 2. Initialize Stripe
-        const stripe = await stripePromise;
-        if (!stripe) {
-          throw new Error('Stripe failed to load. Check your publishable key.');
-        }
-
-        // 3. Mount embedded checkout directly via Stripe.js
-        checkoutInstance = await stripe.initEmbeddedCheckout({
-          clientSecret: data.clientSecret,
-        });
-
-        if (checkoutRef.current) {
-          checkoutInstance.mount(checkoutRef.current);
-          mountedRef.current = true;
-        }
-
-        setLoading(false);
-      } catch (err: any) {
-        console.error('Checkout init error:', err);
-        setError(err.message || 'An error occurred initializing checkout.');
-        setLoading(false);
+      const data = await res.json();
+      
+      if (!res.ok) {
+        setError(data.error || 'Failed to initialize checkout');
+        return null;
       }
+      return data.url;
+    } catch (err) {
+      console.error(err);
+      setError('An error occurred. Please try again.');
+      return null;
     }
+  }, [items, appliedCoupon]);
 
-    initCheckout();
-
-    return () => {
-      if (checkoutInstance) {
-        try {
-          checkoutInstance.unmount();
-        } catch (e) {
-          // ignore unmount errors
-        }
-      }
-      mountedRef.current = false;
-    };
-  }, [isClient, items, appliedCoupon]);
+  // Removed auto-fetch to only create session on button click
 
   // Prevent hydration mismatch
   if (!isClient) {
@@ -146,6 +115,7 @@ export default function CheckoutPage() {
             <div className="grid grid-2 gap-2xl" style={{ alignItems: 'start' }}>
               {/* Left Column — Cart & Order Summary */}
               <div className="flex flex-col gap-2xl">
+                {/* Cart Items */}
                 <div className="bg-card border border-subtle rounded-xl p-xl shadow-md">
                   <div className="flex items-center justify-between mb-lg border-b border-subtle pb-sm">
                     <h2 className="text-xl font-heading text-primary">Order Items ({items.reduce((s, i) => s + i.quantity, 0)})</h2>
@@ -158,6 +128,7 @@ export default function CheckoutPage() {
                         key={`${item.id}-${item.type}-${idx}`}
                         className="flex gap-md items-center p-md rounded-lg bg-tertiary border border-subtle hover:border-primary/30 transition-colors"
                       >
+                        {/* Thumbnail */}
                         <div className="w-16 h-16 rounded-md bg-secondary flex items-center justify-center border border-subtle flex-shrink-0 overflow-hidden">
                           {item.image && item.image.startsWith('/') ? (
                             <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
@@ -166,6 +137,7 @@ export default function CheckoutPage() {
                           )}
                         </div>
 
+                        {/* Info */}
                         <div className="flex-1 min-w-0">
                           <h4 className="font-bold text-primary truncate">{item.title}</h4>
                           <p className="text-xs text-secondary">{item.type}</p>
@@ -174,6 +146,7 @@ export default function CheckoutPage() {
                           </p>
                         </div>
 
+                        {/* Quantity Controls */}
                         <div className="flex items-center gap-sm flex-shrink-0">
                           <button
                             onClick={() => updateQuantity(item.id, item.type, item.quantity - 1)}
@@ -192,6 +165,7 @@ export default function CheckoutPage() {
                           </button>
                         </div>
 
+                        {/* Line Total & Remove */}
                         <div className="flex flex-col items-end gap-sm flex-shrink-0 min-w-[80px]">
                           <span className="font-heading font-bold text-primary">{formatCurrency(item.price * item.quantity)}</span>
                           <button
@@ -205,6 +179,7 @@ export default function CheckoutPage() {
                     ))}
                   </div>
                   
+                  {/* Order Totals Summary */}
                   <div className="border-t border-subtle pt-lg mt-lg">
                     <div className="flex justify-between items-center mb-sm">
                       <span className="text-secondary">Subtotal</span>
@@ -236,28 +211,49 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {/* Right Column — Stripe Embedded Checkout */}
+              {/* Right Column — Checkout Actions */}
               <div className="flex flex-col gap-2xl">
-                <div className="border border-subtle rounded-xl shadow-md sticky overflow-hidden" style={{ top: 'calc(var(--navbar-height) + 2rem)', minHeight: '400px', background: '#fff' }}>
-                  {error ? (
-                    <div className="flex flex-col items-center justify-center p-2xl gap-md" style={{ minHeight: '400px' }}>
-                      <div style={{ fontSize: '3rem' }}>⚠️</div>
-                      <p className="text-error text-center font-bold text-sm" style={{ maxWidth: '400px', wordBreak: 'break-word' }}>{error}</p>
-                      <button
-                        onClick={() => window.location.reload()}
-                        className="btn btn-secondary mt-md"
-                      >
-                        Try Again
-                      </button>
+                <div className="bg-card border border-subtle rounded-xl p-xl shadow-md sticky" style={{ top: 'calc(var(--navbar-height) + 2rem)' }}>
+                  <h3 className="text-xl font-heading text-primary mb-md">Payment Details</h3>
+                  <p className="text-secondary text-sm mb-lg">
+                    You will be redirected to Stripe's secure checkout page to complete your payment securely. We support all major credit cards, Apple Pay, and Google Pay.
+                  </p>
+                  
+                  {error && (
+                    <div className="mb-lg p-md bg-error/10 border-l-4 border-error text-error text-sm rounded">
+                      {error}
                     </div>
-                  ) : loading ? (
-                    <div className="flex flex-col items-center justify-center p-2xl gap-md" style={{ minHeight: '400px' }}>
-                      <div className="spinner spinner-md"></div>
-                      <p className="text-tertiary text-sm">Preparing secure checkout...</p>
-                    </div>
-                  ) : null}
-                  {/* Stripe mounts directly into this div */}
-                  <div ref={checkoutRef} id="checkout-container" className="w-full" style={{ display: loading || error ? 'none' : 'block' }} />
+                  )}
+
+                  <button
+                    onClick={async () => {
+                      setIsClient(false); // Disable button
+                      const url = await fetchClientSecret();
+                      if (url) {
+                        window.location.href = url;
+                      } else {
+                        setIsClient(true);
+                      }
+                    }}
+                    disabled={!isClient}
+                    className="btn btn-primary w-full py-lg text-lg flex justify-center items-center gap-sm"
+                  >
+                    {!isClient ? (
+                      <>
+                        <div className="spinner" style={{ width: '20px', height: '20px', borderWidth: '2px' }}></div>
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        🔒 Proceed to Payment
+                      </>
+                    )}
+                  </button>
+
+                  <div className="mt-lg flex items-center justify-center gap-md opacity-70">
+                    {/* Trust badges placeholders */}
+                    <span className="text-xs text-tertiary uppercase tracking-wider font-bold">Guaranteed Safe & Secure</span>
+                  </div>
                 </div>
               </div>
             </div>
