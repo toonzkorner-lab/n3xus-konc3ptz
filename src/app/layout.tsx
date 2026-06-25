@@ -40,6 +40,7 @@ import CartSlideout from "@/components/CartSlideout";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from 'react-hot-toast';
+import AnalyticsTracker from '@/components/AnalyticsTracker';
 
 const orbitron = Orbitron({
   subsets: ["latin"],
@@ -90,6 +91,7 @@ export default function RootLayout({
           toastOptions={{ style: { pointerEvents: 'auto' } }}
         />
         <Analytics />
+        <AnalyticsTracker />
         <SpeedInsights />
       </body>
     </html>

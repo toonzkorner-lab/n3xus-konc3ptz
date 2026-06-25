@@ -18,6 +18,8 @@ interface ChartDataPoint {
   users: number;
   orders: number;
   revenue: number;
+  views?: number;
+  visitors?: number;
 }
 
 export default function AnalyticsClient({ data }: { data: ChartDataPoint[] }) {
@@ -73,6 +75,44 @@ export default function AnalyticsClient({ data }: { data: ChartDataPoint[] }) {
                 />
                 <Legend />
                 <Bar dataKey="orders" fill="#39ff14" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-8 mt-12">
+        <div>
+          <h3 className="text-lg font-semibold mb-4 text-[#bf00ff]">Page Views</h3>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                <XAxis dataKey="name" stroke="#ccc" />
+                <YAxis stroke="#ccc" />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#111', borderColor: '#333', color: '#fff' }}
+                />
+                <Legend />
+                <Bar dataKey="views" fill="#bf00ff" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold mb-4 text-[#ffbf00]">Unique Visitors</h3>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                <XAxis dataKey="name" stroke="#ccc" />
+                <YAxis stroke="#ccc" />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: '#111', borderColor: '#333', color: '#fff' }}
+                />
+                <Legend />
+                <Bar dataKey="visitors" fill="#ffbf00" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

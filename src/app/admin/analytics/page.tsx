@@ -50,14 +50,41 @@ export default async function AnalyticsPage() {
         _sum: { amount: true }
       });
 
+      const pageViewsCount = await prisma.pageView.count({
+        where: { createdAt: { gte: m.startDate, lt: m.endDate } }
+      });
+
+      // To get unique visitors, we need to count distinct sessionIds
+      // Since prisma.count doesn't support distinct in a simple way for grouping easily inside a map loop without raw queries sometimes,
+      // we can do a findMany with distinct. Or use groupBy.
+      const uniqueSessions = await prisma.pageView.findMany({
+        where: { createdAt: { gte: m.startDate, lt: m.endDate } },
+        distinct: ['sessionId'],
+        select: { sessionId: true }
+      });
+
       return {
         name: m.label,
         users: newUsers,
         orders: orders,
         revenue: ((orderRevenue._sum.amountFinal || 0) + (invoiceRevenue._sum.amount || 0)) / 100, // in dollars
+        views: pageViewsCount,
+        visitors: uniqueSessions.length,
       };
     })
   );
+
+  const topPagesRaw = await prisma.pageView.groupBy({
+    by: ['url'],
+    _count: { url: true },
+    orderBy: { _count: { url: 'desc' } },
+    take: 10,
+  });
+  
+  const topPages = topPagesRaw.map(p => ({
+    url: p.url,
+    views: p._count.url
+  }));
 
   return (
     <div className="space-y-8">
@@ -94,6 +121,31 @@ export default async function AnalyticsPage() {
               {recentUsers.length === 0 && (
                 <tr>
                   <td colSpan={4} className="py-4 text-center text-white/50">No users found.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      <div className="card">
+        <h2 className="text-xl font-bold mb-4 font-orbitron">Top Pages (All Time)</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="border-b border-white/10">
+                <th className="py-2">URL</th>
+                <th className="py-2 text-right">Views</th>
+              </tr>
+            </thead>
+            <tbody>
+              {topPages.map(page => (
+                <tr key={page.url} className="border-b border-white/5">
+                  <td className="py-2 font-mono text-sm text-neon-cyan/80 truncate max-w-[300px]">{page.url}</td>
+                  <td className="py-2 text-right font-bold text-white/90">{page.views}</td>
+                </tr>
+              ))}
+              {topPages.length === 0 && (
+                <tr>
+                  <td colSpan={2} className="py-4 text-center text-white/50">No page views recorded yet.</td>
                 </tr>
               )}
             </tbody>
