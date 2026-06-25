@@ -399,3 +399,12 @@ model PortfolioComment {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
+
+model PageView {
+  id        String   @id @default(cuid())
+  url       String
+  sessionId String
+  referrer  String?
+  userAgent String?
+  createdAt DateTime @default(now())
+}
