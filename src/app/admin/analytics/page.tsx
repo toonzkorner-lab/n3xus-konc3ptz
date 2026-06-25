@@ -42,7 +42,7 @@ export default async function AnalyticsPage() {
       });
       const orderRevenue = await prisma.order.aggregate({
         where: { createdAt: { gte: m.startDate, lt: m.endDate }, status: 'PAID' },
-        _sum: { total: true }
+        _sum: { amountFinal: true }
       });
       
       const invoiceRevenue = await prisma.invoice.aggregate({
@@ -54,7 +54,7 @@ export default async function AnalyticsPage() {
         name: m.label,
         users: newUsers,
         orders: orders,
-        revenue: ((orderRevenue._sum.total || 0) + (invoiceRevenue._sum.amount || 0)) / 100, // in dollars
+        revenue: ((orderRevenue._sum.amountFinal || 0) + (invoiceRevenue._sum.amount || 0)) / 100, // in dollars
       };
     })
   );
