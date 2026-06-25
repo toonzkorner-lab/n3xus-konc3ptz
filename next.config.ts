@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  env: {
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || 'pk_live_51Tez7RGWolWdiG7QYECuvcizBsIqhDu6Vg5Y39fI0BNfY7LPNeIp7ofCFceIH2Xf5SRZMWHQ6BFZ5HJ9JIVeHH2X00v1c9o7my',
+  },
   poweredByHeader: false,
   reactStrictMode: true,
   compress: true,
