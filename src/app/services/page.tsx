@@ -54,7 +54,12 @@ export default async function ServicesPage() {
           <div className="container">
             <div className="grid grid-3">
               {services.map((service, idx) => {
-                const features = JSON.parse(service.features || '[]');
+                let features = [];
+                try {
+                  features = JSON.parse(service.features || '[]');
+                } catch(e) {
+                  console.error("Failed to parse features for service", service.slug, e);
+                }
                 
                 return (
                   <div key={service.id} id={service.slug}>
@@ -66,6 +71,7 @@ export default async function ServicesPage() {
                       icon={service.icon || ''}
                       features={features}
                       startingPrice={service.price}
+                      recurring={service.recurring}
                       delay={idx * 100}
                     />
                   </div>

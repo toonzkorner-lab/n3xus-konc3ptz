@@ -66,7 +66,12 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
     notFound();
   }
 
-  const features = JSON.parse(service.features || '[]');
+  let features = [];
+  try {
+    features = JSON.parse(service.features || '[]');
+  } catch (e) {
+    console.error("Failed to parse features for service", service.slug, e);
+  }
 
   return (
     <>
@@ -121,8 +126,8 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                 
                 <div className="flex flex-wrap items-center gap-xl mt-xl pt-xl border-t border-subtle">
                   <div className="flex flex-col">
-                    <span className="text-xs text-tertiary uppercase tracking-wide">Base Deposit</span>
-                    <span className="text-3xl font-heading font-bold glow-text">${(service.price / 100).toLocaleString()}</span>
+                    <span className="text-xs text-tertiary uppercase tracking-wide">{service.recurring ? 'Subscription' : 'Base Deposit'}</span>
+                    <span className="text-3xl font-heading font-bold glow-text">${(service.price / 100).toLocaleString()}{service.recurring ? ` / ${service.recurring === 'year' ? 'yr' : 'mo'}` : ''}</span>
                   </div>
                   <div className="flex gap-md flex-1 md:flex-none">
                     <Link href={`/contact?service=${service.slug}`} className="btn btn-primary flex-1 text-center">
@@ -134,6 +139,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                       price={service.price}
                       type="SERVICE"
                       image={service.icon || undefined}
+                      recurring={service.recurring || undefined}
                     />
                   </div>
                 </div>

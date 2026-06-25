@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { name, slug, description, shortDesc, price, features, category, icon, order } = body;
+    const { name, slug, description, shortDesc, price, features, category, icon, order, recurring } = body;
 
     if (!name || !slug) {
       return NextResponse.json(
@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
         category: category || null,
         icon: icon || "🚀",
         order: order || 0,
+        recurring: recurring === "month" || recurring === "year" ? recurring : null,
       },
     });
 

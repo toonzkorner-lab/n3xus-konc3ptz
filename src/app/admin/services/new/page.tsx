@@ -62,6 +62,7 @@ export default function NewServicePage() {
       category: formData.get('category'),
       icon: iconValue || '🚀',
       order: parseInt(formData.get('order') as string) || 0,
+      recurring: formData.get('recurring') === 'none' ? null : formData.get('recurring'),
     };
 
     try {
@@ -117,6 +118,15 @@ export default function NewServicePage() {
             <div className="form-group">
               <label className="form-label" htmlFor="price">Base Price ($)</label>
               <input type="number" id="price" name="price" className="form-input" min="0" step="0.01" required placeholder="499.00" />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label" htmlFor="recurring">Pricing Model</label>
+              <select id="recurring" name="recurring" className="form-input">
+                <option value="none">One-time Payment</option>
+                <option value="month">Monthly Subscription</option>
+                <option value="year">Yearly Subscription</option>
+              </select>
             </div>
 
             <div className="form-group">

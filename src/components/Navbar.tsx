@@ -18,6 +18,15 @@ export default function Navbar() {
   const { items, itemCount } = useCart();
   const { data: session, status } = useSession();
 
+  const [servicesList, setServicesList] = useState<{name: string, href: string}[]>([
+    { name: 'Discord Bots', href: '/services#discord-bots' },
+    { name: 'Telegram Bots', href: '/services#telegram-bots' },
+    { name: 'Web Design', href: '/services#web-design' },
+    { name: 'API Development', href: '/services#api-development' },
+    { name: 'Custom Imagery', href: '/services#custom-imagery' },
+    { name: 'Video Creation', href: '/services#video-creation' },
+  ]);
+
   useEffect(() => {
     setMounted(true);
     const sentinel = document.createElement('div');
@@ -35,6 +44,16 @@ export default function Navbar() {
     });
     observer.observe(sentinel);
 
+    // Fetch dynamic services for the navbar
+    fetch('/api/services')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setServicesList(data.map((s: any) => ({ name: s.name, href: `/services/${s.slug}` })));
+        }
+      })
+      .catch(e => console.error("Failed to load services for navbar:", e));
+
     return () => {
       observer.disconnect();
       if (document.body.contains(sentinel)) {
@@ -49,14 +68,7 @@ export default function Navbar() {
     { 
       name: 'Services', 
       href: '/services',
-      subLinks: [
-        { name: 'Discord Bots', href: '/services#discord-bots' },
-        { name: 'Telegram Bots', href: '/services#telegram-bots' },
-        { name: 'Web Design', href: '/services#web-design' },
-        { name: 'API Development', href: '/services#api-development' },
-        { name: 'Custom Imagery', href: '/services#custom-imagery' },
-        { name: 'Video Creation', href: '/services#video-creation' },
-      ]
+      subLinks: servicesList
     },
     { 
       name: 'Portfolio', 

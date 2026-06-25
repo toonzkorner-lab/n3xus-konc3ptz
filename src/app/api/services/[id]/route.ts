@@ -32,7 +32,7 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await req.json();
-    const { name, slug, description, shortDesc, price, features, category, icon, order, active } = body;
+    const { name, slug, description, shortDesc, price, features, category, icon, order, active, recurring } = body;
 
     const service = await prisma.service.update({
       where: { id },
@@ -47,6 +47,7 @@ export async function PUT(
         icon,
         order,
         active,
+        recurring: recurring === "month" || recurring === "year" ? recurring : null,
       },
     });
 

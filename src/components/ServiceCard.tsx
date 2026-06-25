@@ -14,6 +14,7 @@ interface ServiceCardProps {
   icon: string;
   features: string[];
   startingPrice: number;
+  recurring?: string | null;
   delay?: number;
 }
 
@@ -25,6 +26,7 @@ export default function ServiceCard({
   icon,
   features,
   startingPrice,
+  recurring,
   delay = 0,
 }: ServiceCardProps) {
   const { addToCart } = useCart();
@@ -39,6 +41,7 @@ export default function ServiceCard({
       price: startingPrice,
       quantity: 1,
       image: icon,
+      recurring,
     });
   };
 
@@ -78,8 +81,8 @@ export default function ServiceCard({
       
       <div className={styles.footer} style={{ flexDirection: 'column', gap: '1rem', alignItems: 'stretch' }}>
         <div className={styles.priceInfo} style={{ alignSelf: 'flex-start' }}>
-          <span className={styles.priceLabel}>Base Deposit</span>
-          <span className={styles.price}>{formatCurrency(startingPrice)}</span>
+          <span className={styles.priceLabel}>{recurring ? 'Subscription' : 'Base Deposit'}</span>
+          <span className={styles.price}>{formatCurrency(startingPrice)}{recurring ? ` / ${recurring === 'year' ? 'yr' : 'mo'}` : ''}</span>
         </div>
         
         <div className="flex gap-2">

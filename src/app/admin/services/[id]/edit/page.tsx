@@ -93,6 +93,7 @@ export default function EditServicePage({ params }: { params: Promise<{ id: stri
       icon: iconValue || '🚀',
       order: parseInt(formData.get('order') as string) || 0,
       active: formData.get('active') === 'on',
+      recurring: formData.get('recurring') === 'none' ? null : formData.get('recurring'),
     };
 
     try {
@@ -151,6 +152,15 @@ export default function EditServicePage({ params }: { params: Promise<{ id: stri
             <div className="form-group">
               <label className="form-label" htmlFor="price">Base Price ($)</label>
               <input type="number" id="price" name="price" className="form-input" min="0" step="0.01" required defaultValue={(service.price / 100).toFixed(2)} />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label" htmlFor="recurring">Pricing Model</label>
+              <select id="recurring" name="recurring" className="form-input" defaultValue={service.recurring || 'none'}>
+                <option value="none">One-time Payment</option>
+                <option value="month">Monthly Subscription</option>
+                <option value="year">Yearly Subscription</option>
+              </select>
             </div>
 
             <div className="form-group">
