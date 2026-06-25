@@ -61,7 +61,7 @@ export async function POST(request: Request) {
     }
 
     const sessionParams: any = {
-      ui_mode: 'embedded',
+      ui_mode: 'embedded_page',
       line_items: lineItems,
       mode,
       return_url: `${baseUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
