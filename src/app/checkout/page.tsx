@@ -70,16 +70,7 @@ export default function CheckoutPage() {
     }
   }, [items, appliedCoupon]);
 
-  useEffect(() => {
-    // Only fetch if we have items
-    if (items.length > 0 && isClient) {
-      fetchClientSecret().then(secret => {
-        if (secret) {
-          setClientSecret(secret);
-        }
-      });
-    }
-  }, [fetchClientSecret, items.length, isClient]);
+  // Removed auto-fetch to only create session on button click
 
   // Prevent hydration mismatch
   if (!isClient) {
@@ -221,28 +212,49 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {/* Right Column — Stripe Embedded Checkout */}
+              {/* Right Column — Checkout Actions */}
               <div className="flex flex-col gap-2xl">
-                <div className="bg-white border border-subtle rounded-xl p-0 shadow-md sticky overflow-hidden" style={{ top: 'calc(var(--navbar-height) + 2rem)', minHeight: '400px' }}>
-                  {error ? (
-                    <div className="p-xl bg-error/10 border-b border-error/30 text-error">
+                <div className="bg-card border border-subtle rounded-xl p-xl shadow-md sticky" style={{ top: 'calc(var(--navbar-height) + 2rem)' }}>
+                  <h3 className="text-xl font-heading text-primary mb-md">Payment Details</h3>
+                  <p className="text-secondary text-sm mb-lg">
+                    You will be redirected to Stripe's secure checkout page to complete your payment securely. We support all major credit cards, Apple Pay, and Google Pay.
+                  </p>
+                  
+                  {error && (
+                    <div className="mb-lg p-md bg-error/10 border-l-4 border-error text-error text-sm rounded">
                       {error}
                     </div>
-                  ) : clientSecret ? (
-                    <div id="checkout-container" className="w-full">
-                      <EmbeddedCheckoutProvider
-                        stripe={stripePromise}
-                        options={{ clientSecret }}
-                      >
-                        <EmbeddedCheckout className="w-full" />
-                      </EmbeddedCheckoutProvider>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center justify-center p-2xl h-full gap-md">
-                      <div className="spinner spinner-md"></div>
-                      <p className="text-tertiary text-sm">Preparing secure checkout...</p>
-                    </div>
                   )}
+
+                  <button
+                    onClick={async () => {
+                      setIsClient(false); // Disable button
+                      const url = await fetchClientSecret();
+                      if (url) {
+                        window.location.href = url;
+                      } else {
+                        setIsClient(true);
+                      }
+                    }}
+                    disabled={!isClient}
+                    className="btn btn-primary w-full py-lg text-lg flex justify-center items-center gap-sm"
+                  >
+                    {!isClient ? (
+                      <>
+                        <div className="spinner" style={{ width: '20px', height: '20px', borderWidth: '2px' }}></div>
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        🔒 Proceed to Payment
+                      </>
+                    )}
+                  </button>
+
+                  <div className="mt-lg flex items-center justify-center gap-md opacity-70">
+                    {/* Trust badges placeholders */}
+                    <span className="text-xs text-tertiary uppercase tracking-wider font-bold">Guaranteed Safe & Secure</span>
+                  </div>
                 </div>
               </div>
             </div>
