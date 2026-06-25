@@ -120,7 +120,7 @@ export async function POST(request: Request) {
     // Create Stripe Checkout Session
     const session = await stripe.checkout.sessions.create(sessionParams);
 
-    return NextResponse.json({ url: session.url });
+    return NextResponse.json({ url: session.url, clientSecret: session.client_secret });
 
   } catch (error: any) {
     console.error('Checkout error:', error);
