@@ -57,6 +57,9 @@ export default async function AdminLayout({
           <Link href="/admin/messages" className="flex items-center gap-md p-md rounded-md hover:bg-accent/10 hover:text-accent transition-colors text-secondary">
             <span>💬</span> Transmissions
           </Link>
+          <Link href="/admin/tickets" className="flex items-center gap-md p-md rounded-md hover:bg-accent/10 hover:text-accent transition-colors text-secondary">
+            <span>🎫</span> Support Tickets
+          </Link>
           <Link href="/admin/services" className="flex items-center gap-md p-md rounded-md hover:bg-accent/10 hover:text-accent transition-colors text-secondary">
             <span>🛠️</span> Service Editor
           </Link>
