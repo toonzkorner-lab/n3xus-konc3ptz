@@ -24,3 +24,23 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     return NextResponse.json({ error: 'Failed to update ticket' }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || (session.user.role !== 'ADMIN' && session.user.role !== 'OWNER')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    }
+
+    const { id: ticketId } = await params;
+
+    await prisma.ticket.delete({
+      where: { id: ticketId },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Delete ticket error:', error);
+    return NextResponse.json({ error: 'Failed to delete ticket' }, { status: 500 });
+  }
+}

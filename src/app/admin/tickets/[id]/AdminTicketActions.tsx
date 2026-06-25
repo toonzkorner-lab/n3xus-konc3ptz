@@ -63,13 +63,33 @@ export default function AdminTicketActions({ ticketId, currentStatus }: { ticket
           value={status}
           onChange={(e) => handleUpdateStatus(e.target.value)}
           disabled={loading}
-          className="bg-card border border-subtle rounded-md p-sm text-primary text-sm focus:border-accent focus:outline-none"
+          className="bg-card border border-subtle rounded-md p-sm text-primary text-sm focus:border-accent focus:outline-none flex-1"
         >
           <option value="OPEN">Open</option>
           <option value="IN_PROGRESS">In Progress</option>
           <option value="RESOLVED">Resolved</option>
           <option value="CLOSED">Closed</option>
         </select>
+        <button
+          onClick={async () => {
+            if (!confirm('Are you sure you want to delete this ticket? This cannot be undone.')) return;
+            setLoading(true);
+            try {
+              const res = await fetch(`/api/tickets/${ticketId}`, { method: 'DELETE' });
+              if (!res.ok) throw new Error('Failed to delete ticket');
+              toast.success('Ticket deleted');
+              router.push('/admin/tickets');
+              router.refresh();
+            } catch (err: any) {
+              toast.error(err.message || 'Error deleting ticket');
+              setLoading(false);
+            }
+          }}
+          disabled={loading}
+          className="btn btn-sm bg-error/10 text-error hover:bg-error/20 border-error/20 ml-auto"
+        >
+          🗑️ Delete Ticket
+        </button>
       </div>
 
       <form onSubmit={handleReply}>
