@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
+import AnalyticsChart from './AnalyticsChart';
 
 export const metadata = {
   title: 'Admin Console | N3xUs Konc3pt\'z',
@@ -17,6 +18,35 @@ export default async function AdminPage() {
     orderBy: { createdAt: 'desc' },
     include: { client: { select: { name: true, company: true } } }
   });
+
+  // Analytics for the last 30 days
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  
+  const pageViews = await prisma.pageView.findMany({
+    where: {
+      createdAt: { gte: thirtyDaysAgo }
+    }
+  });
+
+  // Group by date
+  const viewsByDate = pageViews.reduce((acc: Record<string, { views: number, uniqueSessions: Set<string> }>, pv) => {
+    const dateStr = new Date(pv.createdAt).toISOString().split('T')[0];
+    if (!acc[dateStr]) {
+      acc[dateStr] = { views: 0, uniqueSessions: new Set() };
+    }
+    acc[dateStr].views += 1;
+    acc[dateStr].uniqueSessions.add(pv.sessionId);
+    return acc;
+  }, {});
+
+  const chartData = Object.entries(viewsByDate)
+    .sort(([dateA], [dateB]) => new Date(dateA).getTime() - new Date(dateB).getTime())
+    .map(([date, data]) => ({
+      date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      views: data.views,
+      visitors: data.uniqueSessions.size
+    }));
 
   return (
     <div className="flex flex-col gap-2xl">
@@ -53,6 +83,11 @@ export default async function AdminPage() {
       </div>
 
       <div className="grid grid-2 gap-2xl">
+        {/* Analytics Chart */}
+        <div className="bg-card border border-subtle rounded-xl p-xl shadow-md col-span-2">
+          <AnalyticsChart data={chartData} />
+        </div>
+
         {/* Recent Projects */}
         <div className="bg-card border border-subtle rounded-xl p-xl shadow-md">
           <div className="flex items-center justify-between mb-lg border-b border-subtle pb-sm">
