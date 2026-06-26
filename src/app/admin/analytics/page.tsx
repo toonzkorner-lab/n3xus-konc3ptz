@@ -87,67 +87,72 @@ export default async function AnalyticsPage() {
   }));
 
   return (
-    <div className="space-y-8">
-      <h1 className="text-3xl font-bold font-orbitron text-neon-cyan drop-shadow-neon">Analytics Dashboard</h1>
+    <div className="flex flex-col gap-2xl">
+      <div>
+        <h1 className="text-3xl font-heading text-primary drop-shadow-sm">Analytics Dashboard</h1>
+        <p className="text-secondary font-mono text-sm mt-xs">Comprehensive metric deep-dive</p>
+      </div>
       
-      <div className="card">
-        <h2 className="text-xl font-bold mb-6 font-orbitron">Metrics Overview</h2>
+      <div className="bg-card border border-subtle rounded-xl p-xl shadow-md">
+        <h2 className="text-xl font-heading text-primary mb-lg border-b border-subtle pb-sm">Metrics Overview</h2>
         <AnalyticsClient data={chartData} />
       </div>
 
-      <div className="card">
-        <h2 className="text-xl font-bold mb-4 font-orbitron">Recent Users</h2>
-        <div className="overflow-x-auto">
+      <div className="grid grid-2 gap-2xl">
+        <div className="bg-card border border-subtle rounded-xl p-xl shadow-md overflow-x-auto">
+          <h2 className="text-xl font-heading text-primary mb-lg border-b border-subtle pb-sm">Recent Users</h2>
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-white/10">
-                <th className="py-2">Name</th>
-                <th className="py-2">Email</th>
-                <th className="py-2">Joined</th>
-                <th className="py-2">Role</th>
+              <tr className="border-b border-subtle text-secondary font-mono text-xs uppercase tracking-wider">
+                <th className="py-3 px-2">Name</th>
+                <th className="py-3 px-2">Email</th>
+                <th className="py-3 px-2">Joined</th>
+                <th className="py-3 px-2">Role</th>
               </tr>
             </thead>
             <tbody>
               {recentUsers.map(user => (
-                <tr key={user.id} className="border-b border-white/5">
-                  <td className="py-2">{user.name || 'N/A'}</td>
-                  <td className="py-2 text-white/70">{user.email}</td>
-                  <td className="py-2">{new Date(user.createdAt).toLocaleDateString()}</td>
-                  <td className="py-2">
-                    <span className="badge badge-outline">{user.role}</span>
+                <tr key={user.id} className="border-b border-subtle/50 hover:bg-tertiary transition-colors">
+                  <td className="py-3 px-2 text-primary font-bold text-sm">{user.name || 'N/A'}</td>
+                  <td className="py-3 px-2 text-secondary text-sm">{user.email}</td>
+                  <td className="py-3 px-2 text-secondary text-sm">{new Date(user.createdAt).toLocaleDateString()}</td>
+                  <td className="py-3 px-2">
+                    <span className={`text-[10px] px-2 py-1 rounded-full uppercase font-bold tracking-wider ${
+                      user.role === 'ADMIN' || user.role === 'OWNER' ? 'bg-accent/20 text-accent border border-accent/30' : 'bg-primary/20 text-primary border border-primary/30'
+                    }`}>
+                      {user.role}
+                    </span>
                   </td>
                 </tr>
               ))}
               {recentUsers.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="py-4 text-center text-white/50">No users found.</td>
+                  <td colSpan={4} className="py-4 text-center text-secondary italic text-sm">No users found.</td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-      </div>
 
-      <div className="card">
-        <h2 className="text-xl font-bold mb-4 font-orbitron">Top Pages (All Time)</h2>
-        <div className="overflow-x-auto">
+        <div className="bg-card border border-subtle rounded-xl p-xl shadow-md overflow-x-auto">
+          <h2 className="text-xl font-heading text-primary mb-lg border-b border-subtle pb-sm">Top Pages (All Time)</h2>
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-white/10">
-                <th className="py-2">URL</th>
-                <th className="py-2 text-right">Views</th>
+              <tr className="border-b border-subtle text-secondary font-mono text-xs uppercase tracking-wider">
+                <th className="py-3 px-2">URL</th>
+                <th className="py-3 px-2 text-right">Views</th>
               </tr>
             </thead>
             <tbody>
               {topPages.map(page => (
-                <tr key={page.url} className="border-b border-white/5">
-                  <td className="py-2 font-mono text-sm text-neon-cyan/80 truncate max-w-[300px]">{page.url}</td>
-                  <td className="py-2 text-right font-bold text-white/90">{page.views}</td>
+                <tr key={page.url} className="border-b border-subtle/50 hover:bg-tertiary transition-colors">
+                  <td className="py-3 px-2 font-mono text-xs text-primary truncate max-w-[200px]">{page.url}</td>
+                  <td className="py-3 px-2 text-right font-bold text-accent">{page.views}</td>
                 </tr>
               ))}
               {topPages.length === 0 && (
                 <tr>
-                  <td colSpan={2} className="py-4 text-center text-white/50">No page views recorded yet.</td>
+                  <td colSpan={2} className="py-4 text-center text-secondary italic text-sm">No page views recorded yet.</td>
                 </tr>
               )}
             </tbody>
