@@ -7,6 +7,11 @@ export default function AnalyticsTracker() {
   const pathname = usePathname();
 
   useEffect(() => {
+    // Skip tracking for admin panel
+    if (pathname && pathname.startsWith('/admin')) {
+      return;
+    }
+
     // Determine unique session ID
     let sessionId = localStorage.getItem('n3xus_session_id');
     if (!sessionId) {
