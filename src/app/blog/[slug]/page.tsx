@@ -5,6 +5,7 @@ import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { BlogPostJsonLd } from '@/components/JsonLd';
 import BlogCommentSection from '@/components/BlogCommentSection';
+import ReactMarkdown from 'react-markdown';
 
 export async function generateStaticParams() {
   const posts = await prisma.blogPost.findMany({
@@ -24,33 +25,38 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const desc = post.excerpt || 'Read more on the N3xUs blog.';
 
   return {
-    title: `${post.title} | N3xUs Konc3pt'z Blog`,
+    title: `${post.title} | N3xUs Konc3pt'z`,
     description: desc,
     alternates: {
       canonical: `https://n3xuskonceptz.com/blog/${slug}`,
     },
     openGraph: {
-      title: `${post.title} | N3xUs Konc3pt'z Blog`,
+      title: post.title,
       description: desc,
       url: `https://n3xuskonceptz.com/blog/${slug}`,
-      siteName: "N3xUs Konc3pt'z",
-      images: [{ url: ogImage, width: 1200, height: 630, alt: post.title }],
+      siteName: 'N3xUs Konc3pt\'z',
+      images: [
+        {
+          url: `https://n3xuskonceptz.com/blog/${slug}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
       locale: 'en_US',
       type: 'article',
-      publishedTime: post.createdAt.toISOString(),
-      modifiedTime: post.updatedAt.toISOString(),
       authors: ['Juan Socarras'],
     },
     twitter: {
-      card: "summary_large_image",
-      title: `${post.title} | N3xUs Konc3pt'z Blog`,
+      card: 'summary_large_image',
+      title: post.title,
       description: desc,
-      images: [ogImage],
-    }
+      images: [`https://n3xuskonceptz.com/blog/${slug}/opengraph-image`],
+    },
   };
 }
 
-export const revalidate = 3600; // Revalidate every hour
+export const dynamic = 'force-dynamic';
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -119,9 +125,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               lineHeight: 'var(--leading-relaxed)',
               color: 'var(--text-secondary)',
             }}>
-              {post.content.split('\n').map((paragraph: string, idx: number) => (
-                paragraph.trim() ? <p key={idx} className="mb-lg">{paragraph}</p> : null
-              ))}
+              <ReactMarkdown>{post.content}</ReactMarkdown>
             </div>
 
             <div className="mt-3xl pt-xl border-t border-subtle text-center">
