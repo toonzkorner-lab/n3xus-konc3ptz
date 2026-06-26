@@ -7,8 +7,9 @@ export default function AnalyticsTracker() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Skip tracking for admin panel
-    if (pathname && pathname.startsWith('/admin')) {
+    // Skip tracking for admin panel and dashboard
+    const currentPath = pathname || window.location.pathname;
+    if (currentPath.startsWith('/admin') || currentPath.startsWith('/dashboard')) {
       return;
     }
 

@@ -17,6 +17,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true, note: 'ignored bot' });
     }
 
+    // Ignore admin and dashboard routes server-side just in case
+    try {
+      const parsedUrl = new URL(url);
+      if (parsedUrl.pathname.startsWith('/admin') || parsedUrl.pathname.startsWith('/dashboard')) {
+        return NextResponse.json({ success: true, note: 'ignored admin/dashboard' });
+      }
+    } catch (e) {
+      // Invalid URL
+    }
+
     await prisma.pageView.create({
       data: {
         url,
