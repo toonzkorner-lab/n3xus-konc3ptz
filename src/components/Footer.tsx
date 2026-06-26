@@ -10,6 +10,18 @@ import toast from 'react-hot-toast';
 export default function Footer() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
+  const [services, setServices] = useState<{name: string, slug: string}[]>([]);
+
+  useEffect(() => {
+    fetch('/api/services')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          setServices(data);
+        }
+      })
+      .catch(console.error);
+  }, []);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,11 +113,13 @@ export default function Footer() {
           <div>
             <h4 className={styles.columnTitle}>Services</h4>
             <ul className={styles.linkList}>
-              <li><Link href="/services#discord" className={styles.link}>Discord Bots</Link></li>
-              <li><Link href="/services#telegram" className={styles.link}>Telegram Bots</Link></li>
-              <li><Link href="/services#design" className={styles.link}>Digital Design</Link></li>
-              <li><Link href="/services#api" className={styles.link}>API Development</Link></li>
-              <li><Link href="/services#client-server" className={styles.link}>Client-Server Arch</Link></li>
+              {services.length > 0 ? services.map(s => (
+                <li key={s.slug}><Link href={`/services/${s.slug}`} className={styles.link}>{s.name}</Link></li>
+              )) : (
+                <>
+                  <li><Link href="/services" className={styles.link}>Loading services...</Link></li>
+                </>
+              )}
             </ul>
           </div>
 
