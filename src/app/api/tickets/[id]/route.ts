@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { sendTicketStatusEmail } from '@/lib/notifications';
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -16,7 +17,13 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     const ticket = await prisma.ticket.update({
       where: { id: ticketId },
       data: { status },
+      include: { client: { select: { email: true } } },
     });
+
+    // Send email notification to client
+    if (ticket.client.email) {
+      sendTicketStatusEmail(ticket.client.email, ticket.subject, status, ticketId).catch(() => {});
+    }
 
     return NextResponse.json(ticket);
   } catch (error) {

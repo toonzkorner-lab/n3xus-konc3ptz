@@ -21,23 +21,22 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   if (!post) return { title: 'Post Not Found' };
 
-  const ogImage = post.coverImage || '/logo.jpg';
   const desc = post.excerpt || 'Read more on the N3xUs blog.';
 
   return {
     title: `${post.title} | N3xUs Konc3pt'z`,
     description: desc,
     alternates: {
-      canonical: `https://n3xuskonceptz.com/blog/${slug}`,
+      canonical: `https://n3xuskonc3ptz.com/blog/${slug}`,
     },
     openGraph: {
       title: post.title,
       description: desc,
-      url: `https://n3xuskonceptz.com/blog/${slug}`,
-      siteName: 'N3xUs Konc3pt\'z',
+      url: `https://n3xuskonc3ptz.com/blog/${slug}`,
+      siteName: "N3xUs Konc3pt'z",
       images: [
         {
-          url: `https://n3xuskonceptz.com/blog/${slug}/opengraph-image`,
+          url: `https://n3xuskonc3ptz.com/blog/${slug}/opengraph-image`,
           width: 1200,
           height: 630,
           alt: post.title,
@@ -51,7 +50,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       card: 'summary_large_image',
       title: post.title,
       description: desc,
-      images: [`https://n3xuskonceptz.com/blog/${slug}/opengraph-image`],
+      images: [`https://n3xuskonc3ptz.com/blog/${slug}/opengraph-image`],
     },
   };
 }
@@ -71,6 +70,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   if (!post || !post.published) {
     notFound();
   }
+
+  // Fetch related posts (3 most recent that aren't this one)
+  const relatedPosts = await prisma.blogPost.findMany({
+    where: { published: true, slug: { not: slug } },
+    orderBy: { createdAt: 'desc' },
+    take: 3,
+    select: { slug: true, title: true, excerpt: true, coverImage: true, createdAt: true },
+  });
 
   const tags = JSON.parse(post.tags);
 
@@ -114,7 +121,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 </div>
                 <div>
                   <p className="text-primary text-sm font-bold">Juan Socarras</p>
-                  <p className="text-xs text-secondary mb-1">Founder & Principal Designer</p>
+                  <p className="text-xs text-secondary mb-1">Founder &amp; Principal Designer</p>
                   <p className="text-xs">{new Date(post.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                 </div>
               </div>
@@ -133,6 +140,31 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 ← More Transmissions
               </Link>
             </div>
+
+            {/* Related Posts */}
+            {relatedPosts.length > 0 && (
+              <section className="mt-3xl pt-xl border-t border-subtle">
+                <h3 className="text-2xl font-heading text-primary mb-lg">Related Transmissions</h3>
+                <div className="grid grid-3 gap-lg">
+                  {relatedPosts.map(rp => (
+                    <Link href={`/blog/${rp.slug}`} key={rp.slug} className="bg-card border border-subtle rounded-xl overflow-hidden hover:border-primary transition-all group">
+                      <div className="w-full h-32 bg-tertiary flex items-center justify-center overflow-hidden">
+                        {rp.coverImage ? (
+                          <img src={rp.coverImage} alt={rp.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} className="group-hover:scale-105 transition-transform duration-500" />
+                        ) : (
+                          <span style={{ fontSize: '2rem' }}>📡</span>
+                        )}
+                      </div>
+                      <div className="p-md">
+                        <p className="text-xs text-secondary font-mono mb-xs">{new Date(rp.createdAt).toLocaleDateString()}</p>
+                        <h4 className="text-primary font-bold text-sm group-hover:text-accent transition-colors" style={{ lineHeight: '1.4' }}>{rp.title}</h4>
+                        {rp.excerpt && <p className="text-xs text-secondary mt-xs" style={{ lineHeight: '1.5', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{rp.excerpt}</p>}
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            )}
             
             <BlogCommentSection slug={slug} />
           </div>

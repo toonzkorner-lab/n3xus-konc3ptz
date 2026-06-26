@@ -88,9 +88,14 @@ export default async function AnalyticsPage() {
 
   return (
     <div className="flex flex-col gap-2xl">
-      <div>
-        <h1 className="text-3xl font-heading text-primary drop-shadow-sm">Analytics Dashboard</h1>
-        <p className="text-secondary font-mono text-sm mt-xs">Comprehensive metric deep-dive</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-heading text-primary drop-shadow-sm">Analytics Dashboard</h1>
+          <p className="text-secondary font-mono text-sm mt-xs">Comprehensive metric deep-dive</p>
+        </div>
+        <a href="/api/admin/analytics/export" target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline flex items-center gap-sm">
+          <span>📥</span> Export CSV
+        </a>
       </div>
       
       <div className="bg-card border border-subtle rounded-xl p-xl shadow-md">

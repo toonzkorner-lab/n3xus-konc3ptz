@@ -63,7 +63,7 @@ export default async function ProjectTimelinePage(props: { params: Promise<{ id:
 
       <div className="grid grid-2 gap-2xl">
         {/* Timeline (Tasks) */}
-        <div className="card">
+        <div className="bg-card border border-subtle rounded-xl p-xl shadow-md">
           <h3 className="text-xl text-primary font-heading mb-lg">Project Timeline</h3>
           <div className="flex flex-col gap-lg relative">
             <div className="absolute left-3 top-2 bottom-2 w-[2px] bg-subtle"></div>
@@ -95,7 +95,7 @@ export default async function ProjectTimelinePage(props: { params: Promise<{ id:
         </div>
 
         {/* Files & Deliverables */}
-        <div className="card">
+        <div className="bg-card border border-subtle rounded-xl p-xl shadow-md">
           <h3 className="text-xl text-primary font-heading mb-lg">Deliverables</h3>
           {project.files.length === 0 ? (
             <p className="text-tertiary text-sm">No files or deliverables have been uploaded yet.</p>

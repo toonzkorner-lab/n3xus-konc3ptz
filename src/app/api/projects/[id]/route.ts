@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { sendProjectMilestoneEmail } from '@/lib/notifications';
 
 export async function GET(
   request: NextRequest,
@@ -42,6 +43,12 @@ export async function PUT(
   try {
     const { id } = await params;
     const data = await request.json();
+
+    // Get current project state for comparison
+    const currentProject = await prisma.project.findUnique({
+      where: { id },
+      include: { client: { select: { email: true } } },
+    });
     
     const project = await prisma.project.update({
       where: { id },
@@ -54,6 +61,20 @@ export async function PUT(
         deadline: data.deadline,
       },
     });
+
+    // Send email if status changed or progress hit a milestone (25%, 50%, 75%, 100%)
+    if (currentProject?.client.email) {
+      const statusChanged = data.status && data.status !== currentProject.status;
+      const progressMilestones = [25, 50, 75, 100];
+      const progressHitMilestone = data.progress && progressMilestones.includes(data.progress) && data.progress !== currentProject.progress;
+
+      if (statusChanged) {
+        const milestone = data.status === 'COMPLETED' ? 'Project Completed! 🎉' : `Status updated to ${data.status.replace('_', ' ')}`;
+        sendProjectMilestoneEmail(currentProject.client.email, project.title, milestone, data.progress || project.progress, id).catch(() => {});
+      } else if (progressHitMilestone) {
+        sendProjectMilestoneEmail(currentProject.client.email, project.title, `Progress reached ${data.progress}%`, data.progress, id).catch(() => {});
+      }
+    }
 
     return NextResponse.json(project);
   } catch (error: any) {

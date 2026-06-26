@@ -99,14 +99,16 @@ export default function Footer() {
             </div>
           </div>
 
-          <div>
+          <div className={styles.colLinks}>
             <h4 className={styles.columnTitle}>Quick Links</h4>
             <ul className={styles.linkList}>
-              <li><Link href="/" className={styles.link}>Home</Link></li>
-              <li><Link href="/about" className={styles.link}>About Us</Link></li>
+              <li><Link href="/services" className={styles.link}>Services</Link></li>
               <li><Link href="/portfolio" className={styles.link}>Portfolio</Link></li>
+              <li><Link href="/case-studies" className={styles.link}>Case Studies</Link></li>
+              <li><Link href="/about" className={styles.link}>About Us</Link></li>
               <li><Link href="/blog" className={styles.link}>Blog</Link></li>
-              <li><Link href="/contact" className={styles.link}>Contact</Link></li>
+              <li><Link href="/faq" className={styles.link}>FAQ</Link></li>
+              <li><Link href="/quote" className={styles.link}>Request a Quote</Link></li>
             </ul>
           </div>
 
