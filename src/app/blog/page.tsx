@@ -31,7 +31,7 @@ export const metadata = {
 export default async function BlogPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
   const resolvedSearchParams = await searchParams;
   const page = parseInt(resolvedSearchParams?.page || '1');
-  const limit = 5;
+  const limit = 6;
   const skip = (page - 1) * limit;
 
   const [posts, totalPosts] = await Promise.all([
