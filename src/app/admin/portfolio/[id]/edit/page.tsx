@@ -152,8 +152,6 @@ export default function EditPortfolioPage() {
           <textarea className="input min-h-[150px]" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
         </div>
 
-        </div>
-
         <div className="grid grid-cols-2 gap-md">
           <div className="form-group">
             <label className="label">Category</label>
