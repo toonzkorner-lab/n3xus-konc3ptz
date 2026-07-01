@@ -217,6 +217,7 @@ model PortfolioItem {
   featured    Boolean   @default(false)
   liveUrl     String?
   githubUrl   String?
+  client      String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   
