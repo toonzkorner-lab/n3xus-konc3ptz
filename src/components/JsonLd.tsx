@@ -3,8 +3,8 @@ export function OrganizationJsonLd() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: "N3xUs Konc3pt'z",
-    url: 'https://n3xuskonceptz.com',
-    logo: 'https://n3xuskonceptz.com/logo.jpg',
+    url: 'https://n3xuskonc3ptz.com',
+    logo: 'https://n3xuskonc3ptz.com/logo.jpg',
     description: 'Premium digital design studio engineering custom Discord bots, Telegram automation, high-performance APIs, e-commerce platforms, and immersive web experiences.',
     founder: {
       '@type': 'Person',
@@ -34,7 +34,7 @@ export function WebSiteJsonLd() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: "N3xUs Konc3pt'z",
-    url: 'https://n3xuskonceptz.com',
+    url: 'https://n3xuskonc3ptz.com',
     description: 'Premium digital design studio engineering custom Discord bots, Telegram automation, high-performance APIs, and immersive web experiences.',
     publisher: {
       '@type': 'Organization',
@@ -63,10 +63,10 @@ export function BlogPostJsonLd({ title, description, slug, datePublished, dateMo
     '@type': 'BlogPosting',
     headline: title,
     description,
-    url: `https://n3xuskonceptz.com/blog/${slug}`,
+    url: `https://n3xuskonc3ptz.com/blog/${slug}`,
     datePublished,
     dateModified,
-    image: coverImage || 'https://n3xuskonceptz.com/logo.jpg',
+    image: coverImage || 'https://n3xuskonc3ptz.com/logo.jpg',
     author: {
       '@type': 'Person',
       name: 'Juan Socarras',
@@ -77,7 +77,7 @@ export function BlogPostJsonLd({ title, description, slug, datePublished, dateMo
       name: "N3xUs Konc3pt'z",
       logo: {
         '@type': 'ImageObject',
-        url: 'https://n3xuskonceptz.com/logo.jpg',
+        url: 'https://n3xuskonc3ptz.com/logo.jpg',
       },
     },
   };
@@ -101,7 +101,7 @@ export function ServiceJsonLd({ name, description, slug, price }: {
     '@type': 'Service',
     name,
     description,
-    url: `https://n3xuskonceptz.com/services/${slug}`,
+    url: `https://n3xuskonc3ptz.com/services/${slug}`,
     provider: {
       '@type': 'Organization',
       name: "N3xUs Konc3pt'z",

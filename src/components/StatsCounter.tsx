@@ -52,28 +52,37 @@ export default function StatsCounter({ stats }: StatsCounterProps) {
   );
 }
 
-// Simple counter component
+// Counter component using requestAnimationFrame
 function Counter({ value, duration }: { value: number, duration: number }) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    let start = 0;
-    const end = value;
-    if (start === end) return;
+    if (value === 0) {
+      setCount(0);
+      return;
+    }
 
-    let totalMilSecDur = duration;
-    let incrementTime = (totalMilSecDur / end) * 2;
+    let startTimestamp: number | null = null;
+    let animationFrameId: number;
 
-    let timer = setInterval(() => {
-      start += 1;
-      setCount(start);
-      if (start >= end) {
-        clearInterval(timer);
-        setCount(end);
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      
+      // Easing function for smoother animation (easeOutQuart)
+      const easeOut = 1 - Math.pow(1 - progress, 4);
+      setCount(Math.floor(easeOut * value));
+      
+      if (progress < 1) {
+        animationFrameId = window.requestAnimationFrame(step);
+      } else {
+        setCount(value);
       }
-    }, incrementTime);
+    };
 
-    return () => clearInterval(timer);
+    animationFrameId = window.requestAnimationFrame(step);
+
+    return () => window.cancelAnimationFrame(animationFrameId);
   }, [value, duration]);
 
   return <span className={styles.value}>{count.toLocaleString()}</span>;

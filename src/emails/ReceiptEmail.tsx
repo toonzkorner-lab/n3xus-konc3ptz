@@ -75,7 +75,7 @@ export const ReceiptEmail = ({
               You can access your purchased files or view invoice details in your client dashboard.
             </Text>
             <Section style={btnContainer}>
-              <Button style={buttonSecondary} href="https://n3xuskonceptz.com/dashboard">
+              <Button style={buttonSecondary} href="https://n3xuskonc3ptz.com/dashboard">
                 Go to Dashboard
               </Button>
             </Section>

@@ -15,14 +15,14 @@ export const metadata = {
   title: 'N3xUs Konc3pt\'z | Digital Design Studio',
   description: 'The premier digital design studio for the next generation of the web.',
   alternates: {
-    canonical: 'https://n3xuskonceptz.com/',
+    canonical: 'https://n3xuskonc3ptz.com/',
   },
   openGraph: {
     title: 'N3xUs Konc3pt\'z | Digital Design Studio',
     description: 'The premier digital design studio for the next generation of the web.',
-    url: 'https://n3xuskonceptz.com/',
+    url: 'https://n3xuskonc3ptz.com/',
     siteName: 'N3xUs Konc3pt\'z',
-    images: [{ url: 'https://n3xuskonceptz.com/logo.jpg', width: 800, height: 800, alt: 'N3xUs Logo' }],
+    images: [{ url: 'https://n3xuskonc3ptz.com/logo.jpg', width: 800, height: 800, alt: 'N3xUs Logo' }],
     locale: 'en_US',
     type: 'website',
   },
@@ -30,7 +30,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'N3xUs Konc3pt\'z | Digital Design Studio',
     description: 'The premier digital design studio for the next generation of the web.',
-    images: ['https://n3xuskonceptz.com/logo.jpg'],
+    images: ['https://n3xuskonc3ptz.com/logo.jpg'],
   },
 };
 
@@ -42,30 +42,21 @@ export default async function Home() {
     take: 3
   });
 
-  // Mock portfolio items for the homepage
-  const portfolioItems = [
-    {
-      id: '1',
-      slug: 'neon-nexus-bot',
-      title: 'Neon Nexus Discord Bot',
-      category: 'Bots',
-      tags: ['Discord', 'Node.js', 'AI Integration']
-    },
-    {
-      id: '2',
-      slug: 'cyber-trade-platform',
-      title: 'Cyber Trade Platform',
-      category: 'Web Design',
-      tags: ['Next.js', 'Web3', 'Tailwind CSS']
-    },
-    {
-      id: '3',
-      slug: 'stellar-api-gateway',
-      title: 'Stellar API Gateway',
-      category: 'API',
-      tags: ['Express', 'Redis', 'Docker']
-    }
-  ];
+  // Fetch real portfolio items
+  const dbPortfolioItems = await prisma.portfolioItem.findMany({
+    orderBy: { createdAt: 'desc' },
+    take: 3
+  });
+
+  const portfolioItems = dbPortfolioItems.map(item => ({
+    id: item.id,
+    slug: item.slug,
+    title: item.title,
+    category: item.category || '',
+    tags: item.tags ? JSON.parse(item.tags) : [],
+    images: item.images ? JSON.parse(item.images) : [],
+    clientProject: !!item.client,
+  }));
 
   // Fetch testimonials
   const testimonials = await prisma.testimonial.findMany({
@@ -74,11 +65,31 @@ export default async function Home() {
     take: 5
   });
 
+  // Fetch actual completed projects from database
+  const actualProjectsCount = await prisma.project.count({
+    where: { status: 'COMPLETED' }
+  });
+
+  // Calculate dynamic stats based on time elapsed since launch (e.g., Jan 1, 2024)
+  const launchDate = new Date('2024-01-01').getTime();
+  const currentDate = Date.now();
+  const daysElapsed = Math.max(0, Math.floor((currentDate - launchDate) / (1000 * 60 * 60 * 24)));
+  
+  // 1 fake project every 8 days on average, with a base of 30
+  const fakeProjectsCount = Math.floor(daysElapsed / 8);
+  const totalProjects = actualProjectsCount + fakeProjectsCount + 30;
+  
+  // Discord Bots Deployed - 1 bot every 15 days, base 15
+  const discordBotsCount = Math.floor(daysElapsed / 15) + 15;
+  
+  // Lines of Code - 1k lines every 4 days, base 150
+  const linesOfCodeCount = Math.floor(daysElapsed / 4) + 150;
+
   // Stats
   const stats = [
-    { label: 'Projects Completed', value: 150, suffix: '+' },
-    { label: 'Discord Bots Deployed', value: 45, suffix: '+' },
-    { label: 'Lines of Code', value: 500, suffix: 'k+' },
+    { label: 'Projects Completed', value: totalProjects, suffix: '+' },
+    { label: 'Discord Bots Deployed', value: discordBotsCount, suffix: '+' },
+    { label: 'Lines of Code', value: linesOfCodeCount, suffix: 'k+' },
     { label: 'Client Satisfaction', value: 99, suffix: '%' }
   ];
 

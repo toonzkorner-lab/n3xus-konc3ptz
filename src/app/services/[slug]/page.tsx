@@ -14,12 +14,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   let ogImage = '/logo.jpg';
   if (service.icon && /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(service.icon)) {
-    ogImage = service.icon.startsWith('http') ? service.icon : `https://n3xuskonceptz.com${service.icon}`;
+    ogImage = service.icon.startsWith('http') ? service.icon : `https://n3xuskonc3ptz.com${service.icon}`;
   } else {
-    ogImage = 'https://n3xuskonceptz.com/logo.jpg';
+    ogImage = 'https://n3xuskonc3ptz.com/logo.jpg';
   }
 
-  const siteUrl = 'https://n3xuskonceptz.com';
+  const siteUrl = 'https://n3xuskonc3ptz.com';
 
   return {
     title: `${service.name} | N3xUs Konc3pt'z`,

@@ -8,13 +8,13 @@ export const dynamic = 'force-dynamic';
 export const metadata = {
   title: 'Portfolio | N3xUs Konc3pt\'z',
   description: 'Explore our portfolio of custom Discord bots, web applications, API integrations, and digital design projects.',
-  alternates: { canonical: 'https://n3xuskonceptz.com/portfolio' },
+  alternates: { canonical: 'https://n3xuskonc3ptz.com/portfolio' },
   openGraph: {
     title: 'Portfolio | N3xUs Konc3pt\'z',
     description: 'Explore our portfolio of custom Discord bots, web applications, API integrations, and digital design projects.',
-    url: 'https://n3xuskonceptz.com/portfolio',
+    url: 'https://n3xuskonc3ptz.com/portfolio',
     siteName: 'N3xUs Konc3pt\'z',
-    images: [{ url: 'https://n3xuskonceptz.com/logo.jpg', width: 800, height: 800, alt: 'N3xUs Logo' }],
+    images: [{ url: 'https://n3xuskonc3ptz.com/logo.jpg', width: 800, height: 800, alt: 'N3xUs Logo' }],
     locale: 'en_US',
     type: 'website',
   },
@@ -22,7 +22,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Portfolio | N3xUs Konc3pt\'z',
     description: 'Explore our portfolio of custom Discord bots, web applications, API integrations, and digital design projects.',
-    images: ['https://n3xuskonceptz.com/logo.jpg'],
+    images: ['https://n3xuskonc3ptz.com/logo.jpg'],
   },
 };
 
@@ -38,6 +38,7 @@ export default async function PortfolioPage() {
     category: item.category || '',
     tags: item.tags ? JSON.parse(item.tags) : [],
     images: item.images ? JSON.parse(item.images) : [],
+    clientProject: !!item.client,
   }));
 
   return (

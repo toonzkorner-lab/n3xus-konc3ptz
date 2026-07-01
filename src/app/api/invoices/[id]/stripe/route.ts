@@ -71,7 +71,7 @@ export async function POST(
       after_completion: {
         type: 'redirect',
         redirect: {
-          url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://n3xuskonceptz.com'}/dashboard/invoices`,
+          url: `${process.env.NEXT_PUBLIC_APP_URL || 'https://n3xuskonc3ptz.com'}/dashboard/invoices`,
         },
       },
     });

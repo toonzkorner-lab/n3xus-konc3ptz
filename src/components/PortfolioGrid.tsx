@@ -13,6 +13,7 @@ interface PortfolioItem {
   tags: string[];
   imagePlaceholder?: boolean;
   images?: string[];
+  clientProject?: boolean;
 }
 
 interface PortfolioGridProps {
@@ -84,7 +85,14 @@ export default function PortfolioGrid({ items, limit }: PortfolioGridProps) {
             
             <div className={styles.content}>
               <h3 className={styles.title}>{item.title}</h3>
-              <p className={styles.category}>{item.category}</p>
+              <div className="flex items-center gap-sm mb-xs">
+                <p className={styles.category} style={{ margin: 0 }}>{item.category}</p>
+                {item.clientProject ? (
+                  <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 border border-green-500/30">Client Project</span>
+                ) : (
+                  <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30">Studio Project</span>
+                )}
+              </div>
               <div className={styles.tags}>
                 {item.tags.slice(0, 3).map(tag => (
                   <span key={tag} className={styles.tag}>{tag}</span>

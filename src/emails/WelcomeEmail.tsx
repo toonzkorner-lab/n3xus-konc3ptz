@@ -38,7 +38,7 @@ export const WelcomeEmail = ({ name = 'Client', projectName = 'Your Project' }: 
           </Text>
           
           <Section style={btnContainer}>
-            <Button style={button} href="https://n3xuskonceptz.com/dashboard">
+            <Button style={button} href="https://n3xuskonc3ptz.com/dashboard">
               Go to Dashboard
             </Button>
           </Section>

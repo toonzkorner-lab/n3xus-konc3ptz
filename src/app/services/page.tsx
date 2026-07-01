@@ -8,13 +8,13 @@ import AddToCartButton from '@/components/AddToCartButton';
 export const metadata = {
   title: 'Services | N3xUs Konc3pt\'z',
   description: 'Explore our premium digital design and development services including Discord bots, Telegram automation, custom APIs, e-commerce platforms, and web applications.',
-  alternates: { canonical: 'https://n3xuskonceptz.com/services' },
+  alternates: { canonical: 'https://n3xuskonc3ptz.com/services' },
   openGraph: {
     title: 'Services | N3xUs Konc3pt\'z',
     description: 'Explore our premium digital design and development services including Discord bots, Telegram automation, custom APIs, e-commerce platforms, and web applications.',
-    url: 'https://n3xuskonceptz.com/services',
+    url: 'https://n3xuskonc3ptz.com/services',
     siteName: 'N3xUs Konc3pt\'z',
-    images: [{ url: 'https://n3xuskonceptz.com/logo.jpg', width: 800, height: 800, alt: 'N3xUs Logo' }],
+    images: [{ url: 'https://n3xuskonc3ptz.com/logo.jpg', width: 800, height: 800, alt: 'N3xUs Logo' }],
     locale: 'en_US',
     type: 'website',
   },
@@ -22,7 +22,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'Services | N3xUs Konc3pt\'z',
     description: 'Explore our premium digital design and development services including Discord bots, Telegram automation, custom APIs, e-commerce platforms, and web applications.',
-    images: ['https://n3xuskonceptz.com/logo.jpg'],
+    images: ['https://n3xuskonc3ptz.com/logo.jpg'],
   },
 };
 
