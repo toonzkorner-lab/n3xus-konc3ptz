@@ -37,6 +37,7 @@ export async function POST(request: Request) {
         featured: data.featured,
         liveUrl: data.liveUrl,
         githubUrl: data.githubUrl,
+        client: data.client,
       },
     });
 

@@ -18,6 +18,7 @@ export default function NewPortfolioPage() {
     githubUrl: '',
     images: '',
     tags: '',
+    client: '',
   });
   
   const [saving, setSaving] = useState(false);
@@ -71,16 +72,17 @@ export default function NewPortfolioPage() {
     setError('');
 
     try {
-      const submitData = {
+      const payload = {
         ...formData,
         images: formData.images ? JSON.stringify(formData.images.split(',').map(s => s.trim())) : '[]',
         tags: formData.tags ? JSON.stringify(formData.tags.split(',').map(s => s.trim())) : '[]',
+        client: formData.client || null,
       };
 
       const res = await fetch(`/api/portfolio`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(submitData),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
@@ -132,10 +134,15 @@ export default function NewPortfolioPage() {
             <label className="label">Category</label>
             <input type="text" className="input" value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} />
           </div>
-          <div className="form-group flex items-center gap-sm mt-lg">
-            <input type="checkbox" id="featured" className="w-5 h-5 accent-primary" checked={formData.featured} onChange={(e) => setFormData({ ...formData, featured: e.target.checked })} />
-            <label htmlFor="featured" className="label mb-0 cursor-pointer">Featured Item</label>
+          <div className="form-group">
+            <label className="label">Client Name (Optional)</label>
+            <input type="text" className="input" value={formData.client} onChange={(e) => setFormData({ ...formData, client: e.target.value })} placeholder="e.g. Acme Corp" />
           </div>
+        </div>
+
+        <div className="form-group flex items-center gap-sm mt-lg">
+          <input type="checkbox" id="featured" className="w-5 h-5 accent-primary" checked={formData.featured} onChange={(e) => setFormData({ ...formData, featured: e.target.checked })} />
+          <label htmlFor="featured" className="label mb-0 cursor-pointer">Featured Item</label>
         </div>
 
         <div className="grid grid-cols-2 gap-md">

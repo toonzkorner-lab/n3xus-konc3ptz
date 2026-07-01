@@ -20,6 +20,7 @@ export default function EditPortfolioPage() {
     githubUrl: '',
     images: '',
     tags: '',
+    client: '',
   });
   
   const [loading, setLoading] = useState(true);
@@ -45,6 +46,7 @@ export default function EditPortfolioPage() {
           githubUrl: data.githubUrl || '',
           images: data.images ? JSON.parse(data.images).join(', ') : '',
           tags: data.tags ? JSON.parse(data.tags).join(', ') : '',
+          client: data.client || '',
         });
       } catch (err: any) {
         setError(err.message);
@@ -95,6 +97,7 @@ export default function EditPortfolioPage() {
         ...formData,
         images: formData.images ? JSON.stringify(formData.images.split(',').map(s => s.trim()).filter(s => s)) : '[]',
         tags: formData.tags ? JSON.stringify(formData.tags.split(',').map(s => s.trim()).filter(s => s)) : '[]',
+        client: formData.client || null,
       };
 
       const res = await fetch(`/api/portfolio/${portfolioId}`, {
@@ -149,15 +152,22 @@ export default function EditPortfolioPage() {
           <textarea className="input min-h-[150px]" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
         </div>
 
+        </div>
+
         <div className="grid grid-cols-2 gap-md">
           <div className="form-group">
             <label className="label">Category</label>
             <input type="text" className="input" value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} />
           </div>
-          <div className="form-group flex items-center gap-sm mt-lg">
-            <input type="checkbox" id="featured" className="w-5 h-5 accent-primary" checked={formData.featured} onChange={(e) => setFormData({ ...formData, featured: e.target.checked })} />
-            <label htmlFor="featured" className="label mb-0 cursor-pointer">Featured Item</label>
+          <div className="form-group">
+            <label className="label">Client Name (Optional)</label>
+            <input type="text" className="input" value={formData.client} onChange={(e) => setFormData({ ...formData, client: e.target.value })} placeholder="e.g. Acme Corp" />
           </div>
+        </div>
+
+        <div className="form-group flex items-center gap-sm mt-lg">
+          <input type="checkbox" id="featured" className="w-5 h-5 accent-primary" checked={formData.featured} onChange={(e) => setFormData({ ...formData, featured: e.target.checked })} />
+          <label htmlFor="featured" className="label mb-0 cursor-pointer">Featured Item</label>
         </div>
 
         <div className="grid grid-cols-2 gap-md">

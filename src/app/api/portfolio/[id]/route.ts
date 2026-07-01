@@ -51,6 +51,7 @@ export async function PUT(
         featured: data.featured,
         liveUrl: data.liveUrl,
         githubUrl: data.githubUrl,
+        client: data.client,
       },
     });
 
