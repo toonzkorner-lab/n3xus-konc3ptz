@@ -215,7 +215,7 @@ export default async function Home() {
                       </li>
                       <li style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--text-secondary)' }}>
                         <span style={{ color: 'var(--color-primary)', fontSize: '1.25rem' }}>📞</span> 
-                        <a href="tel:+12108900172" className="hover:text-primary transition-colors text-lg">(210) 890-0172 (Call or Text)</a>
+                        <a href="tel:+12107868576" className="hover:text-primary transition-colors text-lg">(210) 786-8576 (Call or Text)</a>
                       </li>
                       <li style={{ display: 'flex', alignItems: 'center', gap: '1rem', color: 'var(--text-secondary)' }}>
                         <span style={{ color: 'var(--color-primary)', fontSize: '1.25rem' }}>📱</span> 
