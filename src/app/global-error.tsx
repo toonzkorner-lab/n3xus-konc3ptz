@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+
 export default function GlobalError({
   error,
   reset,
@@ -7,6 +9,10 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    console.error("FATAL ROOT LAYOUT ERROR:", error);
+  }, [error]);
+
   return (
     <html>
       <body className="bg-background text-primary min-h-screen flex items-center justify-center font-sans">
@@ -21,6 +27,14 @@ export default function GlobalError({
 
           <div className="bg-background rounded-md p-md mb-xl text-left border border-subtle overflow-x-auto">
             <p className="text-xs font-mono text-tertiary">Error digest: {error.digest || 'Unknown'}</p>
+            <p className="text-xs font-mono text-error mt-xs mt-2 border-t border-error pt-2">
+              <strong>Actual Error:</strong> {error.message || 'Check terminal logs (if logged)'}
+            </p>
+            {error.stack && (
+              <pre className="text-xs text-secondary mt-2 opacity-70" style={{ whiteSpace: 'pre-wrap' }}>
+                {error.stack}
+              </pre>
+            )}
           </div>
 
           <button
