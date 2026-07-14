@@ -16,7 +16,12 @@ export default function AnalyticsTracker() {
     // Determine unique session ID
     let sessionId = localStorage.getItem('n3xus_session_id');
     if (!sessionId) {
-      sessionId = crypto.randomUUID();
+      if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+        sessionId = crypto.randomUUID();
+      } else {
+        // Fallback for HTTP / non-secure contexts where randomUUID is unavailable
+        sessionId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      }
       localStorage.setItem('n3xus_session_id', sessionId);
     }
 
