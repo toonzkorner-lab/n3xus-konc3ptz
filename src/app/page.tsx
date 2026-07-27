@@ -119,7 +119,7 @@ export default async function Home() {
                 <div className="text-5xl mb-md">🎨</div>
                 <h3 className="text-2xl text-primary mb-sm font-heading">Design</h3>
                 <p className="text-secondary text-sm leading-relaxed">
-                  Visually striking, cyberpunk-inspired aesthetics tailored to your brand. We focus on UI/UX that captivates and converts.
+                  Visually striking aesthetics across all styles—from sleek minimal to bold cyberpunk. We focus on UI/UX tailored to your brand that captivates and converts.
                 </p>
               </div>
               
