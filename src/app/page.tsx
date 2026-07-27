@@ -12,14 +12,14 @@ import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 
 export const metadata = {
-  title: 'N3xUs Konc3pt\'z | Digital Design Studio',
-  description: 'The premier digital design studio for the next generation of the web.',
+  title: 'N3xUs Konc3pt\'z | Website Design, Development & Deployment',
+  description: 'The premier digital design studio mastering the 3 D\'s: stunning website Design, robust custom Development, and seamless global Deployment.',
   alternates: {
     canonical: 'https://n3xuskonc3ptz.com/',
   },
   openGraph: {
-    title: 'N3xUs Konc3pt\'z | Digital Design Studio',
-    description: 'The premier digital design studio for the next generation of the web.',
+    title: 'N3xUs Konc3pt\'z | Website Design, Development & Deployment',
+    description: 'The premier digital design studio mastering the 3 D\'s: stunning website Design, robust custom Development, and seamless global Deployment.',
     url: 'https://n3xuskonc3ptz.com/',
     siteName: 'N3xUs Konc3pt\'z',
     images: [{ url: 'https://n3xuskonc3ptz.com/logo.jpg', width: 800, height: 800, alt: 'N3xUs Logo' }],
@@ -28,8 +28,8 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'N3xUs Konc3pt\'z | Digital Design Studio',
-    description: 'The premier digital design studio for the next generation of the web.',
+    title: 'N3xUs Konc3pt\'z | Website Design, Development & Deployment',
+    description: 'The premier digital design studio mastering the 3 D\'s: stunning website Design, robust custom Development, and seamless global Deployment.',
     images: ['https://n3xuskonc3ptz.com/logo.jpg'],
   },
 };
@@ -103,6 +103,46 @@ export default async function Home() {
         </div>
 
         <Hero />
+        
+        {/* The 3 D's Section */}
+        <section className="section bg-secondary relative z-10">
+          <div className="container">
+            <div className="section-header text-center">
+              <h2 className="section-title text-5xl glow-text mb-md">The 3 D's of Digital Success</h2>
+              <p className="section-subtitle text-secondary">
+                Our core philosophy for building exceptional web experiences
+              </p>
+            </div>
+            
+            <div className="grid grid-3 gap-xl">
+              <div className="bg-card p-xl rounded-xl border border-subtle text-center hover:border-primary transition-colors">
+                <div className="text-5xl mb-md">🎨</div>
+                <h3 className="text-2xl text-primary mb-sm font-heading">Design</h3>
+                <p className="text-secondary text-sm leading-relaxed">
+                  Visually striking, cyberpunk-inspired aesthetics tailored to your brand. We focus on UI/UX that captivates and converts.
+                </p>
+              </div>
+              
+              <div className="bg-card p-xl rounded-xl border border-subtle text-center hover:border-primary transition-colors">
+                <div className="text-5xl mb-md">⚙️</div>
+                <h3 className="text-2xl text-primary mb-sm font-heading">Development</h3>
+                <p className="text-secondary text-sm leading-relaxed">
+                  High-performance code utilizing modern frameworks like Next.js and React. Built for speed, scalability, and security.
+                </p>
+              </div>
+              
+              <div className="bg-card p-xl rounded-xl border border-subtle text-center hover:border-primary transition-colors">
+                <div className="text-5xl mb-md">🚀</div>
+                <h3 className="text-2xl text-primary mb-sm font-heading">Deployment</h3>
+                <p className="text-secondary text-sm leading-relaxed">
+                  Seamless launches and bulletproof hosting solutions. We get your digital presence live and keep it running flawlessly.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div className="container"><hr className="divider-glow opacity-50" /></div>
         
         {/* Services Section */}
         <section id="services" className="section relative z-10">
@@ -199,7 +239,7 @@ export default async function Home() {
                 <div>
                   <h2 className="text-5xl mb-lg glow-text">Ready to Launch Your Next Project?</h2>
                   <p className="text-lg text-secondary mb-xl">
-                    Whether you need a complex Discord bot, a sleek new web application, or a complete digital transformation, our team is ready to bring your vision to life.
+                    Whether you need a stunning new website design, robust custom development, or seamless deployment solutions, our team is ready to bring your digital vision to life.
                   </p>
                   
                   <div className="mt-xl">
